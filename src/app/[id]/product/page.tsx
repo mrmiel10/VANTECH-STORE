@@ -28,7 +28,7 @@ export default PageProduct;
 const Horizontal = () => {
   return <hr className="w-[30%] my-2" />;
 };
-export const ProductsFeatures = ({ product }: { product: productsType }) => {
+ const ProductsFeatures = ({ product }: { product: productsType }) => {
   const [cartProduct, setCartProduct] = useState<CartProductType>({
     id: product.id,
     name: product.name,
