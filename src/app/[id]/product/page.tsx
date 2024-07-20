@@ -129,7 +129,7 @@ const handleQtyIncrease = useCallback(() => {
     </div>
   );
 };
-export const ProductImage = ({
+ const ProductImage = ({
     cartProduct
 }: {
     cartProduct: CartProductType;
