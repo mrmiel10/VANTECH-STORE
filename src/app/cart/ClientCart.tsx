@@ -13,7 +13,7 @@ import Link from "next/link";
 import ItemContent from "./ItemContent";
 import { truncateText } from "@/lib/truncate";
 import PaginationProductCart from "../../../components/cart/pagination";
-import { GetFilteredProducts } from "@/lib/getFilteredProducts";
+import { GetFilteredProducts } from "@/lib/GetFilteredProducts";
 const ClientCart = ({currentPage}:{currentPage:number}) => {
   // const currentPage = Number(searchParams?.page) || 1;
   const Router = useRouter();
