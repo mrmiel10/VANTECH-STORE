@@ -10,6 +10,9 @@ import SetQuantity from "../../../../components/product/setQuantity";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/lib/cart.context";
+import { Separator } from "@/components/ui/separator";
+import { useShallow } from "zustand/react/shallow";
+import ProductDetails from "./productDetails";
 interface IParams {
     id:string
 }
@@ -19,6 +22,7 @@ const PageProduct = ({params} : {params:IParams}) => {
   if (!product) return <p>Pas de produit disponible</p>;
   return (
     <div className="overflow-hidden min-h-10">
+      {/* <ProductDetails /> */}
       <ProductsFeatures product={product} />
     </div>
   );
@@ -38,9 +42,12 @@ const Horizontal = () => {
     image: product.image,
     price: product.price,
   });
-  const cart = useCartStore((s)=>s.cart)
-  const toggleCart = useCartStore((s)=>s.toggleCart)
-  const isInCart = useCartStore(useCallback((s)=> s.cart.some((item) => item.id === product.id),[cart]))
+  const {cart,toggleCart,isInCart} = useCartStore(useShallow((s)=>({
+    cart:s.cart,
+    toggleCart:s.toggleCart,
+   isInCart:s.cart.some((item)=> item.id === product.id)
+   })))
+  
   const [isProductInCart, setIsProductInCart] = useState<boolean>(false);
 //   useEffect(()=>{
 //     if (cart) {
@@ -68,61 +75,74 @@ const handleQtyIncrease = useCallback(() => {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
       <ProductImage cartProduct={cartProduct} />
       <div>
-        <div className="flex flex-col gap-1 text-gray-500 text-sm">
-          <h2 className="text-3xl font-medium text-blue-700">{product.name}</h2>
-          <p className="font-bold">{formatPrice(product.price)}</p>
+        <div className=" grid grid-cols-1 gap-8 text-muted-foreground text-sm">
+          <div className="">
+          <h2 className="mb-3 text-3xl font-medium text-blue-700">{product.name}</h2>
+          <p className="font-bold text-lg">{formatPrice(product.price)}</p>
+          <Separator orientation="horizontal" />
+          </div>
+         
+         
+          {/* <Horizontal /> */}
+          <div className="text-justify ">
+            <p>{product.description}</p>
+            <Separator orientation="horizontal" />
+          </div>
+         
 
-          <Horizontal />
-          <div className="text-justify">{product.description}</div>
-          <Horizontal />
+          {/* <Horizontal /> */}
 
-          <div>
+          <div className="">
             <span className="font-semibold">marque: </span>
             <span>{product.brand}</span>
+            <Separator orientation="horizontal" />
           </div>
-
-          <Horizontal />
+        
+          {/* <Horizontal /> */}
           {isInCart ? (
-            <>
+            <div>
               <p className="mb-2 text-gray-500 flex items-center gap-1">
                 <LucideCheckCircle className="text-teal-400" size={20} />
                 <span>Produit ajouté au panier</span>
               </p>
               <div className="flex gap-4">
-              <Button
-                variant={"outline"}
-                  onClick={() => Router.push("/cart")}
-                  className="border bg-transparent border-orange-500 max-w-[300px] text-orange-500 hover:bg-transparent"
-                >
-                  Voir le panier
-                </Button>
+             
                 <Button
-                variant={"default"}
+                variant={"outline"}
                   onClick={() => deleteProductInCart(cartProduct.id)}
-                  className="border bg-transparent border-orange-500 max-w-[300px] text-orange-500 hover:bg-transparent"
+                  className=" max-w-[300px] hover:text-blue-500"
                 >
                  Retirer du panier
                 </Button>
+                <Button
+                variant={"default"}
+                  onClick={() => Router.push("/cart")}
+                  className="  max-w-[300px] bg-blue-500 hover:bg-blue-500/90"
+                >
+                  Voir le panier
+                </Button>
              
               </div>
-            </>
+            </div>
           ) : (
-            <>
+            <div className="space-y-2">
               < SetQuantity
                 cartProduct={cartProduct}
                  handleQtyIncrease={handleQtyIncrease}
                  handleQtyDecrease={handleQtyDecrease}
               />
-              <Horizontal />
+              
+              {/* <Horizontal /> */}
               <div>
                 <Button
+                variant={"default"}
                   onClick={() => toggleCart(cartProduct)}
-                  className="max-w-[300px] bg-orange-500 hover:bg-orange-700"
+                  className="max-w-[300px] bg-blue-500 hover:bg-blue-500/90"
                 >
                   Ajouter au panier
                 </Button>
               </div>
-            </>
+            </div>
           )}
         </div>
       </div>
@@ -137,10 +157,11 @@ const handleQtyIncrease = useCallback(() => {
   return (
     <div
       className="
+    w-full
   h-full
-  max-h-[500px]
+  max-h-[400px]
   min-h-[300px]
-  sm:min-h-[400px]
+  sm:min-h-[500px]
   relative aspect-square"
     >
       <Image

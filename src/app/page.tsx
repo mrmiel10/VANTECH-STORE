@@ -14,6 +14,7 @@ import { Heart } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
 import { useState } from "react";
 import { productsType } from "@/lib/typeProducts";
+import clsx from "clsx";
 export default function Home() {
   //  const {cart,toggleCart,favorites,toggleFavorite} = useCartStore()
 
@@ -24,6 +25,14 @@ export default function Home() {
     {/* <Nav /> */}
     <div className="max-w-screen-xl p-5 mx-auto sm:p-10 md:p-16"> 
      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
+     {/* <TooltipProvider>
+  <Tooltip>
+    <TooltipTrigger>Hover</TooltipTrigger>
+    <TooltipContent>
+      <p>Add to library</p>
+    </TooltipContent>
+  </Tooltip>
+</TooltipProvider> */}
     {products.map((product,index)=> (
    
         <ProductCard
@@ -56,7 +65,7 @@ export default function Home() {
 
   );
 }
-const ToggleLikeButton = ({product}:{product:productsType}) =>{
+export const ToggleLikeButton = ({product}:{product:productsType}) =>{
   // const favorites = useCartStore((s) => s.favorites)
   // const toggleFavorite = useCartStore((s) => s.toggleFavorite)
   const [cartProduct,setCartProduct] = useState({
@@ -75,7 +84,7 @@ const ToggleLikeButton = ({product}:{product:productsType}) =>{
   // const isFavorite = favorites.includes(id)
   return (
     <Button variant={"outline"} onClick={()=> toggleFavorite(cartProduct)}>
-      <Heart  className="text-red-500" size={16} fill={isFavorite ? "red" :"none"} />
+      <Heart  className="text-muted-foreground" size={16} fill={isFavorite ? "blue" :"none"} />
       </Button>
   )
 }
@@ -97,8 +106,11 @@ const ToggleCartButton = ({product}:{product:productsType}) =>{
     toggleCart: s.toggleCart
   })))
   return (
-    <Button variant={isInCart ? "default" : "outline"} onClick={()=> toggleCart(cartProduct)}>
-      <ShoppingCart size={16} fill={isInCart ? "white" :"none"} />
+    <Button className="" variant={isInCart ? "defaultBtn" : "outline"} onClick={()=> toggleCart(cartProduct)}>
+      <ShoppingCart className={clsx(
+    
+    isInCart ? "text-white" : "text-blue-500"
+  )} size={16} fill={isInCart ? "white" :"none"} />
       </Button>
   )
 }

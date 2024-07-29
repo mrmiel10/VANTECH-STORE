@@ -4,7 +4,7 @@ import { persist } from "zustand/middleware";
 export type CartProductType = {
     id: string;
     name: string;
-    description?: string;   
+    description: string;   
     brand: string;  
     quantity:number
     price: number;
@@ -22,14 +22,16 @@ export type FavoriteProductType = {
 type CartStoreType = {
     cart:CartProductType[],
     totalQty:number,
+    totalPrice:number,
     favorites:FavoriteProductType[],
     // getTotalPrice:()=> void
     toggleCart:(product:CartProductType) => void,
     toggleFavorite:(product:FavoriteProductType) => void,
-    handleQtyIncrease:(product:CartProductType) => void
+    //handleQtyIncrease:(product:CartProductType) => void,
+    // handleQtyIncrease:(id:string,qty:number) => void,
     getTotalQty:()=> void
-    // handleAddProductToCart: (product:CartProductType) => void
-    // setCart:(cart:string[]) => void
+    getTotalPrice:()=> void
+   
 }
 
 export const useCartStore = create(persist<CartStoreType>((set) =>(
@@ -38,30 +40,35 @@ export const useCartStore = create(persist<CartStoreType>((set) =>(
        
     cartTotalAmount : 0,
     cart:[],
-    totalQty:1,
+    totalQty:0,
+    totalPrice:0,
     favorites:[],
    toggleFavorite: (product) => set((state) =>({
-    favorites:state.favorites.some((item) => item.id === product.id) ? state.favorites.filter((item) => item.id !== product.id ) : [...state.favorites,product]
+    favorites:state.favorites.some((item) => item.id === product.id) ? state.favorites.filter((item) => item.id !== product.id ) : [product,...state.favorites]
    })),
     toggleCart:(product) =>set((state)=>({
         cart:state.cart.some((item) => item.id === product.id ) ? state.cart.filter((item)=> item.id !== product.id):
-        [...state.cart,product]
+        [product,...state.cart]
     })),
-    handleQtyIncrease:(product) => {
-        const cart = useCartStore.getState().cart
-            let updatedCart
-        
-            if(cart){
-                updatedCart = [...cart]
-              
-                const existingIndex = cart.findIndex((item) => item.id === product.id)
-                if (existingIndex > -1 ){
-                    updatedCart[existingIndex].quantity == ++updatedCart[existingIndex].quantity
-                  
-            }
-    }
   
-    },
+    // handleQtyIncrease:(product) => {
+    //     const cart = useCartStore.getState().cart
+    //         let updatedCart
+        
+    //         if(cart){
+    //             updatedCart = [...cart]
+              
+    //             const existingIndex = cart.findIndex((item) => item.id === product.id)
+    //             if (existingIndex > -1 ){
+    //                 updatedCart[existingIndex].quantity == ++updatedCart[existingIndex].quantity
+                  
+    //         }
+    //         useCartStore.setState({
+    //             cart:updatedCart
+    //         })
+    // }
+  
+    // },
     getTotalQty:()=> {
         const cart = useCartStore.getState().cart
            // if(cart){
@@ -81,30 +88,27 @@ export const useCartStore = create(persist<CartStoreType>((set) =>(
            useCartStore.setState({
             totalQty:totalqty
         })
+        },
+        getTotalPrice:()=>{
+            const cart = useCartStore.getState().cart
+            if(cart){
+                  
+            const totalPrice = cart.reduce((total,item)=>
+                {
+                    const itemTotal = item.price * item.quantity
+                    total +=itemTotal
+                    return total 
+                },0)
+
+                useCartStore.setState({
+                    totalPrice:totalPrice
+                })
+            }
+         
         }
     
     
-    // getQuantity:()=>{
-    //     const cart = useCartStore.getState().cart
-    //     if(cart){
-    //         const qty = cart.reduce((acc, item) =>
-    //         {
-                           
-    //             acc += item.quantity
-
-    //             return acc
-
-    //         },
-    //        0
-    //         )
-          
-    //     }
-    // }
-    // toggleCart:(id) =>set((state)=>({
-    //     cart:state.cart.includes(id) ? state.cart.filter((i)=> i !== id):
-    //     [...state.cart,id]
-    // }))
-
+    
     
 }),{
     name:"cartStorage"
@@ -115,28 +119,39 @@ export const deleteProductInCart = (id:string) => {
         cart:cart.filter((item) => item.id !== id )
     })
 }
+export const deleteAllProductsInCart = () => {
+    // const cart = useCartStore.getState().cart
+    useCartStore.setState({
+        cart:[]
+    })
+}
 export const deleteProductInFavorite = (id:string) => {
     const favorites = useCartStore.getState().favorites
     useCartStore.setState({
         favorites:favorites.filter((item) => item.id !== id )
     })
 }
-// export const handleQtyIncrease = (product:CartProductType)=> {
-//     const cart = useCartStore.getState().cart
-//     let updatedCart
+export const handleQtyIncrease = (product:CartProductType)=> {
+    if(product.quantity === 99) return
+    const cart = useCartStore.getState().cart
+    let updatedCart
 
-//     if(cart){
-//         updatedCart = [...cart]
+    if(cart){
+        updatedCart = [...cart]
       
-//         const existingIndex = cart.findIndex((item) => item.id === product.id)
-//         if (existingIndex > -1 ){
-//             updatedCart[existingIndex].quantity == ++updatedCart[existingIndex].quantity
+        const existingIndex = cart.findIndex((item) => item.id === product.id)
+        if (existingIndex > -1 ){
+            updatedCart[existingIndex].quantity == ++updatedCart[existingIndex].quantity
           
-//     }
-// }
+    }
+    useCartStore.setState({
+        cart:updatedCart
+    })
+}
    
-// }
+}
 export const handleQtyDecrease = (product:CartProductType)=> {
+    if(product.quantity === 1) return
     const cart = useCartStore.getState().cart
     let updatedCart
 
@@ -148,6 +163,9 @@ export const handleQtyDecrease = (product:CartProductType)=> {
             updatedCart[existingIndex].quantity == --updatedCart[existingIndex].quantity
           
     }
+    useCartStore.setState({
+        cart:updatedCart
+    })
 }
    
 }
