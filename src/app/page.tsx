@@ -15,6 +15,7 @@ import { useShallow } from "zustand/react/shallow";
 import { useState } from "react";
 import { productsType } from "@/lib/typeProducts";
 import clsx from "clsx";
+import { ToggleLikeButton } from "../../components/ToggleLikeButton";
 export default function Home() {
   //  const {cart,toggleCart,favorites,toggleFavorite} = useCartStore()
 
@@ -65,7 +66,7 @@ export default function Home() {
 
   );
 }
-export const ToggleLikeButton = ({product}:{product:productsType}) =>{
+ /*const ToggleLikeButton = ({product}:{product:productsType}) =>{
   // const favorites = useCartStore((s) => s.favorites)
   // const toggleFavorite = useCartStore((s) => s.toggleFavorite)
   const [cartProduct,setCartProduct] = useState({
@@ -87,7 +88,7 @@ export const ToggleLikeButton = ({product}:{product:productsType}) =>{
       <Heart  className="text-muted-foreground" size={16} fill={isFavorite ? "blue" :"none"} />
       </Button>
   )
-}
+}*/
 const ToggleCartButton = ({product}:{product:productsType}) =>{
   const [cartProduct,setCartProduct] = useState({
     id: product.id,

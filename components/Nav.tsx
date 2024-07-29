@@ -24,6 +24,71 @@ import {
 } from "@/components/ui/tooltip";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
+ const FavoriteButtonCart = () => {
+  const favorites = useCartStore((s) => s.favorites);
+  //   const selectedItems = products.filter((product) =>favorites.includes(product.id))
+
+  return (
+    <Popover>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <PopoverTrigger asChild>
+              <Button variant={"secondary"}>
+                <Heart className="size-5 mr-2" />
+                {favorites.length}
+              </Button>
+            </PopoverTrigger>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>mes favoris</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+
+      <PopoverContent className="text-muted-foreground  w-[400px]">
+        <div className="flex items-center gap-4">
+          <h2 className="font-bold text-xl items-center text-blue-500 ">
+            My Favorites
+          </h2>
+          {favorites.length ? (
+            <Button variant={"defaultBtn"} className=" gap-1">
+              <ArrowUpRight size={17} className="text-white" />
+              View all
+            </Button>
+          ) : null}
+        </div>
+        {!favorites.length ? <p>Your list of favorites is empty</p> : null}
+
+        <ul className="divide-y-2  space-y-2">
+          {favorites.map((product, index) => (
+            <li key={index} className="py-3">
+              <div className="flex items-center">
+                <div>
+                  <p className="text-blue-500 font-bold">$ {product.price}</p>
+                  <h3 className="text-md font-medium leading-none">
+                    {truncateText(product.name)}
+                  </h3>
+
+                  {/* <p>{product.description}</p> */}
+                </div>
+
+                <Button className="group px-3 py-2 ml-auto" variant={"outline"}>
+                  <Trash2Icon
+                    className="group-hover:text-blue-500 transition ease duration-150"
+                    size={17}
+                    onClick={() => deleteProductInFavorite(product.id)}
+                  />
+                </Button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </PopoverContent>
+    </Popover>
+  );
+};
+
 const Nav = () => {
   return (
     <div className="max-w-screen-xl w-full p-3 mx-auto sm:p-5">
@@ -106,70 +171,6 @@ const ButtonCart = () => {
                     className=" group-hover:text-blue-500 transition ease duration-150"
                     size={17}
                     onClick={() => deleteProductInCart(product.id)}
-                  />
-                </Button>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </PopoverContent>
-    </Popover>
-  );
-};
-const FavoriteButtonCart = () => {
-  const favorites = useCartStore((s) => s.favorites);
-  //   const selectedItems = products.filter((product) =>favorites.includes(product.id))
-
-  return (
-    <Popover>
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <PopoverTrigger asChild>
-              <Button variant={"secondary"}>
-                <Heart className="size-5 mr-2" />
-                {favorites.length}
-              </Button>
-            </PopoverTrigger>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>mes favoris</p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-
-      <PopoverContent className="text-muted-foreground  w-[400px]">
-        <div className="flex items-center gap-4">
-          <h2 className="font-bold text-xl items-center text-blue-500 ">
-            My Favorites
-          </h2>
-          {favorites.length ? (
-            <Button variant={"defaultBtn"} className=" gap-1">
-              <ArrowUpRight size={17} className="text-white" />
-              View all
-            </Button>
-          ) : null}
-        </div>
-        {!favorites.length ? <p>Your list of favorites is empty</p> : null}
-
-        <ul className="divide-y-2  space-y-2">
-          {favorites.map((product, index) => (
-            <li key={index} className="py-3">
-              <div className="flex items-center">
-                <div>
-                  <p className="text-blue-500 font-bold">$ {product.price}</p>
-                  <h3 className="text-md font-medium leading-none">
-                    {truncateText(product.name)}
-                  </h3>
-
-                  {/* <p>{product.description}</p> */}
-                </div>
-
-                <Button className="group px-3 py-2 ml-auto" variant={"outline"}>
-                  <Trash2Icon
-                    className="group-hover:text-blue-500 transition ease duration-150"
-                    size={17}
-                    onClick={() => deleteProductInFavorite(product.id)}
                   />
                 </Button>
               </div>

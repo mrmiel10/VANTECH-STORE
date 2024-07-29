@@ -13,7 +13,7 @@ import Link from "next/link";
 import ItemContent from "./ItemContent";
 import { truncateText } from "@/lib/truncate";
 import PaginationProductCart from "../../../components/cart/pagination";
-import { GetFilteredProducts } from "@/lib/GetFilteredProducts";
+import { GetFilteredProductsCart } from "@/lib/GetFilteredProductsCart";
 const ClientCart = ({currentPage}:{currentPage:number}) => {
   // const currentPage = Number(searchParams?.page) || 1;
   const Router = useRouter();
@@ -26,7 +26,7 @@ const ClientCart = ({currentPage}:{currentPage:number}) => {
   );
 
 const totalPages = Math.ceil(cart.length / 3)
-const cartProduct = GetFilteredProducts(currentPage)
+const cartProduct = GetFilteredProductsCart(currentPage)
   //   const getQty = useCartStore(useCallback((s)=> s.getTotalQty,[]))
 
   //   const handleQtyIncrease = useCartStore(useCallback((s)=>s.handleQtyIncrease,[]))
