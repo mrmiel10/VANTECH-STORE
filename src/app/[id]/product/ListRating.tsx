@@ -38,7 +38,7 @@ const filterRating = searchParamsCache.get("rating")!
             </div>
             <div className="text-sm leading-loose text-muted-foreground">
               <p>
-                I recently purchased this t-shirt and I'm really happy with it.
+                I recently purchased this t-shirt and I&apos;m really happy with it.
                 The fit is great and the material is high quality. I would
                 definitely recommend this to anyone looking for a new t-shirt.
               </p>
