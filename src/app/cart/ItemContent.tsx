@@ -74,7 +74,7 @@ import { useRouter } from 'next/navigation';
                           onClick={() =>
                             handleQtyIncrease(
                               item
-                              //  item.quantity + 1
+                             
                             )
                           }
                         >

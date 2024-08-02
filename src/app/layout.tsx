@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Nav from "../../components/Nav";
+import { Toaster as Sonner } from "sonner";
+import { CircleX } from "lucide-react";
+import { CircleCheckIcon } from "lucide-react";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -22,6 +25,28 @@ export default function RootLayout({
         <main className="flex-grow">
         {children}
         </main>
+        <Sonner
+       
+        toastOptions={{classNames:{
+
+          closeButton:"",
+          title:"text-base",
+          content:"border-[1.5] border-green-500",
+          default:"bg-blue-500",
+         icon:"size-5",
+          success:"border-2 border-green-200  bg-green-100 text-green-400",
+          error:"border-2 border-red-200  bg-red-100 text-red-400"
+        }}}
+        
+          closeButton
+            //  richColors
+         className="text-xl"
+          icons={{
+             
+            error: <CircleX className="" />,
+            success: <CircleCheckIcon className="" />,
+          }}
+        />
         </div>
        
          
