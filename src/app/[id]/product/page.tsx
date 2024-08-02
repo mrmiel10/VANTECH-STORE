@@ -12,7 +12,7 @@ import Image from "next/image";
 import ListRating from "./ListRating";
 import AddRating from "./AddRating";
 import { searchParamsCache } from "@/lib/nuqs";
-import ProductsDetails from "./ProductDetails";
+import ProductsFeatures from "./ProductsFeatures";
 interface IParams {
   id: string;
   
@@ -26,7 +26,7 @@ const PageProduct = ({ params,searchParams }: { params: IParams,searchParams:Rec
   return (
     <div className="overflow-hidden min-h-10">
    
-      <ProductsDetails product={product}/>
+      <ProductsFeatures product={product}/>
       <section className="container mx-auto grid grid-cols-1 gap-8 px-4 py-8 sm:grid-cols-2 sm:gap-12 md:px-6 lg:max-w-7xl">
        <ListRating  />
        <AddRating />

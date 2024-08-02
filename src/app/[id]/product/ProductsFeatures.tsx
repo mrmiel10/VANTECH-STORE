@@ -21,7 +21,7 @@ import Link from "next/link";
 import { Rating } from "@mui/material";
 import { toast } from "sonner";
 
-const ProductsDetails = ({ product }: { product: productsType }) => {
+const ProductsFeatures = ({ product }: { product: productsType }) => {
   const [cartProduct, setCartProduct] = useState<CartProductType>({
     id: product.id,
     name: product.name,
@@ -164,4 +164,4 @@ const ProductsDetails = ({ product }: { product: productsType }) => {
     </div>
   );
 };
-export default ProductsDetails;
+export default ProductsFeatures;
