@@ -33,12 +33,21 @@ import {
     TooltipTrigger,
     TooltipProvider,
   } from "@/components/ui/tooltip";
+
+import { filtersMouses } from "@/lib/listFiltersProducts";
+import { filtersAllCategories } from "@/lib/listFiltersProducts";
 const FiltersSheet = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const [isSelectedFilter, setIsSelectedFilter] = useState(false);
-
+  let filtersProducts:{
+    id:string,
+    value:string[]
+  }[] = []
+  if(pathname === "/category/desktop")  filtersProducts = [...filtersComputers]
+  else if(pathname === "/category/mouses") filtersProducts = [...filtersMouses]
+  else filtersProducts = [...filtersAllCategories]
   useEffect(() => {
     setIsSelectedFilter(false);
     const hasSelectedFilter = filtersComputers.some((item) =>
@@ -124,7 +133,7 @@ const FiltersSheet = () => {
             </SheetDescription> */}
           </SheetHeader>
           <div className="grid gap-4 md:overflow-y-auto">
-            {filtersComputers.map((item, _) => {
+            {filtersProducts.map((item, _) => {
               return (
                 <div key={item.id}>
                   <h3 className="text-base font-medium mb-2">{item.id}</h3>

@@ -11,7 +11,7 @@ const ShowItems = async ({
     searchParams?: { [key: string]: string };
     category?:string
   }) => {
-     // await new Promise((resolve) => setTimeout(resolve, 3000));
+      await new Promise((resolve) => setTimeout(resolve, 3000));
     console.log(searchParams);
   
     const { filtersByFeatures, filtersSort, filterByCategory } =

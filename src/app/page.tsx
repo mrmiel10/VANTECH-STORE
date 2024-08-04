@@ -23,7 +23,7 @@ export default function Home({
         <ShowItems searchParams={searchParams} />
          </Suspense> 
       </div>
-      {/* <SkeletonCard /> */}
+     
     </div>
   );
 }

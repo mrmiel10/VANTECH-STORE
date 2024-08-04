@@ -5,6 +5,8 @@ import Nav from "../../components/Nav";
 import { Toaster as Sonner } from "sonner";
 import { CircleX } from "lucide-react";
 import { CircleCheckIcon } from "lucide-react";
+import Navbar from "../../components/Navbar/Navbar";
+import FirstHeader from "../../components/FirstHeader";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -20,8 +22,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="flex flex-col min-h-screen max-w-screen-xl w-full p-3 mx-auto sm:p-5">
-          <Nav />
+        <div className="flex flex-col min-h-screen  w-full ">
+          {/* // <Nav /> */}
+          <Navbar />
+          <FirstHeader />
         <main className="flex-grow">
         {children}
         </main>
