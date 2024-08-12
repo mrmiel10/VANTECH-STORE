@@ -2,15 +2,16 @@ import React, { Suspense } from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Rating } from "@mui/material";
 
-import FiltersByRating from "./FiltersByRating";
+import { FiltersByRating } from "./FiltersByRating";
 import { searchParamsCache } from "@/lib/nuqs";
-const ListRating = () => {
+export const ListRating = () => {
 
 const filterRating = searchParamsCache.get("rating")!
 
   return (
     <div className="grid gap-4">
-      <h2 className="text-2xl font-bold text-blue-500">Customer Reviews</h2>
+          <h2 className="text-2xl font-bold text-blue-500">Customer Reviews</h2>
+  
     <FiltersByRating />
      <p>Vous avez sélectionnez {Number(filterRating )} étoiles</p> 
       <div className="grid gap-6">
@@ -23,8 +24,11 @@ const filterRating = searchParamsCache.get("rating")!
           <div className="grid gap-2">
             <div className="flex md:items-center max-md:gap-2 gap-4 max-md:flex-col">
               <div className="grid gap-0.5 text-sm">
+                
                 <h3 className="font-semibold text-blue-500">Alex Smith</h3>
                 <time className=" text-muted-foreground italic font-bold">3 weeks ago</time>
+                
+              
               </div>
               <div className="flex items-center gap-0.5 md:ml-auto">
                 <Rating
@@ -50,7 +54,7 @@ const filterRating = searchParamsCache.get("rating")!
   );
 };
 
-export default ListRating;
+
 // const ShowReviews = async({
   
 // }) =>{

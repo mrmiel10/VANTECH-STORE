@@ -15,7 +15,10 @@ import { truncateText } from "@/lib/truncate";
 import PaginationProductCart from "../../../components/cart/pagination";
 import { GetFilteredProductsCart } from "@/lib/GetFilteredProductsCart";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Suspense } from "react";
+import { SkeletonItemCartLoading } from "../../../components/Skeletons";
 import cart from "../../../public/cart.png";
+import { Skeleton } from "@/components/ui/skeleton";
 const ClientCart = ({ currentPage }: { currentPage: number }) => {
   // const currentPage = Number(searchParams?.page) || 1;
   const Router = useRouter();
@@ -29,10 +32,6 @@ const ClientCart = ({ currentPage }: { currentPage: number }) => {
 
   const totalPages = Math.ceil(cart.length / 3);
   const cartProduct = GetFilteredProductsCart(currentPage);
-  //   const getQty = useCartStore(useCallback((s)=> s.getTotalQty,[]))
-
-  //   const handleQtyIncrease = useCartStore(useCallback((s)=>s.handleQtyIncrease,[]))
-  //   const handleQtyDecrease = useCartStore(useCallback((s)=>s.handleQtyDecrease,[]))
 
   useEffect(() => {
     getTotalPrice();
@@ -64,7 +63,12 @@ const ClientCart = ({ currentPage }: { currentPage: number }) => {
               <div className="grid gap-6">
                 <div className="grid gap-8">
                   {cartProduct.map((item) => (
-                    <ItemContent key={item.id} item={item} />
+                    <Suspense
+                      key={item.id}
+                      fallback={<SkeletonItemCartLoading />}
+                    >
+                      <ItemContent key={item.id} item={item} />
+                    </Suspense>
                   ))}
                 </div>
                 <Separator />
@@ -72,9 +76,11 @@ const ClientCart = ({ currentPage }: { currentPage: number }) => {
                 <div className="flex items-center justify-between gap-4 max-sm:flex-col">
                   <p className="text-lg">
                     TotalPrice:{" "}
-                    <span className="text-blue-500 font-semibold">
-                      {totalPrice}
-                    </span>
+                    <Suspense fallback={<Skeleton className="w-11 h-5" />}>
+                      <span className="text-blue-500 font-semibold">
+                        {totalPrice}
+                      </span>
+                    </Suspense>
                   </p>
                   <div className="flex gap-2 max-sm:flex-col-reverse max-sm:w-full">
                     <Button
@@ -98,40 +104,7 @@ const ClientCart = ({ currentPage }: { currentPage: number }) => {
 };
 
 export default ClientCart;
-export const ProductsDetailsSelect = ({
-  productSelect,
-}: {
-  productSelect: CartProductType | null;
-}) => {
-  if (!productSelect) return null;
-  return (
-    <div className="col-span-2 sm:col-span-1 ">
-      {/* <div className='text-muted-foreground flex flex-col shadow-md rounded-md overflow-hidden  cursor-pointer '> */}
-      <Card>
-        <CardContent className="p-0">
-          <div className=" w-full relative aspect-square overflow-hidden h-52">
-            <Image
-              fill
-              src={productSelect.image}
-              alt={productSelect.description}
-              className="object-contain"
-            />
-          </div>
-        </CardContent>
-      </Card>
-      {/* <div  className=' w-full relative aspect-square overflow-hidden h-52'>
-        <Image fill src={productSelect.image} alt={productSelect.description} className='object-contain' />
-       </div> */}
-      <div className=" flex flex-col gap-y-3  text-sm p-3">
-        <p className="font-semibold">{productSelect.name}</p>
-        <p className="font-semibold text-lg">$ {productSelect.price}</p>
-        <p>{productSelect.description}</p>
-      </div>
 
-      {/* </div> */}
-    </div>
-  );
-};
 export const NoItems = () => {
   return (
     <Alert className="p-6">
@@ -154,10 +127,9 @@ export const NoItems = () => {
               </AlertDescription>
             </div>
             {/* <div className="flex-grow flex flex-col"> */}
-              <Button className="" variant={"defaultBtn"} asChild>
-                <Link href="/">Add porduct</Link>
-             
-              </Button>
+            <Button className="" variant={"defaultBtn"} asChild>
+              <Link href="/">Add porduct</Link>
+            </Button>
             {/* </div> */}
           </div>
         </div>

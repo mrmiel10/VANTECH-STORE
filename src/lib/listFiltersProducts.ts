@@ -8,7 +8,7 @@ export const filtersComputers = [
     {
       id: "Marque",
   
-      value: ["Dell", "Hp"],
+      value: ["Dell", "Hp","Lenovo","Apple"],
     },
  
   ];

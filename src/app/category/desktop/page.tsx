@@ -1,7 +1,7 @@
 import React, { Suspense } from "react";
 import { SkeletonProductsCards } from "../../../../components/ProductCard";
-import TitleProductsByCategories from "../../../../components/componentsPerCategory/TitleProductsByCategories";
-import ShowItems from "../../../../components/componentsPerCategory/ShowItems";
+import { TitleProductsByCategories } from "../../../../components/componentsPerCategory/TitleProductsByCategories";
+import { ShowItems } from "../../../../components/componentsPerCategory/ShowItems";
 
 const DesktopProductsPage = ({
   searchParams,
@@ -10,12 +10,15 @@ const DesktopProductsPage = ({
 }) => {
   return (
     <div>
+      <Suspense fallback={"loading"}>
       <TitleProductsByCategories
         title="Nos ordinateurs de bureau"
         description="Découvrez notre collection d'ordinateurs de bureau"
       />
+      </Suspense>
+      
       <Suspense fallback={<SkeletonProductsCards />}>
-        <ShowItems searchParams={searchParams} />
+        <ShowItems searchParams={searchParams} category="desktops" />
       </Suspense>
     </div>
   );

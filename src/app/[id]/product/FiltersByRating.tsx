@@ -3,7 +3,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import clsx from "clsx";
-const FiltersByRating = () => {
+export const FiltersByRating = () => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
@@ -44,4 +44,4 @@ const FiltersByRating = () => {
   );
 };
 
-export default FiltersByRating;
+

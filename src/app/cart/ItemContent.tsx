@@ -17,12 +17,14 @@ import Image from "next/image";
 import { Separator } from '@/components/ui/separator';
 import { Button } from "@/components/ui/button";
 import { useRouter } from 'next/navigation';
- const ItemContent = ({item}:{item:CartProductType}) => {
+ const ItemContent = async ({item}:{item:CartProductType}) => {
   const router = useRouter()
+  //await new Promise((resolve) => setTimeout(resolve, 10000));
+
   return (
     <div
                     key={item.id}
-                    className="grid grid-cols-[150px_1fr_auto] items-center gap-8 sm:gap-8"
+                    className="grid grid-cols-[150px_1fr_auto] items-center gap-y-8 sm:gap-4"
                   >
                     <div onClick={()=>router.push(`/${item.id}/product`)} className="hover:cursor-pointer max-sm:h-32 col-span-2 sm:col-span-1 flex justify-center items-center">
                     <Image

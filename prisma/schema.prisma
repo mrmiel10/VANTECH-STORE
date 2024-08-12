@@ -1,0 +1,99 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+// prisma/schema.prisma
+datasource db {
+  provider  = "postgresql"
+  url  	    ="postgresql://V-store_owner:GKU9jdIu5TRb@ep-shrill-waterfall-a5xbnzft-pooler.us-east-2.aws.neon.tech/V-store?sslmode=require"
+  // uncomment next line if you use Prisma <5.10
+  // directUrl = env("DATABASE_URL_UNPOOLED")
+}
+
+// model Image {
+//   id String @unique
+//   image String
+//   product Product @relation(fields: [productId],references: [id])
+  
+//   productId Int
+// }
+// model Address {
+//   id String @id @default(uuid()) 
+//   city String
+//   country String
+//   line1 String
+//   line2 String?
+//   orderId Int @unique
+//   order Order @relation(fields:[orderId],references: [id])
+// }
+// model CartProductType {
+//   id Int @unique
+//   name String
+//   description String?
+//   category String
+//   brand String
+//   selectedImg String
+//   quantity Int
+//   price Float
+//   orderId Int
+//   order Order @relation(fields:[orderId],references:[id])
+// }
+
+enum Role{
+  USER
+  ADMIN
+}
+model User {
+  id       Int @id @default(autoincrement())
+  kindeId   String   @unique
+  email     String   @unique
+  firstName String?
+  lastName  String?
+  picture   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  orders Order[]
+  role Role @default(USER)
+  reviews Review[]
+}
+model Review{
+  id Int @id @default(autoincrement())
+  userId Int
+  productId Int
+  rating Int
+  comment String
+  createdDate DateTime @default(now())
+  product Product @relation(fields: [productId], references: [id])
+  user User @relation(fields: [userId],references: [id])
+}
+model Order{
+  id Int @id @default(autoincrement())
+  userId Int
+  amount Float
+  currency String
+  status String
+  deliveryStatus String?
+  createdDate DateTime @default(now())
+  paymentIntentId String @unique
+  products Json
+  address Json
+  user User @relation(fields: [userId],references: [id],onDelete: Cascade)
+}
+
+
+model Product{
+  id Int  @id @default(autoincrement())
+  name String
+  description String?
+  price Float
+  brand String
+  category String
+  status String
+  images Json
+  reviews Review[]
+ }

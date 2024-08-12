@@ -11,27 +11,16 @@ import { useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 import clsx from "clsx";
 import { Skeleton } from "@/components/ui/skeleton";
-const ProductCard = ({ products }: { products: productsType[] }) => {
-
-
-  return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-6">
-      {}
-      {products.map((product, index) => (
-        <CardProduct key={index} {...product}>
-          <ToggleLikeButton product={product} />
-          <ToggleCartButton product={product} />
-        </CardProduct>
-      ))}
-    </div>
-  );
-};
-
-export default ProductCard;
-const CardProduct = (
-  product: PropsWithChildren<productsType> & { className?: string }
+import { Product } from "@prisma/client";
+import { Review } from "@prisma/client";
+import { Rating } from "@mui/material";
+import { formatPrice } from "@/lib/formatPrice";
+// import { products } from "@/lib/products";
+export const CardProduct = (
+  product: PropsWithChildren<Product & { reviews: Review[] }>
 ) => {
   const Router = useRouter();
+
   return (
     <div className="text-muted-foreground flex flex-col w-full shadow-md rounded-md overflow-hidden  cursor-pointer ">
       <div
@@ -40,37 +29,42 @@ const CardProduct = (
       >
         <Image
           fill
-          src={product.image}
-          alt={product.description}
+          src={ParseImage(product.images)[0].image}
+          alt={product.description!}
           className="object-contain"
         />
       </div>
-      <div className="border-t flex flex-col flex-grow gap-y-3 min-h-5  bg-white text-sm p-4  ">
-        <p className="font-semibold">{truncateText(product.name)}</p>
-        <p>{product.description}</p>
-        <div className="flex justify-between items-center">
-          <p className="font-semibold">$ {product.price}</p>
-          <div className="flex gap-2">
-            {product.children}
-            {/* <Button variant={"outline"} className='px-4 py-8 text-white cursor-pointer inline-flex bg-blue-500 hover:bg-blue-400 transition rounded-md' onClick={()=>{toggleCart?.()}}>{isInCart ? "remove" : "Add to cart"}</Button>
-      <Button className='px-4 py-2 text-white cursor-pointer rounded-md' onClick={()=>{toggleFavorite?.()}}>
-      <Heart fill={favorite ? "red" : "none"} />
-        
-      </Button> */}
+      <div className="border-t grid grid-cols-1 flex-grow gap-y-4 min-h-5  bg-white text-sm p-4  ">
+        <p className="font-semibold text-blue-500">{product.name}</p>
+        {/* <p className="font-semibold">{truncateText(product.name)}</p> */}
+        {/* <p>{product.description}</p> */}
+        <div className="flex  items-center w-full flex-col justify-end">
+          <div className="flex flex-col w-full gap-2">
+            <div className="flex items-center gap-1">
+              <p className="font-semibold"> {formatPrice(product.price)}</p>
+              <Rating value={4.5} precision={0.5} readOnly size="small" />
+            </div>
+
+            <div className="flex gap-2 ml-auto">{product.children}</div>
           </div>
         </div>
       </div>
     </div>
   );
 };
-export const ToggleCartButton = ({ product }: { product: productsType }) => {
+export const ToggleCartButton = ({
+  product,
+}: {
+  product: Product & { reviews: Review[] };
+}) => {
   const [cartProduct, setCartProduct] = useState({
-    id: product.id,
+    id:  Number(product.id),
     name: product.name,
     description: product.description,
     brand: product.brand,
+    category: product.category,
     quantity: 1,
-    image: product.image,
+    image: ParseImage(product.images)[0].image,
     price: product.price,
   });
 
@@ -95,16 +89,21 @@ export const ToggleCartButton = ({ product }: { product: productsType }) => {
   );
 };
 
-export const ToggleLikeButton = ({ product }: { product: productsType }) => {
+export const ToggleLikeButton = ({
+  product,
+}: {
+  product: Product & { reviews: Review[] };
+}) => {
   // const favorites = useCartStore((s) => s.favorites)
   // const toggleFavorite = useCartStore((s) => s.toggleFavorite)
   const [cartProduct, setCartProduct] = useState({
-    id: product.id,
+    id: Number(product.id),
     name: product.name,
     description: product.description,
     brand: product.brand,
+    category: product.category,
     quantity: 1,
-    image: product.image,
+    image: ParseImage(product.images)[0].image,
     price: product.price,
   });
   const { isFavorite, toggleFavorite } = useCartStore(
@@ -140,16 +139,22 @@ export const SkeletonCard = () => {
     <div className="flex flex-col w-full rounded-md overflow-hidden bg-slate-200">
       <Skeleton className="h-52   rounded-none" />
       <div className=" flex flex-col flex-grow gap-y-3 text-sm p-8 sm:p-4  ">
-        <Skeleton className="h-4 w-full " />
+        <Skeleton className="h-5 w-full " />
         <Skeleton className="h-8 w-full " />
         <div className=" flex justify-between items-center">
           <Skeleton className="h-5 w-12  " />
           <div className="flex gap-2 ">
-            <Skeleton className=" size-12 p-2 " />
-            <Skeleton className=" size-12 p-2" />
+            <Skeleton className=" w-12 h-10 " />
+            <Skeleton className="  w-12 h-10 " />
           </div>
         </div>
       </div>
     </div>
   );
+};
+export const ParseImage = (images: any) => {
+  const safeImages: { image: string }[] = JSON.parse(
+    JSON.stringify(images as string)
+  );
+  return safeImages;
 };

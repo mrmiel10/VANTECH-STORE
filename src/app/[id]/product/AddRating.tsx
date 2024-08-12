@@ -31,7 +31,7 @@ const formValidateReview = z.object({
 });
 
 
-const AddRating = () => {
+export const AddRating = () => {
   const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof formValidateReview>>({
     resolver: zodResolver(formValidateReview),
@@ -57,13 +57,15 @@ const AddRating = () => {
   }
   return (
     <div className="grid gap-8">
-          <h2 className="text-2xl font-bold text-blue-500">Leave a Review</h2>
+      <div className='flex'> <h2 className="text-2xl font-bold text-blue-500">Leave a Review</h2></div>
+         
           <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-8">
           <div className="flex flex-col gap-1">
-              <Label htmlFor="rating" className="text-lg text-muted-foreground font-semibold">
+            <div className='flex'>  <Label htmlFor="rating" className="text-lg text-muted-foreground font-semibold">
                 Rating
-              </Label>
+              </Label></div>
+            
               <div className="flex items-center gap-2">
               <Rating
                     className="border-blue-400 mr-1"
@@ -84,9 +86,12 @@ const AddRating = () => {
                      <div className="flex flex-col gap-1">
          
               <div className="flex flex-col gap-1">
+              <div className='flex'>
               <Label htmlFor="review" className="text-lg text-muted-foreground font-semibold">
                 Review
               </Label>
+              </div>
+             
               <Textarea
                 id="review"
                 placeholder="Write your review here..."
@@ -129,4 +134,4 @@ const AddRating = () => {
   )
 }
 
-export default AddRating
+

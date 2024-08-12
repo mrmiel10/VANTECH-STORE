@@ -48,9 +48,9 @@ import { ArrowUpRight } from "lucide-react";
 
       <PopoverContent className="text-muted-foreground  w-[400px]">
         <div className="flex items-center gap-4">
-          <h2 className="font-bold text-xl items-center text-blue-500 ">
-            My Favorites
-          </h2>
+            <h2 className="font-bold text-xl items-center text-blue-500 ">
+              My Favorites
+            </h2>
           {favorites.length ? (
             <Button variant={"defaultBtn"} className=" gap-1">
               <ArrowUpRight size={17} className="text-white" />

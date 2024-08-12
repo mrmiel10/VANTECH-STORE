@@ -9,13 +9,32 @@ import {
   DropdownMenu,
   DropdownMenuItem,
   DropdownMenuSeparator,
+  DropdownMenuCheckboxItem
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
+import { CheckedState } from "@radix-ui/react-checkbox";
 const ButtonFiltersCategories = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
+  const handleFilterChange = useCallback(
+    (filter: {
+      id: string;
+      name: string;
+      value: string;
+  }, checked: CheckedState) => {
+      const params = new URLSearchParams(searchParams.toString());
+
+      if (checked) {
+        params.set(filter.name, filter.value);
+      } else {
+        params.delete(filter.name, filter.value);
+      }
+      router.push(pathname + "?" + params.toString());
+    },
+    [searchParams, pathname, router]
+  );
   const handleSetParamsSortFilters = useCallback(
     (name: string, value: string) => {
       console.log(name, value);
@@ -36,7 +55,7 @@ const ButtonFiltersCategories = () => {
         <DropdownMenu>
           <DropdownMenuTrigger asChild className="focus:outline-none">
             <Button
-              className="focus-visible:ring-offset-0 focus-visible:ring-0 active:outline-none focus-visible:outline-none"
+              className="focus-visible:ring-offset-0 focus-visible:ring-0 active:outline-none focus-visible:outline-none hover:text-blue-500"
               variant="outline"
               size="sm"
             >
@@ -47,22 +66,15 @@ const ButtonFiltersCategories = () => {
           <DropdownMenuContent align="start">
             {filtersByCategories.map((filter, index) => {
               return (
-                <DropdownMenuItem
-                  className="px-2 py-1.5 w-full flex items-center gap-1"
-                  onClick={() => {
-                    handleSetParamsSortFilters(filter.name, filter.value);
-                  }}
-                  key={filter.id}
-                >
-                  <div className="size-4 flex justify-center items-center">
-                    {" "}
-                    {searchParams.has(filter.name, filter.value) ? (
-                      <Check />
-                    ) : null}
-                  </div>
-
-                  {filter.id}
-                </DropdownMenuItem>
+                <DropdownMenuCheckboxItem
+            
+                checked={searchParams.has(filter.name, filter.value)}
+                onCheckedChange={(checked) =>
+                  handleFilterChange(filter, checked)
+                }
+                   key={filter.id}
+                
+                 className="focus:text-blue-500 text-muted-foreground">{filter.id}</DropdownMenuCheckboxItem>
               );
             })}
           </DropdownMenuContent>

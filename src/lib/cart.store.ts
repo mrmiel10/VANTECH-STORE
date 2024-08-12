@@ -2,20 +2,22 @@ import { StaticImageData } from "next/image";
 import { create, useStore } from "zustand";
 import { persist } from "zustand/middleware";
 export type CartProductType = {
-    id: string;
+    id: number;
     name: string;
-    description: string;   
-    brand: string;  
+    description: string | null;   
+    brand: string;
+    category:string,  
     quantity:number
     price: number;
     image: string | StaticImageData
 }
   
 export type FavoriteProductType = {
-    id: string;
+    id: number;
     name: string;
-    description?: string;   
-    brand: string;  
+    description: string | null;   
+    brand: string;
+    category:string,    
     price: number;
     image: string | StaticImageData
   };
@@ -113,7 +115,7 @@ export const useCartStore = create(persist<CartStoreType>((set) =>(
 }),{
     name:"cartStorage"
 }))
-export const deleteProductInCart = (id:string) => {
+export const deleteProductInCart = (id:number) => {
     const cart = useCartStore.getState().cart
     useCartStore.setState({
         cart:cart.filter((item) => item.id !== id )
@@ -125,7 +127,7 @@ export const deleteAllProductsInCart = () => {
         cart:[]
     })
 }
-export const deleteProductInFavorite = (id:string) => {
+export const deleteProductInFavorite = (id:number) => {
     const favorites = useCartStore.getState().favorites
     useCartStore.setState({
         favorites:favorites.filter((item) => item.id !== id )

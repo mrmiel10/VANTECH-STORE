@@ -26,9 +26,9 @@ const SetQuantity: React.FC<SetQtyProps> = ({
         {cartCounter ? null :   <Label htmlFor="quantity" className="text-base">
             Quantity:
           </Label>}
-          <Label htmlFor="quantity" className="text-base">
+          {/* <Label htmlFor="quantity" className="text-base">
             Quantity:
-          </Label>
+          </Label> */}
           <div className="flex items-center gap-2">
             <Button className="group" onClick={handleQtyDecrease} variant="outline" size="icon">
               <MinusIcon className="text-muted-foreground size-4 group-hover:text-blue-500 hover:cursor-pointer ease transition" />
