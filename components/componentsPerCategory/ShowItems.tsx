@@ -1,33 +1,8 @@
-
-<<<<<<< Updated upstream
-const ShowItems = async ({
-    searchParams,
-    category,
-  }: {
-    searchParams?: { [key: string]: string };
-    category?:string
-  }) => {
-     // await new Promise((resolve) => setTimeout(resolve, 3000));
-    console.log(searchParams);
-  
-    const { filtersByFeatures, filtersSort, filterByCategory } =
-      handleFilterSearchParams(searchParams);
-      console.log(filtersByFeatures);
-      console.log(filtersSort);
-      console.log(filterByCategory);
-    return (
-      // <Suspense  fallback={<SkeletonProductsCards />}>
-        <ProductCard products={products} />
-    //   </Suspense>
-     );
-  };
-  export default ShowItems
-  
-=======
-import { handleFilterSearchParams } from "@/lib/handleFiltersSearchparams";
+// import { handleFilterSearchParams } from "@/lib/HandleFiltersSearchparams";
+import { HandleFilterSearchParams } from "../ProductCard";
 import React, { Suspense } from "react";
 // import { ProductCard } from "../ProductCard";
-import { products } from '@/lib/products';
+import { products } from "@/lib/products";
 
 import prisma from "../../db";
 import * as z from "zod";
@@ -45,9 +20,68 @@ import * as z from "zod";
 // import { Skeleton } from "@/components/ui/skeleton";
 // import { Product } from "@prisma/client";
 // import { Review } from "@prisma/client";
- import { CardProduct } from "../ProductCard";
+import { CardProduct } from "../ProductCard";
 import { ToggleCartButton } from "../ProductCard";
 import { ToggleLikeButton } from "../ProductCard";
+import { unstable_noStore as noStore } from "next/cache"
+export type typeFiltersSort = {
+  price?: string;
+  rating?: string;
+  new?: string;
+};
+export type typeFilterByCategory = {
+  category?: string;
+};
+const getData = async ({
+  filtersByFeatures,
+  filtersSort,
+  filterByCategory,
+  querySearch,
+  category
+}: {
+  filtersByFeatures?: string[];
+  filtersSort?: typeFiltersSort;
+  filterByCategory?: typeFilterByCategory;
+  querySearch?: string;
+  category?:string
+}) => {
+  noStore()
+  const datas = await prisma.product.findMany({
+    where: {
+      name:
+        filtersByFeatures && filtersByFeatures?.length > 0
+          ? {
+              in: filtersByFeatures,
+              mode: "insensitive",
+            }
+          : undefined,
+
+      category: filterByCategory?.category
+        ? {
+            contains: filterByCategory.category,
+            mode: "insensitive",
+          }
+        : category
+        ? {
+            contains: category,
+            mode: "insensitive",
+          }
+        : undefined,
+    },
+   
+    include: {
+      reviews: true,
+    },
+    orderBy: {
+      price: filtersSort?.price
+        ? filtersSort.price === "asc"
+          ? "asc"
+          : "desc"
+        : undefined,
+    },
+  });
+  return datas
+};
 export const ShowItems = async ({
   searchParams,
   category,
@@ -57,83 +91,25 @@ export const ShowItems = async ({
 }) => {
   //await new Promise((resolve) => setTimeout(resolve, 3000));
   console.log(searchParams);
-  console.log(category)
+  console.log(category);
 
-  const { filtersByFeatures, filtersSort, filterByCategory,querySearch } =
-    handleFilterSearchParams(searchParams);
+  const { filtersByFeatures, filtersSort, filterByCategory, querySearch } =
+    HandleFilterSearchParams(searchParams);
 
-
-  console.log(Object.values(filtersByFeatures));
+  console.log(filtersByFeatures);
   console.log(filtersSort);
   console.log(filterByCategory);
-  let tabByFeatures = Object.values(filtersByFeatures);
-  // const products = await prisma.product.findMany({
-  //   include:{
-  //     reviews:true
-  //   }
-  // })
-  const products = await prisma.product.findMany({
-    where: {
-      // OR: [
-      //  {
-          name:
-            tabByFeatures.length > 0
-              ? {
-                  in: tabByFeatures,
-                  mode: "insensitive",
-                }
-              : undefined,
-     //   },
-     //   {
-          // description:
-          //   tabByFeatures.length > 0
-          //     ? {
-          //         in: tabByFeatures,
-          //         mode: "insensitive",
-          //       }
-          //     : undefined,
-     //   },
-      // ],
-      category: filterByCategory.category
-        ? {
-            contains: filterByCategory.category,
-            mode: "insensitive",
-          }
-        : category ? {
-          contains: category,
-          mode: "insensitive",
-        } : undefined,
-    },
-    // select: {
-    //   id: true,
-    //   name: true,
-    //   description: true,
-    //   price: true,
-    //   brand: true,
-    //   category: true,
-    //   status: true,
-    //   images: true,
-    //   reviews: true,
-    // },
-include:{
-  reviews:true
-},
-    orderBy: {
-      price: filtersSort.price
-        ? filtersSort.price === "asc"
-          ? "asc"
-          : "desc"
-        : undefined,
-      // reviews: {
-      //   _count: filtersSort.rating
-      //     ? filtersSort.rating === "asc"
-      //       ? "asc"
-      //       : "desc"
-      //     : undefined,
-      // },
-    },
+  console.log(querySearch);
+
+  const products = await getData({
+    filtersByFeatures,
+    filtersSort,
+    filterByCategory,
+    querySearch,
+    category
   });
-  console.log(products)
+
+  console.log(products);
   return (
     //  <ProductCard products={products} />
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-6">
@@ -146,5 +122,3 @@ include:{
     </div>
   );
 };
-;
->>>>>>> Stashed changes

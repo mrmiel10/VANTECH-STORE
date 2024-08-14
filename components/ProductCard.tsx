@@ -15,6 +15,9 @@ import { Product } from "@prisma/client";
 import { Review } from "@prisma/client";
 import { Rating } from "@mui/material";
 import { formatPrice } from "@/lib/formatPrice";
+import { filtersByCategories } from "@/lib/listFiltersProducts";
+
+import { sortFilters } from "@/lib/listFiltersProducts";
 // import { products } from "@/lib/products";
 export const CardProduct = (
   product: PropsWithChildren<Product & { reviews: Review[] }>
@@ -158,3 +161,83 @@ export const ParseImage = (images: any) => {
   );
   return safeImages;
 };
+export const HandleFilterSearchParams = (searchParams?: {
+  [key: string]: string;
+}) =>{
+ 
+    const [filtersByFeatures,setFiltersByFeatures] = useState<string[]>()
+    const [filtersSort,setFiltersSort] = useState< { price?:string,rating?:string,new?:string}>()
+   const [filterByCategory,setFilterByCategory] = useState<{category:string}>()
+   const otherParams = ["rating","price","new"]
+      const querySearch = searchParams?.query
+      for (const paramFilter in searchParams) {
+        if(!otherParams.includes(paramFilter)){
+        setFiltersByFeatures(prev =>{
+          if(prev) {
+            return [
+              ...prev,
+              searchParams[paramFilter]
+            ]
+          }
+         
+        })
+        
+        }
+        else{
+          const existingFilterSort = sortFilters.find(
+            (filter, index) =>
+              filter.name === paramFilter &&
+              filter.value === searchParams[paramFilter]
+          );
+          const existingFilterByCategory = filtersByCategories.find(
+            (filter, index) =>
+              filter.name === paramFilter &&
+              filter.value === searchParams[paramFilter]
+          );
+        
+      
+          if (existingFilterByCategory){
+            setFilterByCategory(prev => {
+             return {
+              ...prev,
+              category:existingFilterByCategory.value
+             }
+            })
+          }
+         
+           if(existingFilterSort){
+            setFiltersSort(prev=>{
+              let name:string = existingFilterSort.name
+              if(name === "price" ){
+                return {
+                  ...prev,
+                  price:existingFilterSort.value
+                }
+              }
+              else if(name === "rating" ) {
+                return {
+                  ...prev,
+                  rating:existingFilterSort.value
+                }
+              }
+              else 
+              return {
+                ...prev,
+                new:existingFilterSort.value
+            }
+             
+            })
+           }
+           
+        
+        }
+      
+      }
+    
+      return {
+       querySearch,
+        filtersByFeatures,
+        filtersSort,
+        filterByCategory,
+      };
+}

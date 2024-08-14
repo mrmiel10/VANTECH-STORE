@@ -2,6 +2,7 @@
 import React from 'react'
 import { FlipWords } from './animation/flipword';
 import { usePathname } from 'next/navigation';
+
 const FirstHeader = () => {
    
     const pathname = usePathname()

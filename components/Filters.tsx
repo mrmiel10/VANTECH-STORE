@@ -58,7 +58,7 @@ const Filters = () => {
       const params = new URLSearchParams(searchParams.toString());
 
       if (checked) {
-        params.set(nameVal, nameVal);
+        params.set(nameVal, nameVal);             
       } else {
         params.delete(nameVal, nameVal);
       }

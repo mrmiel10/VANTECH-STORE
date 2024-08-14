@@ -32,12 +32,9 @@
     "@radix-ui/react-tooltip": "^1.1.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
-<<<<<<< Updated upstream
-=======
     "embla-carousel-react": "^8.1.8",
     "firebase": "^10.12.5",
     "framer-motion": "^11.3.21",
->>>>>>> Stashed changes
     "lucide-react": "^0.408.0",
     "next": "14.2.5",
     "next-themes": "^0.3.0",

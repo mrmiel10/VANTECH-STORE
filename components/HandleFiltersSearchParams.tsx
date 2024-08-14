@@ -1,7 +1,7 @@
 "use client"
 import { filtersByCategories, sortFilters } from "./listFiltersProducts";
 
-export const HpandleFilterSearchParams = (searchParams?: {
+export const HandleFilterSearchParams = (searchParams?: {
     [key: string]: string;
   }) => {
     const filtersByFeatures: { [key: string]: string } = {};
