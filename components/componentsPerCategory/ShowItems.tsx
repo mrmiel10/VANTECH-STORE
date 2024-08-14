@@ -1,25 +1,11 @@
-// import { handleFilterSearchParams } from "@/lib/HandleFiltersSearchparams";
-import { HandleFilterSearchParams } from "../ProductCard";
+ import { HandleFilterSearchParams } from "../ProductCard";
 import React, { Suspense } from "react";
 // import { ProductCard } from "../ProductCard";
-import { products } from "@/lib/products";
+// import { products } from "@/lib/products";
 
 import prisma from "../../db";
 import * as z from "zod";
-// import { PropsWithChildren } from "react";
-// import Image from "next/image";
-// import { Heart, ShoppingCart } from "lucide-react";
-// import { Button } from "@/components/ui/button";
-// import { truncateText } from "@/lib/truncate";
-// import { useRouter } from "next/navigation";
-// import { productsType } from "@/lib/typeProducts";
-// import { useCartStore } from "@/lib/cart.store";
-// import { useState } from "react";
-// import { useShallow } from "zustand/react/shallow";
-// import clsx from "clsx";
-// import { Skeleton } from "@/components/ui/skeleton";
-// import { Product } from "@prisma/client";
-// import { Review } from "@prisma/client";
+//import { HandleFilterSearchParams } from "@/lib/HandleFilterSearchParams";
 import { CardProduct } from "../ProductCard";
 import { ToggleCartButton } from "../ProductCard";
 import { ToggleLikeButton } from "../ProductCard";

@@ -1,6 +1,6 @@
 "use client"
 import React from 'react'
-import { FlipWords } from './animation/flipword';
+import { FlipWords } from '../animations/flipwords';
 import { usePathname } from 'next/navigation';
 
 const FirstHeader = () => {

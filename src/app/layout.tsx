@@ -28,7 +28,7 @@ export default function RootLayout({
       <body className={inter.className}>
 
         <div className="flex flex-col min-h-screen max-w-screen-xl w-full p-3 mx-auto sm:p-5">
-          <Nav />
+          {/* <Nav /> */}
 
         {/* <div className="flex flex-col min-h-screen  w-full "> */}
           {/* // <Nav /> */}

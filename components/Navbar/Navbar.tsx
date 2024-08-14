@@ -23,7 +23,7 @@ import Image from "next/image";
 import SearchComponent from "../SearchComponent";
 import logo from "../public/vStore.png";
 import { UserNav } from "./UserNav";
-import MenuNavigation from "./MenuNavigation";
+
 import { allTabs } from "@/lib/navigation";
 import { ChevronDownIcon } from "lucide-react";
 import ButtonCartNav from "./ButtonCartNav";
@@ -37,7 +37,7 @@ export  function Navbar() {
     <header className="bg-background">
       <div className="container mx-auto px-8 py-3 gap-4 flex items-center justify-between">
         <div className="flex items-center gap-4 text-muted-foreground">
-          <MenuNavigation />
+        
           <Link href="#" className="flex items-center" prefetch={false}>
             {/* <div className="w-20 h-20  border-1 relative"> */}
             {/* <Image 
