@@ -1,10 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-<<<<<<< Updated upstream
-    experimental: {
-        missingSuspenseWithCSRBailout: false,
-      },
-=======
     // experimental: {
     //     missingSuspenseWithCSRBailout: false,
     //   },
@@ -61,7 +56,6 @@ const nextConfig = {
         ]
     }
     
->>>>>>> Stashed changes
 };
 
 export default nextConfig;
