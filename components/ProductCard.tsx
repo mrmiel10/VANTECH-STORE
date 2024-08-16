@@ -11,43 +11,54 @@ import { useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 import clsx from "clsx";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Product } from "@prisma/client";
+import { Prisma, Product } from "@prisma/client";
 import { Review } from "@prisma/client";
 import { Rating } from "@mui/material";
 import { formatPrice } from "@/lib/formatPrice";
 import { filtersByCategories } from "@/lib/listFiltersProducts";
 import { sortFilters } from "@/lib/listFiltersProducts";
+import { Card } from "@/components/ui/card";
 // import { products } from "@/lib/products";
 export const CardProduct = (
-  product: PropsWithChildren<Product & { reviews: Review[] }>
+  product?: PropsWithChildren<{
+    id?: String;
+    name?: string;
+    description?: string | null;
+    price?: number;
+    brand?: string;
+    category?: string;
+    status?: string
+    images?: Prisma.JsonValue;
+} | undefined & { reviews: Review[] }>
 ) => {
   const Router = useRouter();
+  if(!product === undefined) return null
 
   return (
     <div className="text-muted-foreground flex flex-col w-full shadow-md rounded-md overflow-hidden  cursor-pointer ">
       <div
-        onClick={() => Router.push(`/${product.id}/product`)}
+        onClick={() => Router.push(`/${product?.id}/product`)}
         className=" w-full relative aspect-square overflow-hidden h-52"
       >
         <Image
           fill
-          src={ParseImage(product.images)[0].image}
-          alt={product.description!}
+          src={ParseImage(product?.images)[0].image}
+          alt={product?.description!}
           className="object-contain"
         />
       </div>
       <div className="border-t grid grid-cols-1 flex-grow gap-y-4 min-h-5  bg-white text-sm p-4  ">
-        <p className="font-semibold text-blue-500">{product.name}</p>
+        <p className="font-semibold text-blue-500">{product?.name}</p>
         {/* <p className="font-semibold">{truncateText(product.name)}</p> */}
         {/* <p>{product.description}</p> */}
         <div className="flex  items-center w-full flex-col justify-end">
           <div className="flex flex-col w-full gap-2">
             <div className="flex items-center gap-1">
-              <p className="font-semibold"> {formatPrice(product.price)}</p>
+              <p className="font-semibold"> {formatPrice(product?.price)}</p>
               <Rating value={4.5} precision={0.5} readOnly size="small" />
             </div>
 
-            <div className="flex gap-2 ml-auto">{product.children}</div>
+            <div className="flex gap-2 ml-auto">{product?.children}</div>
           </div>
         </div>
       </div>
@@ -57,22 +68,22 @@ export const CardProduct = (
 export const ToggleCartButton = ({
   product,
 }: {
-  product: Product & { reviews: Review[] };
+  product?: Product & { reviews: Review[] };
 }) => {
   const [cartProduct, setCartProduct] = useState({
-    id:  Number(product.id),
-    name: product.name,
-    description: product.description,
-    brand: product.brand,
-    category: product.category,
+    id:  product?.id,
+    name: product?.name,
+    description: product?.description,
+    brand: product?.brand,
+    category: product?.category,
     quantity: 1,
-    image: ParseImage(product.images)[0].image,
-    price: product.price,
+    image: ParseImage(product?.images)[0].image,
+    price: product?.price,
   });
 
   const { isInCart, toggleCart } = useCartStore(
     useShallow((s) => ({
-      isInCart: s.cart.some((item) => item.id === cartProduct.id),
+      isInCart: s.cart.some((item) => item?.id === cartProduct.id),
       toggleCart: s.toggleCart,
     }))
   );
@@ -94,23 +105,23 @@ export const ToggleCartButton = ({
 export const ToggleLikeButton = ({
   product,
 }: {
-  product: Product & { reviews: Review[] };
+  product?: Product & { reviews: Review[] };
 }) => {
   // const favorites = useCartStore((s) => s.favorites)
   // const toggleFavorite = useCartStore((s) => s.toggleFavorite)
   const [cartProduct, setCartProduct] = useState({
-    id: Number(product.id),
-    name: product.name,
-    description: product.description,
-    brand: product.brand,
-    category: product.category,
+    id: product?.id,
+    name: product?.name,
+    description: product?.description,
+    brand: product?.brand,
+    category: product?.category,
     quantity: 1,
-    image: ParseImage(product.images)[0].image,
-    price: product.price,
+    image: ParseImage(product?.images)[0].image,
+    price: product?.price,
   });
   const { isFavorite, toggleFavorite } = useCartStore(
     useShallow((s) => ({
-      isFavorite: s.favorites.some((product) => product.id === cartProduct.id),
+      isFavorite: s.favorites.some((product) => product?.id === cartProduct.id),
       toggleFavorite: s.toggleFavorite,
     }))
   );
@@ -138,7 +149,7 @@ export const SkeletonProductsCards = () => {
 };
 export const SkeletonCard = () => {
   return (
-    <div className="flex flex-col w-full rounded-md overflow-hidden bg-slate-200">
+    <Card className="border-muted flex flex-col w-full rounded-md overflow-hidden bg-white">
       <Skeleton className="h-52   rounded-none" />
       <div className=" flex flex-col flex-grow gap-y-3 text-sm p-8 sm:p-4  ">
         <Skeleton className="h-5 w-full " />
@@ -151,7 +162,7 @@ export const SkeletonCard = () => {
           </div>
         </div>
       </div>
-    </div>
+    </Card>
   );
 };
 export const ParseImage = (images: any) => {
@@ -160,83 +171,6 @@ export const ParseImage = (images: any) => {
   );
   return safeImages;
 };
-export const HandleFilterSearchParams = (searchParams:any)=>{
-  const [filtersByFeatures,setFiltersByFeatures] = useState<string[]>()
-  const [filtersSort,setFiltersSort] = useState<{ price?:string,rating?:string,new?:string}>()
- const [filterByCategory,setFilterByCategory] = useState<{category:string}>()
- const otherParams = ["rating","price","new"]
-    const querySearch:string = searchParams?.query
-    for (const paramFilter in searchParams) {
-      if(!otherParams.includes(paramFilter)){
-      setFiltersByFeatures(prev =>{
-        if(prev) {
-          return [
-            ...prev,
-            searchParams[paramFilter]
-          ]
-        }
-       
-      })
-      
-      }
-      else{
-        const existingFilterSort = sortFilters.find(
-          (filter, index) =>
-            filter.name === paramFilter &&
-            filter.value === searchParams[paramFilter]
-        );
-        const existingFilterByCategory = filtersByCategories.find(
-          (filter, index) =>
-            filter.name === paramFilter &&
-            filter.value === searchParams[paramFilter]
-        );
-      
-    
-        if (existingFilterByCategory){
-          setFilterByCategory(prev => {
-           return {
-            ...prev,
-            category:existingFilterByCategory.value
-           }
-          })
-        }
-       
-         if(existingFilterSort){
-          setFiltersSort(prev=>{
-            let name:string = existingFilterSort.name
-            if(name === "price" ){
-              return {
-                ...prev,
-                price:existingFilterSort.value
-              }
-            }
-            else if(name === "rating" ) {
-              return {
-                ...prev,
-                rating:existingFilterSort.value
-              }
-            }
-            else 
-            return {
-              ...prev,
-              new:existingFilterSort.value
-          }
-           
-          })
-         }
-         
-      
-      }
-    
-    }
-  
-    return {
-     querySearch,
-      filtersByFeatures,
-      filtersSort,
-      filterByCategory,
-    };
-}
-export const ParseNombre = () =>{
+ const ParseNombre = () =>{
   return "dddd"
 }

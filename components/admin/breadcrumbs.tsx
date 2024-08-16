@@ -25,14 +25,14 @@ import { usePathname } from "next/navigation";
 export default function Breadcrumbs() {
   let breadcrumbs:{label:string,href:string,active?:boolean}[] = []
   const pathname = usePathname()
-  if(pathname === "/admin/dashboard/add-products") breadcrumbs = [...tabAddProductActive]
-  if(pathname === "/admin/dashboard/manage-products") breadcrumbs = [...tabManageProductActive]
+  if(pathname === "/admin/add-products") breadcrumbs = [...tabAddProductActive]
+  if(pathname === "/admin/manage-products") breadcrumbs = [...tabManageProductActive]
   return (
     <Breadcrumb className="">
       <BreadcrumbList className="text-sm">
         {breadcrumbs.map((breadcrumb, index) =>
           breadcrumb.active === true ? (
-            < >
+            <>
               <BreadcrumbItem key={breadcrumb.label}>
                 <BreadcrumbPage className="text-blue-500">
                   {breadcrumb.label}

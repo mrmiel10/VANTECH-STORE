@@ -2,7 +2,7 @@ export const filtersComputers = [
     {
       id: "RAM",
   
-      value: ["3G0", "4G0", "8G0"],
+      value: ["3Go", "4Go", "8Go"],
     },
   
     {
@@ -72,12 +72,12 @@ export const filtersAllCategories = [
     {
       id:"Ordinateurs de bureaux",
       name:"category",
-      value:"desktop"
+      value:"desktops"
     },
     {
       id:"Ordinateurs portables",
       name:"category",
-      value:"laptop"
+      value:"laptops"
     },
     {
       id:"Souris",

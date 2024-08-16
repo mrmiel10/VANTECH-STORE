@@ -33,8 +33,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import SelectImage from "../../../../../components/admin/SelectImage";
-import { formValidateProducts } from "../../../../../schemas/schema";
+import SelectImage from "../../../../components/admin/SelectImage";
+import { formValidateProducts } from "../../../../schemas/schema";
 import { toast } from "sonner";
 import firebaseApp from "@/lib/firebase";
 import {
@@ -53,9 +53,30 @@ export type uploadImageType = {
   image: string;
 };
 export const AddProductsForm = () => {
-  const imageItem = {
-    image: null,
-  };
+ 
+   const addImageToState = useCallback((value: imageType) => {
+    setImages((prev) => {
+      if (!prev) {
+        return [value];
+      }
+      if (prev.some((item) => item.image?.name === value.image?.name))
+        return [...prev];
+      return [...prev, value];
+    });
+  }, []);
+   const removeImageFromState = useCallback((value: imageType) => {
+    setImages((prev) => {
+      if (prev) {
+        const filteredImages = prev.filter(
+          (item) => String(item.image?.name) !== String(value.image?.name)
+        );
+
+        console.log(filteredImages);
+        return filteredImages;
+      }
+      return prev;
+    });
+  }, []);
 const Router = useRouter()
   const [isLoading, setIsLoading] = useState(false);
   const [images, setImages] = useState<imageType[] | null>(null);
@@ -97,29 +118,7 @@ const Router = useRouter()
       shouldTouch: true,
     });
   };
-  const addImageToState = useCallback((value: imageType) => {
-    setImages((prev) => {
-      if (!prev) {
-        return [value];
-      }
-      if (prev.some((item) => item.image?.name === value.image?.name))
-        return [...prev];
-      return [...prev, value];
-    });
-  }, []);
-  const removeImageFromState = useCallback((value: imageType) => {
-    setImages((prev) => {
-      if (prev) {
-        const filteredImages = prev.filter(
-          (item) => String(item.image?.name) !== String(value.image?.name)
-        );
 
-        console.log(filteredImages);
-        return filteredImages;
-      }
-      return prev;
-    });
-  }, []);
   async function onSubmit(values: z.infer<typeof formValidateProducts>) {
     setIsLoading(true);
     console.log(values);
@@ -203,6 +202,7 @@ console.log()
       const product = await addProducts(productData);
       toast.success("This product has been created");
       Router.refresh();
+      setIsProductCreated(true)
     } catch (error) {
       toast.error("Error creating product");
     } finally {
@@ -213,7 +213,7 @@ console.log()
     <>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 mb-4">
             <Button variant="outline" size="icon" className="h-7 w-7">
               <ChevronLeft className="h-4 w-4" />
               <span className="sr-only">Back</span>
@@ -263,6 +263,7 @@ console.log()
                               Name
                             </Label>
                             <Input
+                            
                               {...field}
                               id="name"
                               className="text-muted-foreground"
@@ -427,7 +428,7 @@ console.log()
               </Card>
             </div>
             <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
-              <Card x-chunk="dashboard-07-chunk-3">
+              <Card>
                 <CardHeader>
                   <CardTitle className="text-blue-500">
                     Product Status
@@ -494,7 +495,7 @@ console.log()
                   <div className="grid grid-cols-2 gap-6">
                     <SelectImage
                       className="h-44 col-span-2 "
-                      item={imageItem}
+                   
                       addImageToState={addImageToState}
                       removeImageFromState={removeImageFromState}
                       isProductCreated={isProductCreated}
@@ -502,7 +503,7 @@ console.log()
                     />
                     <SelectImage
                       className="h-28 "
-                      item={imageItem}
+                    
                       addImageToState={addImageToState}
                       removeImageFromState={removeImageFromState}
                       isProductCreated={isProductCreated}
@@ -510,7 +511,7 @@ console.log()
                     />
                     <SelectImage
                       className="h-28 "
-                      item={imageItem}
+                     
                       addImageToState={addImageToState}
                       removeImageFromState={removeImageFromState}
                       isProductCreated={isProductCreated}
@@ -518,7 +519,7 @@ console.log()
                     />
                     <SelectImage
                       className="h-44 col-span-2"
-                      item={imageItem}
+                     
                       addImageToState={addImageToState}
                       removeImageFromState={removeImageFromState}
                       isProductCreated={isProductCreated}
@@ -531,7 +532,7 @@ console.log()
                 </CardContent>
               </Card>
 
-              <Card x-chunk="dashboard-07-chunk-5">
+              {/* <Card x-chunk="dashboard-07-chunk-5">
                 <CardHeader>
                   <CardTitle>Archive Product</CardTitle>
                   <CardDescription>
@@ -544,14 +545,14 @@ console.log()
                     Archive Product
                   </Button>
                 </CardContent>
-              </Card>
+              </Card> */}
             </div>
-          </div>
-          <div className="flex items-center justify-centermd:hidden">
+          <div className="flex justify-center ml:auto md:hidden">
             {/* <Button variant="outline" size="sm">
               Discard
             </Button> */}
-            <Button size="sm">Add Product</Button>
+            <Button variant={"defaultBtn"} size="sm">Add Product</Button>
+          </div>
           </div>
         </form>
       </Form>

@@ -73,7 +73,7 @@ const ButtonCartNav = () => {
                 <div>
                   <p className="text-blue-500 font-bold">$ {product.price}</p>
                   <h3 className="text-md font-medium leading-none">
-                    {truncateText(product.name)}
+                    {truncateText(product.name!)}
                   </h3>
                 </div>
 
@@ -81,7 +81,7 @@ const ButtonCartNav = () => {
                   <Trash2Icon
                     className=" group-hover:text-blue-500 transition ease duration-150"
                     size={17}
-                    onClick={() => deleteProductInCart(product.id)}
+                    onClick={() => deleteProductInCart(product.id!)}
                   />
                 </Button>
               </div>

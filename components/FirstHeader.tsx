@@ -26,4 +26,4 @@ const FirstHeader = () => {
 }
 
 export default FirstHeader
-export const fakePathname = ["/order","/cart","/editprofil","/admin/dashboard/add-products","/admin/dashboard/manage-products"]
+export const fakePathname = ["/order","/cart","/editprofil","/admin/add-products","/admin/manage-products"]

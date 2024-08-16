@@ -8,11 +8,15 @@ import { Separator } from "@/components/ui/separator";
 import clsx from "clsx";
 import { Button } from "@/components/ui/button";
 import { fakePathname } from "./FirstHeader";
+import { usePathname } from "next/navigation";
+
 const WarrantyAndReturnInformation = [
   { id: "product warranty", href: "#" },
   { id: "return policy", href: "#" },
 ];
 export const Footer2 = () => {
+  const pathname  = usePathname()
+  if(pathname.startsWith("/admin")) return null
   // if(fakePathname.includes("/admin/dashboard/add-products")) return null
   
   const categoriesProducts = [...allTabs];

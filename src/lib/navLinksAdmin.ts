@@ -8,18 +8,18 @@ export const navLinksAdmin = [
     },
     {
       id: "orders",
-      href: ["/admin/dashboard/orders"],
+      href: ["/admin/orders"],
       Icon: ShoppingCart,
       badge:true
     },
     {
       id: "products",
-      href: ["/admin/dashboard/manage-products","/admin/dashboard/add-products"],
+      href: ["/admin/manage-products","/admin/add-products"],
       Icon: Package,
     },
     {
       id: "customers",
-      href: ["/admin/dasboard/customer"],
+      href: ["/admin/customer"],
       Icon: Users2,
     },
   ];

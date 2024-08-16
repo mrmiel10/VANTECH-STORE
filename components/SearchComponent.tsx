@@ -4,7 +4,8 @@ import React from 'react'
 import { SearchIcon } from "lucide-react";
 // import { useDebouncedCallback } from 'use-debounce';
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
-import { useQueryState } from 'nuqs';import clsx from 'clsx';
+import { useQueryState } from 'nuqs';
+import clsx from 'clsx';
 const SearchComponent = ({placeholder}:{placeholder:string}) => {
     const [query,setQuery] = useQueryState("query",{
         defaultValue:"",

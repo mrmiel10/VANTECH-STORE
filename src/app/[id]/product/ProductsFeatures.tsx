@@ -22,19 +22,19 @@ import { Rating } from "@mui/material";
 import { toast } from "sonner";
 import { Product } from "@prisma/client";
 import { Review } from "@prisma/client";
-import { ParseImage } from "../../../../components/ProductCard";
+import { ParseImages } from "../../../../components/admin/ProductsTable";
 const ProductsFeatures = ({ product }: { product: Product & {reviews:Review[]} }) => {
 // const ProductsFeatures = ({ product }: { product: productsType }) => {
-const productImages = ParseImage(product.images)
+const productImages = ParseImages(product.images)
   const [cartProduct, setCartProduct] = useState<CartProductType>({
-    id: Number(product.id),
+    id: product.id,
     name: product.name,
     description: product.description,
     brand: product.brand,
     category:product.category,
     quantity: 1,
     // image: product.image,
-    image: ParseImage(product.images)[0].image,
+    image: productImages,
     // selectedImg: ParseImage(product.images)[0].image,
     price: product.price,
   });
@@ -49,13 +49,23 @@ const productImages = ParseImage(product.images)
   const handleQtyIncrease = useCallback(() => {
     if (cartProduct.quantity === 99) return;
     setCartProduct((prev) => {
-      return { ...prev, quantity: ++prev.quantity };
+      if(prev && prev.quantity) {
+        return { ...prev, quantity: ++prev.quantity }
+      }
+        
+      
+      return prev
     });
   }, [cartProduct]);
   const handleQtyDecrease = useCallback(() => {
     if (cartProduct.quantity === 1) return;
     setCartProduct((prev) => {
-      return { ...prev, quantity: --prev.quantity };
+      if(prev && prev.quantity) {
+        return { ...prev, quantity: --prev.quantity }
+      }
+        
+      
+      return prev
     });
   }, [cartProduct]);
   const productRating =
@@ -68,17 +78,19 @@ const productImages = ParseImage(product.images)
         <div className="flex flex-col justify-end gap-4">
         
           {/* <div className="aspect-square w-full rounded-lg flex"> */}
-          <Image
-            src={cartProduct.image}
-            alt="Product Image"
-             width={600}
-             height={600}
-            className=" w-full rounded-lg object-contain"
-          />
+        
+              <Image
+              src={ productImages[0].image}
+              alt="Product Image"
+               width={600}
+               height={600}
+              className=" w-full rounded-lg object-contain"
+            />
+      
           {/* </div> */}
           <div className="border-2 border-muted-foreground rounded-lg h-20 max-h-20 flex justify-center items-center">
             {productImages.map((imageProduct,_)=>(
-              <div key={imageProduct.image} className="relative aspect-square w-10">
+              <div key={imageProduct.image} className="relative aspect-square w-20">
                 <Image src={imageProduct.image} alt="image-du-produit" fill className="object-contain " />
               </div>
             ))}
@@ -157,15 +169,18 @@ const productImages = ParseImage(product.images)
           <div className="grid gap-4">
             {isInCart ? (
               <div className="flex max-xs:flex-col gap-4">
-                <Button
+                {cartProduct?.id && (
+                  <Button
                   onClick={() => {
-                    deleteProductInCart(cartProduct.id);
+                    deleteProductInCart(product.id);
                   }}
                   className="max-sm:order-2 hover:text-blue-500 transition ease text-muted-foreground"
                   variant={"outline"}
                 >
-                  Retirer du panier panier
+                  Retirer du panier
                 </Button>
+                )}
+                
                 <Button variant={"defaultBtn"} asChild>
                   <Link href="/cart">Voir le panier</Link>
                 </Button>

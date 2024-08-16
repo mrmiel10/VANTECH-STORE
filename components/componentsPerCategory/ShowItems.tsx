@@ -1,15 +1,17 @@
- import { HandleFilterSearchParams } from "../ProductCard";
+
 import React, { Suspense } from "react";
 // import { ProductCard } from "../ProductCard";
 // import { products } from "@/lib/products";
-
+import { handleFilterSearchParams } from "@/lib/handleFilterSearchParams";
 import prisma from "../../db";
 import * as z from "zod";
-//import { HandleFilterSearchParams } from "@/lib/HandleFilterSearchParams";
 import { CardProduct } from "../ProductCard";
 import { ToggleCartButton } from "../ProductCard";
 import { ToggleLikeButton } from "../ProductCard";
-import { unstable_noStore as noStore } from "next/cache"
+import { unstable_noStore as noStore } from "next/cache";
+import { Product, Review } from "@prisma/client";
+import searchProduct from "../../public/searchProduct.png"
+import Image from "next/image";
 export type typeFiltersSort = {
   price?: string;
   rating?: string;
@@ -23,24 +25,22 @@ const getData = async ({
   filtersSort,
   filterByCategory,
   querySearch,
-  category
+  category,
 }: {
   filtersByFeatures?: string[];
   filtersSort?: typeFiltersSort;
   filterByCategory?: typeFilterByCategory;
   querySearch?: string;
-  category?:string
+  category?: string;
 }) => {
-  noStore()
-  const datas = await prisma.product.findMany({
+  noStore();
+  console.log(filtersByFeatures);
+  
+   const datas = await prisma.product.findMany({
     where: {
-      name:
-        filtersByFeatures && filtersByFeatures?.length > 0
-          ? {
-              in: filtersByFeatures,
-              mode: "insensitive",
-            }
-          : undefined,
+      name: querySearch
+        ? { contains: querySearch, mode: "insensitive" }
+        : undefined,
 
       category: filterByCategory?.category
         ? {
@@ -54,7 +54,7 @@ const getData = async ({
           }
         : undefined,
     },
-   
+
     include: {
       reviews: true,
     },
@@ -66,7 +66,23 @@ const getData = async ({
         : undefined,
     },
   });
-  return datas
+
+  if (filtersByFeatures && filtersByFeatures.length != 0) {
+    const dataFiltersByFeatures: (Product & { reviews: Review[] })[] = [];
+    datas.map((product, _) =>
+      product.name
+        .split(" ")
+        .map(
+          (stringProduct, _) =>
+            filtersByFeatures.includes(stringProduct) &&
+            dataFiltersByFeatures.push(product)
+        )
+    );
+
+    return dataFiltersByFeatures;
+  }
+
+  return datas;
 };
 export const ShowItems = async ({
   searchParams,
@@ -75,25 +91,27 @@ export const ShowItems = async ({
   searchParams?: { [key: string]: string };
   category?: string;
 }) => {
-  //await new Promise((resolve) => setTimeout(resolve, 3000));
+  await new Promise((resolve) => setTimeout(resolve, 10000));
   console.log(searchParams);
   console.log(category);
 
   const { filtersByFeatures, filtersSort, filterByCategory, querySearch } =
-    HandleFilterSearchParams(searchParams);
+    handleFilterSearchParams(searchParams);
 
-  console.log(filtersByFeatures);
+  console.log({ filtersByFeatures });
   console.log(filtersSort);
   console.log(filterByCategory);
   console.log(querySearch);
+  console.log(category);
 
   const products = await getData({
     filtersByFeatures,
     filtersSort,
     filterByCategory,
     querySearch,
-    category
+    category,
   });
+   if(!products || products.length === 0) return <NoProducts />
 
   console.log(products);
   return (
@@ -108,3 +126,11 @@ export const ShowItems = async ({
     </div>
   );
 };
+export const NoProducts = () => {
+  return (
+    <div className="size-full flex flex-col justify-center items-center gap-2">
+      <Image alt="imageNoProduct" src={searchProduct} className="size-40 object-contain aspect-square" />
+      <div>No products found!</div>
+    </div>
+  )
+}

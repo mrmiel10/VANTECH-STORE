@@ -15,7 +15,7 @@ import { AddRating } from "./AddRating";
 import { searchParamsCache } from "@/lib/nuqs";
 import ProductsFeatures from "./ProductsFeatures";
 interface IParams {
-  id: number;
+  id: string;
   
 }
 const PageProduct = async ({ params,searchParams }: { params: IParams,searchParams:Record<string, string | string[] | undefined>}) => {
@@ -27,7 +27,7 @@ const PageProduct = async ({ params,searchParams }: { params: IParams,searchPara
   //const product = products.find((item) => item.id === Number(params.id));
   const product = await prisma.product.findUnique({
     where:{
-      id:Number(params.id)
+      id:params.id
     },
     include:{
       reviews:true
@@ -48,25 +48,3 @@ const PageProduct = async ({ params,searchParams }: { params: IParams,searchPara
 
 export default PageProduct;
 
-const ProductImage = ({ cartProduct }: { cartProduct: CartProductType }) => {
-  return (
-    <div
-      className="
-    w-full
-  h-full
-  max-h-[400px]
-  min-h-[300px]
-  sm:min-h-[500px]
-  relative aspect-square"
-    >
-      <Image
-        fill
-        className="w-full
-               h-full
-                object-contain"
-        src={cartProduct.image}
-        alt={cartProduct.name}
-      />
-    </div>
-  );
-};

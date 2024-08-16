@@ -10,12 +10,12 @@ const DesktopProductsPage = ({
 }) => {
   return (
     <div>
-      <Suspense fallback={"loading"}>
+      {/* <Suspense fallback={"loading"}> */}
       <TitleProductsByCategories
         title="Nos ordinateurs de bureau"
         description="Découvrez notre collection d'ordinateurs de bureau"
       />
-      </Suspense>
+      {/* </Suspense> */}
       
       <Suspense fallback={<SkeletonProductsCards />}>
         <ShowItems searchParams={searchParams} category="desktops" />

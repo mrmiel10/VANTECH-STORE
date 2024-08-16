@@ -3,13 +3,13 @@ import clsx from "clsx";
 import { Upload } from "lucide-react";
 import Shoe from "../../public/blackShoe.jpg";
 import Image from "next/image";
-import { imageType } from "@/app/admin/dashboard/add-products/AddProductsForm";
+import { imageType } from "@/app/admin/add-products/AddProductsForm";
 import { useCallback, useEffect, useState } from "react";
 import { DropImage } from "./DropImage";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 interface SelectImageProps {
-  item: imageType;
+  
   addImageToState: (value: imageType) => void;
   removeImageFromState: (value: imageType) => void;
   isProductCreated: boolean;
@@ -17,7 +17,7 @@ interface SelectImageProps {
   images: imageType[] | null
 }
 const SelectImage: React.FC<SelectImageProps> = ({
-  item,
+
   addImageToState,
   removeImageFromState,
   isProductCreated,
@@ -27,8 +27,7 @@ const SelectImage: React.FC<SelectImageProps> = ({
   const [isSelected, setIsSelected] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  // console.log(typeof(file?.name))
-  // console.log(imagePreview)
+
    useEffect(() => {
     if (isProductCreated) {
       setIsSelected(false);
@@ -73,7 +72,7 @@ const SelectImage: React.FC<SelectImageProps> = ({
     )}
   >
    
-        <DropImage  item={item} handleFileChange={handleFileChange}  />
+        <DropImage  handleFileChange={handleFileChange}  />
  
   </div>
           )}

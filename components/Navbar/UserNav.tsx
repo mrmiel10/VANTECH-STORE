@@ -1,4 +1,3 @@
-"use client";
 import React from "react";
 import {
   DropdownMenu,
@@ -12,58 +11,67 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Heart, LogOut, ShoppingBag } from "lucide-react";
-
 import { LayoutDashboard } from "lucide-react";
-
 import { User } from "lucide-react";
 import CountFavorites from "./CountFavorites";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import {
   RegisterLink,
   LoginLink,
+  LogoutLink,
 } from "@kinde-oss/kinde-auth-nextjs/components";
-import DefaultUser from "../public/default-user.jpeg";
-export const UserNav = async () => {
-  const { getUser } = getKindeServerSession();
-  const user = await getUser();
-  const getInitials = (
-    firstName: string | null,
-    lastName: string | null
-  ): string => {
-    if (firstName === null && lastName === null) return "XO";
+import DefaultUser from "../../public/defaultUser.png";
+import Image from "next/image";
+import prisma from "../../db";
+import { redirect } from "next/navigation";
+import { getCurrentUser } from "@/lib/actions";
+export   const getInitials = (
+  firstName: string | null,
+  lastName: string | null,
+  email:string | null
+): string => {
+  if (firstName === null && lastName === null){
+    const emailInitial = email?.charAt(0).toUpperCase()
+    return `${emailInitial}`
+  } 
 
-    const firstInitial = firstName?.charAt(0).toUpperCase();
-    const lastInitial = lastName?.charAt(0).toUpperCase();
-    return `${firstInitial}${lastInitial}`;
-  };
+  const firstInitial = firstName?.charAt(0).toUpperCase();
+  const lastInitial = lastName?.charAt(0).toUpperCase();
+  return `${firstInitial}${lastInitial}`;
+};
+export const UserNav = async () => {
+ const user = await getCurrentUser()
+
+  console.log(user);
+
 
   return (
     <>
-      <p>ddddd</p>
-
       <DropdownMenu>
         <DropdownMenuTrigger>
           <div>
-          {user ? (
-            <Avatar>
-              <AvatarImage src={user?.picture as string} />
-              <AvatarFallback>
-                {getInitials(user.given_name, user.family_name)}
-              </AvatarFallback>
-            </Avatar>
-          ) : (
-            <Avatar>
-              <AvatarImage
-                src={
-                  "https://img.freepik.com/vecteurs-libre/jeune-homme-barbu_24877-82119.jpg?t=st=1723002802~exp=1723006402~hmac=245926a627ec25c84f62979a8893a3f49b740b68cbef5df5acbcc89a177c5c7c&w=740"
-                }
+            {user ? (
+              <Avatar>
+                <AvatarFallback>
+                  {getInitials(user.firstName, user.lastName,user.email)}
+                </AvatarFallback>
+                <AvatarImage
+                  alt="profile user"
+                  src={
+                    (user.picture as string) ??
+                    `https://api.dicebear.com/9.x/adventurer/svg?seed=Buster`
+                  }
+                />
+              </Avatar>
+            ) : (
+              
+              <Image
+                src={DefaultUser}
+                alt="defaultImageUser"
+                className="object-contain rounded-full size-10 border border-muted"
               />
-              <AvatarFallback>KO</AvatarFallback>
-            </Avatar>
-          )}
+            )}
           </div>
-          
-        
         </DropdownMenuTrigger>
         <DropdownMenuContent
           align="end"
@@ -71,27 +79,29 @@ export const UserNav = async () => {
         >
           {user ? (
             <>
-              <DropdownMenuItem className="focus:bg-transparent focus:text">
-                <div className="flex flex-col gap-2">
-                  <div>
-                    <p className="font-semibold text-blue-500">user407211</p>
-                    <p className="font-semibold text-blue-500">
-                      {user.family_name} {user.given_name}
-                    </p>
-                    <p className="text-muted-foreground">{user.email}</p>
-                  </div>
-
-                  <Button
-                    asChild
-                    variant={"defaultBtn"}
-                    className="self-start text-white bg-blue-500 border-none outline-none"
-                  >
-                    <Link href="/editprofil"> Edit profil</Link>
-                  </Button>
+              <DropdownMenuItem className="flex flex-col gap-2 focus:bg-transparent focus:text-blue-500 items-start">
+                <div className="flex flex-wrap">
+                  {user.firstName || user.lastName ? (
+                    <div className="font-semibold text-blue-500">
+                      {user.firstName} {user.lastName}
+                    </div>
+                  ) : (
+                    <div className="font-semibold text-blue-500">
+                    {user.username}
+                    </div>
+                  )}
                 </div>
+
+                <Button
+                  asChild
+                  variant={"defaultBtn"}
+                  className="self-start text-white bg-blue-500 border-none outline-none"
+                >
+                  <Link href="/editprofil"> Edit profil</Link>
+                </Button>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="focus:text-blue-500">
+              <DropdownMenuItem className="focus:text-blue-500" asChild>
                 <Link href="favourites" className="w-full">
                   <div className="flex items-center w-full">
                     <div className="flex items-center">
@@ -103,37 +113,39 @@ export const UserNav = async () => {
                   </div>
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem className="focus:text-blue-500">
+              <DropdownMenuItem className="focus:text-blue-500" asChild>
                 <Link href="/orders">
                   {" "}
                   <ShoppingBag className="size-4 mr-2 transition ease grduration-150 text-blue-500" />
                   My orders
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem className="focus:text-blue-500">
-                <Link href="/dashboard">
-                  {" "}
-                  <LayoutDashboard className="size-4 mr-2 transition ease grduration-150 text-blue-500" />
-                  Mon dashboard
-                </Link>
-              </DropdownMenuItem>
+              {user?.role === "ADMIN" && (
+                <DropdownMenuItem className="focus:text-blue-500" asChild>
+                  <Link href="/admin/dashboard">
+                    {" "}
+                    <LayoutDashboard className="size-4 mr-2 transition ease grduration-150 text-blue-500" />
+                    Mon dashboard
+                  </Link>
+                </DropdownMenuItem>
+              )}
 
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="focus:text-blue-500">
-                <LogOut className="size-4 mr-2 group-hover:transition group-hover:ease group-hover:duration-150 text-blue-500" />
-                Log out
+              <DropdownMenuItem className="focus:text-blue-500" asChild>
+                <LogoutLink>
+                  {" "}
+                  <LogOut className="size-4 mr-2 group-hover:transition group-hover:ease group-hover:duration-150 text-blue-500" />
+                  Log out
+                </LogoutLink>
               </DropdownMenuItem>
             </>
           ) : (
             <>
-              {/* <DropdownMenuItem className="focus:text-blue-500">
-                <LoginLink>Sign in</LoginLink>
+              <DropdownMenuItem className="focus:text-blue-500">
+                <LoginLink className="w-full">Sign in</LoginLink>
               </DropdownMenuItem>
               <DropdownMenuItem className="focus:text-blue-500">
-                <RegisterLink>Sign up</RegisterLink>
-              </DropdownMenuItem> */}
-             <DropdownMenuItem className="focus:text-blue-500">
-               ddddd
+                <RegisterLink className="w-full">Sign up</RegisterLink>
               </DropdownMenuItem>
             </>
           )}

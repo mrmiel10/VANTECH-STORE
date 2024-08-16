@@ -37,7 +37,7 @@ const ButtonFiltersCategories = () => {
   );
   const handleSetParamsSortFilters = useCallback(
     (name: string, value: string) => {
-      console.log(name, value);
+      // console.log(name, value);
 
       const params = new URLSearchParams(searchParams.toString());
       if (params.has(name, value)) {

@@ -9,7 +9,7 @@ const Status = ({status}:{
     "",
     status === "draft" ? "text-blue-500" : "text-white",
     
-   )} variant={status === "active" ? "active" : status === "archive" ? "archive" : "secondary"}>{status}</Badge>
+   )} variant={status === "published" ? "published" : status === "archive" ? "archive" : "secondary"}>{status}</Badge>
   )
 }
 

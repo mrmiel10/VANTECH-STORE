@@ -3,7 +3,7 @@ import { Upload } from 'lucide-react'
 import { useCallback } from 'react'
 import {useDropzone} from 'react-dropzone'
 import clsx from 'clsx'
-import { imageType } from '@/app/admin/dashboard/add-products/AddProductsForm'
+import { imageType } from '@/app/admin/add-products/AddProductsForm'
 import Image from 'next/image'
 import Shoe from "../../public/blackShoe.jpg";
 interface DropImageProps {

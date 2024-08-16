@@ -2,25 +2,29 @@ import { StaticImageData } from "next/image";
 import { create, useStore } from "zustand";
 import { persist } from "zustand/middleware";
 export type CartProductType = {
-    id: number;
-    name: string;
-    description: string | null;   
-    brand: string;
-    category:string,  
-    quantity:number
-    price: number;
-    image: string | StaticImageData
-}
+    id?: String;
+    name?: string;
+    description?: string | null;   
+    brand?: string;
+    category?:string,  
+    quantity?:number
+    price?: number;
+    image?: {
+        image: string;
+    }[]
+} 
   
 export type FavoriteProductType = {
-    id: number;
-    name: string;
-    description: string | null;   
-    brand: string;
-    category:string,    
-    price: number;
-    image: string | StaticImageData
-  };
+    id?: String;
+    name?: string;
+    description?: string | null;   
+    brand?: string;
+    category?:string,    
+    price?: number;
+    image?: {
+        image: string;
+    }[]
+  } ;
 type CartStoreType = {
     cart:CartProductType[],
     totalQty:number,
@@ -77,7 +81,7 @@ export const useCartStore = create(persist<CartStoreType>((set) =>(
                 const totalqty = cart.reduce((qty, item) =>
                 {
                                
-                    qty += item.quantity
+                    qty += item.quantity!
    
                     return qty
     
@@ -97,7 +101,7 @@ export const useCartStore = create(persist<CartStoreType>((set) =>(
                   
             const totalPrice = cart.reduce((total,item)=>
                 {
-                    const itemTotal = item.price * item.quantity
+                    const itemTotal = item.price! * item.quantity!
                     total +=itemTotal
                     return total 
                 },0)
@@ -115,7 +119,7 @@ export const useCartStore = create(persist<CartStoreType>((set) =>(
 }),{
     name:"cartStorage"
 }))
-export const deleteProductInCart = (id:number) => {
+export const deleteProductInCart = (id:string) => {
     const cart = useCartStore.getState().cart
     useCartStore.setState({
         cart:cart.filter((item) => item.id !== id )
@@ -127,7 +131,7 @@ export const deleteAllProductsInCart = () => {
         cart:[]
     })
 }
-export const deleteProductInFavorite = (id:number) => {
+export const deleteProductInFavorite = (id:string) => {
     const favorites = useCartStore.getState().favorites
     useCartStore.setState({
         favorites:favorites.filter((item) => item.id !== id )
@@ -143,7 +147,7 @@ export const handleQtyIncrease = (product:CartProductType)=> {
       
         const existingIndex = cart.findIndex((item) => item.id === product.id)
         if (existingIndex > -1 ){
-            updatedCart[existingIndex].quantity == ++updatedCart[existingIndex].quantity
+            updatedCart[existingIndex].quantity == ++updatedCart[existingIndex].quantity!
           
     }
     useCartStore.setState({
@@ -162,7 +166,7 @@ export const handleQtyDecrease = (product:CartProductType)=> {
       
         const existingIndex = cart.findIndex((item) => item.id === product.id)
         if (existingIndex > -1 ){
-            updatedCart[existingIndex].quantity == --updatedCart[existingIndex].quantity
+            updatedCart[existingIndex].quantity == --updatedCart[existingIndex].quantity!
           
     }
     useCartStore.setState({

@@ -7,10 +7,11 @@
 generator client {
   provider = "prisma-client-js"
 }
+
 // prisma/schema.prisma
 datasource db {
-  provider  = "postgresql"
-  url  	    ="postgresql://V-store_owner:GKU9jdIu5TRb@ep-shrill-waterfall-a5xbnzft-pooler.us-east-2.aws.neon.tech/V-store?sslmode=require"
+  provider = "postgresql"
+  url      = "postgresql://V-store_owner:GKU9jdIu5TRb@ep-shrill-waterfall-a5xbnzft-pooler.us-east-2.aws.neon.tech/V-store?sslmode=require"
   // uncomment next line if you use Prisma <5.10
   // directUrl = env("DATABASE_URL_UNPOOLED")
 }
@@ -19,7 +20,7 @@ datasource db {
 //   id String @unique
 //   image String
 //   product Product @relation(fields: [productId],references: [id])
-  
+
 //   productId Int
 // }
 // model Address {
@@ -44,56 +45,60 @@ datasource db {
 //   order Order @relation(fields:[orderId],references:[id])
 // }
 
-enum Role{
+enum Role {
   USER
   ADMIN
 }
+
 model User {
-  id       Int @id @default(autoincrement())
+  id        String   @id @default(uuid())
   kindeId   String   @unique
   email     String   @unique
+  username  String   @unique
   firstName String?
   lastName  String?
   picture   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  orders Order[]
-  role Role @default(USER)
-  reviews Review[]
-}
-model Review{
-  id Int @id @default(autoincrement())
-  userId Int
-  productId Int
-  rating Int
-  comment String
-  createdDate DateTime @default(now())
-  product Product @relation(fields: [productId], references: [id])
-  user User @relation(fields: [userId],references: [id])
-}
-model Order{
-  id Int @id @default(autoincrement())
-  userId Int
-  amount Float
-  currency String
-  status String
-  deliveryStatus String?
-  createdDate DateTime @default(now())
-  paymentIntentId String @unique
-  products Json
-  address Json
-  user User @relation(fields: [userId],references: [id],onDelete: Cascade)
+  orders    Order[]
+  role      Role     @default(USER)
+  reviews   Review[]
 }
 
+model Review {
+  id          String   @id @default(uuid())
+  userId      String
+  productId   String
+  rating      Int
+  comment     String
+  createdDate DateTime @default(now())
+  product     Product  @relation(fields: [productId], references: [id])
+  user        User     @relation(fields: [userId], references: [id])
+}
 
-model Product{
-  id Int  @id @default(autoincrement())
-  name String
+model Order {
+  id              String   @id @default(uuid())
+  userId          String
+  amount          Float
+  currency        String
+  status          String
+  deliveryStatus  String?
+  createdDate     DateTime @default(now())
+  paymentIntentId String   @unique
+  products        Json
+  address         Json
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Product {
+  id          String   @id @default(uuid())
+  name        String
   description String?
-  price Float
-  brand String
-  category String
-  status String
-  images Json
-  reviews Review[]
- }
+  price       Float
+  brand       String
+  category    String
+  status      String
+  images      Json
+  reviews     Review[]
+  quantity    Int
+}

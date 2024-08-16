@@ -1,10 +1,10 @@
-
+"use client"
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
 import { generatePagination } from '@/lib/generatePagination';
 import { usePathname, useSearchParams } from 'next/navigation';
 import React from 'react'
 
-const PaginationProductCart = ({totalPages}:{totalPages:number}) => {
+export const PaginationProduct = ({totalPages}:{totalPages:number}) => {
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const currentPage = Number(searchParams.get("page")) || 1;
@@ -68,4 +68,3 @@ const PaginationProductCart = ({totalPages}:{totalPages:number}) => {
   )
 }
 
-export default PaginationProductCart
