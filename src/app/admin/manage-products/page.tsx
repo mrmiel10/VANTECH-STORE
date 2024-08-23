@@ -103,7 +103,7 @@ export default function ManageProducts({
     </div>
   );
 }
-export const DisplayProductsAndPagination = async ({
+ const DisplayProductsAndPagination = async ({
   currentPage,
 }: {
   currentPage: number;
@@ -123,7 +123,7 @@ export const DisplayProductsAndPagination = async ({
     </>
   );
 };
-export const ShowingNumberProducts = async () => {
+ const ShowingNumberProducts = async () => {
   const searchProduct = searchParamsCache.get("search");
   const productStatus = searchParamsCache.get("status");
   const currentPage = searchParamsCache.get("page");
