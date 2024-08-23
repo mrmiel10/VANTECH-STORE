@@ -34,9 +34,7 @@ export const AddRating =({user,product}:{user:User & {orders:Order[]} , product:
     const userReview = product?.reviews.find((review:Review)=>{
         return review.userId === user.id 
     })
-    if(userReview || !deliveredOrder){
-        return null
-    }
+  
 const commentProduct = useServerAction(commentProductAction,{
   onSuccess:()=>{
     toast.success("your co")
@@ -70,6 +68,9 @@ const commentProduct = useServerAction(commentProductAction,{
     }
     await commentProduct.execute({...values,userId:user.id,productId:product.id})
   }
+  if(userReview || !deliveredOrder){
+    return null
+}
   return (
     <div className="grid gap-8">
       <div className="flex">

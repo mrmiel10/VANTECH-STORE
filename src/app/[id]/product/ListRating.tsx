@@ -69,7 +69,7 @@ export const ListRating = async ({ productId }: { productId: string }) => {
       <p>Vous avez sélectionnez {Number(filterRating)} étoiles</p>
       <div className="grid gap-6">
         {reviews.map((review, _) => (
-          <div className="flex gap-4">
+          <div key={review.id} className="flex gap-4">
             <Avatar className="w-10 h-10 border">
               <AvatarImage
                 alt="image-user"
