@@ -112,7 +112,7 @@ const PageCart =  ({
 }
 
 export default PageCart
-export const NoItems = () => {
+const NoItems = () => {
   return (
     <Alert className="p-6">
       <div className="flex sm:items-stretch max-sm:flex-col items-center">
