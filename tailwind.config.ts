@@ -20,6 +20,8 @@ const config = {
     extend: {
       screens:{
         xs:"384px",
+       "max-size-500":"500px",
+
        },
       fontFamily: {
         heading: ['var(--font-heading)', ...fontFamily.sans],

@@ -34,8 +34,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import SelectImage from "../../../../components/admin/SelectImage";
-import { formValidateProducts } from "../../../../schemas/schema";
+import SelectImage from "../../../../../components/admin/SelectImage";
+import { formValidateProducts } from "../../../../../schemas/schema";
 import { toast } from "sonner";
 import firebaseApp from "@/lib/firebase";
 import {
@@ -46,77 +46,79 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import { redirect, useRouter } from "next/navigation";
-import { deleteStorageImages, editProduct } from "@/lib/actions";
+import { deleteImagesProductAction, editProductAction } from "@/lib/actions";
 import {
   imageType,
   uploadImageType,
-} from "@/app/admin/add-products/AddProductsForm";
-import { ParseImages } from "../../../../components/admin/ProductsTable";
+} from "@/app/admin/add-products/AddProductsForme";
+import { ParseImages } from "../../../../../components/admin/ProductsTable";
 import { revalidatePath } from "next/cache";
+import { useServerAction } from "zsa-react";
+import { updateFileProgress } from "../../add-products/AddProductsForm";
+import { FileState } from "../../../../../components/MultiImageDropzone";
+import { useEdgeStore } from "@/lib/edgestore";
+import { UploadImageProduct } from "../../../../../components/UploadImageProduct";
 export const EditProductForm = ({
   product,
 }: {
-  product: Product & { reviews: Review[] };
+  product: Product
 }) => {
+  const router = useRouter();
   console.log(product);
-
-  const addImageToState = useCallback((value: imageType) => {
-    setImages((prev) => {
-      if (!prev) {
-        return [value];
-      }
-      if (prev.some((item) => item.image?.name === value.image?.name))
-        return [...prev];
-      return [...prev, value];
-    });
-  }, []);
-  const removeImageFromState = useCallback((value: imageType) => {
-    setImages((prev) => {
-      if (prev) {
-        const filteredImages = prev.filter(
-          (item) => String(item.image?.name) !== String(value.image?.name)
-        );
-
-        console.log(filteredImages);
-        return filteredImages;
-      }
-      return prev;
-    });
-  }, []);
-  const Router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
-  const [images, setImages] = useState<imageType[] | null>(null);
+  const [isUploadImage, setUploadImage] = React.useState(false);
+  const [fileStates, setFileStates] = useState<FileState[]>([]);
   const [isProductCreated, setIsProductCreated] = useState(false);
-  console.log(images);
+  const { edgestore } = useEdgeStore(); 
+  const editProduct = useServerAction(editProductAction, {
+    onSuccess: () => {
+      setIsProductCreated(true);
+      form.reset();
+      toast.success("the product has been updated sucessfully!");
+   
+      router.push("/admin/manage-products");
+      // Router.refresh();
+    },
+    onError: () => {
+      toast.error("error updating product!");
+    },
+  });
+  const deleteImagesProduct = useServerAction(deleteImagesProductAction, {
+    onSuccess: () => {
+      toast.success("Delete Images successfully!")
+    },
+    onError: () => {
+      toast.error("Not deleted images product")
+    },
+  });
+  const createImageFile = (files: FileState[]) => {
+    const imagesFile = files.map((i) => {
+      return { image: i.file.name };
+    });
+    setCustomValue("images", imagesFile);
+  };
+
   const form = useForm<z.infer<typeof formValidateProducts>>({
     resolver: zodResolver(formValidateProducts),
     defaultValues: {
-      name: undefined,
-      description: undefined,
-      brand: undefined,
-      category: undefined,
-      status: undefined,
+      name: product.name,
+      description: product.description ?? undefined,
+      brand: product.brand,
+      category: product.category,
+      status: product.status,
       images: [],
-      // price: undefined,
-      quantity: undefined,
+       price: product.price,
+      quantity: product.quantity,
     },
   });
 
   useEffect(() => {
-    if (!images) return;
-    const filenameImages = images?.map((item, _) => {
-      if (item.image) return item.image?.name;
-    });
-    setCustomValue("images", filenameImages);
-  }, [images]);
-
-  useEffect(() => {
     if (isProductCreated) {
       form.reset();
-      setImages(null);
+      setFileStates([]);
       setIsProductCreated(false);
     }
-  }, [form]);
+  }, [form, isProductCreated]);
+
   const setCustomValue = (id: any, value: any) => {
     form.setValue(id, value, {
       shouldValidate: true,
@@ -126,126 +128,82 @@ export const EditProductForm = ({
   };
 
   async function onSubmit(values: z.infer<typeof formValidateProducts>) {
-    setIsLoading(true);
+ setUploadImage(true)
     console.log(values);
 
     let uploadedImages: uploadImageType[] = [];
     console.log(uploadedImages);
-    if (!images) return;
-    const handleImageUploads = async () => {
-      toast("creating product,please wait...");
-      try {
-        for (const item of images) {
-          if (item.image) {
-            const filename = new Date().getTime() + "-" + item.image.name;
-
-            const storage = getStorage(firebaseApp);
-            const storageRef = ref(storage, `products/${filename}`);
-            const uploadTask = uploadBytesResumable(storageRef, item.image);
-            await new Promise<void>((resolve, reject) => {
-              uploadTask.on(
-                "state_changed",
-                (snapshot) => {
-                  // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-                  const progress =
-                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                  console.log("Upload is " + progress + "% done");
-                  switch (snapshot.state) {
-                    case "paused":
-                      console.log("Upload is paused");
-                      break;
-                    case "running":
-                      console.log("Upload is running");
-                      break;
-                  }
-                },
-                (error) => {
-                  console.log("Eror uploading image", error);
-                  return toast.error("Error handling image uploads");
-
-                  reject(error);
-                },
-                () => {
-                  {
-                    // Upload completed successfully, now we can get the download URL
-                    getDownloadURL(uploadTask.snapshot.ref)
-                      .then((downloadURL) => {
-                        uploadedImages.push({
-                          ...item,
-                          image: downloadURL,
-                        });
-                        console.log("File available at", downloadURL);
-                        resolve();
-                      })
-                      .catch((error) => {
-                        console.log("Error getting the download URL", error);
-                        return toast.error("Error handling image uploads");
-
-                        reject(error);
-                      });
-                  }
-                }
-              );
-            });
-          } else return null;
+    await Promise.all([
+      fileStates.map(async (fileState, index) => {
+        try {
+          if (
+            fileState.progress !== "PENDING"
+            // typeof values.images[index].image === "string"
+          ) {
+            return;
+          }
+          const res = await edgestore.publicFiles.upload({
+            file: fileState.file,
+            input:{type:"product"},
+            options: {},
+            onProgressChange: async (progress) => {
+              updateFileProgress(fileState.key, progress,setFileStates);
+              if (progress === 100) {
+                // wait 1 second to set it to complete
+                // so that the user can see the progress bar
+                await new Promise((resolve) => setTimeout(resolve, 1000));
+                updateFileProgress(fileState.key, "COMPLETE",setFileStates);
+              }
+            },
+          });
+          uploadedImages.push({
+            ...values.images[index],
+            image: res.url,
+          });
+          editProduct.execute({ ...values, images: uploadedImages,id:product.id})
+        } catch (err) {
+          updateFileProgress(fileState.key, "ERROR",setFileStates);
+        } finally {
+          setUploadImage(false);
         }
-      } catch (error) {
-        console.log("Error handling image uploads", error);
-        toast.error("Error handling image uploadse");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    await handleImageUploads();
+      }),
 
-    const productData = { ...values, images: uploadedImages };
-    console.log(productData);
-    console.log(uploadedImages);
-    try {
-      await Promise.all([
-        editProduct(productData, product.id),
-        deleteStorageImages(ParseImages(product.images)),
-      ]);
-
-      //await editProduct(productData,product.id);
-      toast.success("The product has been updated successfully");
-      setIsProductCreated(true);
-      revalidatePath("/admin/manage-products");
-      redirect("/admin/manage-products");
-      // Router.refresh();
-    } catch (error) {
-      toast.error("Error updating product!");
-    } finally {
-      setIsLoading(false);
-    }
+     // console.log(uploadedImages),
+   
+       deleteImagesProduct.execute(ParseImages(product.images)),
+    
+    ]);
+ 
   }
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="flex items-center gap-4 mb-4">
-          <Button variant="outline" size="icon" className="h-7 w-7">
+          <Button onClick={()=>router.push("/admin/manage-products")} variant="outline" size="icon" className="h-7 w-7">
             <ChevronLeft className="h-4 w-4" />
             <span className="sr-only">Back</span>
           </Button>
           <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0 text-blue-500">
             Edit Product
           </h1>
-          {/* <Badge variant="outline" className="ml-auto sm:ml-0">
-      In stock
-    </Badge> */}
+
           <div className="hidden items-center gap-2 md:ml-auto md:flex">
             <Button variant="outline" size="sm">
               Discard
             </Button>
-            {isLoading ? (
-              <Button variant={"defaultBtn"} size="sm">
-                <Loader2 className="animate-spin" />
+      
+              <Button
+                disabled={editProduct.isPending || deleteImagesProduct.isPending || isUploadImage}
+                variant={"defaultBtn"}
+                size="sm"
+              >
+                {editProduct.isPending || deleteImagesProduct.isPending || isUploadImage ? (
+                  <Loader2 className="size-5 animate-spin" />
+                ) : (
+                  "Edit product"
+                )}
               </Button>
-            ) : (
-              <Button variant={"defaultBtn"} size="sm">
-                Edit Product
-              </Button>
-            )}
+        
           </div>
         </div>
         <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
@@ -269,7 +227,7 @@ export const EditProductForm = ({
                             Name
                           </Label>
                           <Input
-                            defaultValue={product.name}
+                         
                             {...field}
                             id="name"
                             className="text-muted-foreground"
@@ -292,7 +250,7 @@ export const EditProductForm = ({
                             Description
                           </Label>
                           <Textarea
-                            defaultValue={product.description ?? ""}
+                            
                             {...field}
                             id="description"
                             className="min-h-32 text-muted-foreground"
@@ -305,7 +263,7 @@ export const EditProductForm = ({
                 </div>
               </CardContent>
             </Card>
-            <Card x-chunk="dashboard-07-chunk-1">
+            <Card>
               <CardHeader>
                 <CardTitle className="text-blue-500">Stock</CardTitle>
                 <CardDescription>
@@ -324,12 +282,12 @@ export const EditProductForm = ({
                             Brand
                           </Label>
                           <Input
-                            defaultValue={product.brand}
+                          
                             {...field}
                             id="brand"
                             type="text"
                             name="brand"
-                            className="w-full text-muted-foreground "
+                            className="w-full text-muted-foreground"
                           />
                         </div>
                         <FormMessage />
@@ -346,7 +304,7 @@ export const EditProductForm = ({
                             Quantity
                           </Label>
                           <Input
-                            // defaultValue={String(product.quantity)}
+                           
                             {...field}
                             id="quantity"
                             type="text"
@@ -369,7 +327,7 @@ export const EditProductForm = ({
                             Price
                           </Label>
                           <Input
-                            defaultValue={product.price}
+                           
                             {...field}
                             id="price"
                             type="text"
@@ -383,14 +341,9 @@ export const EditProductForm = ({
                   />
                 </div>
               </CardContent>
-              {/* <CardFooter className="justify-center border-t p-4">
-          <Button size="sm" variant="ghost" className="gap-1">
-            <PlusCircle className="h-3.5 w-3.5" />
-            Add Variant
-          </Button>
-        </CardFooter> */}
+            
             </Card>
-            <Card x-chunk="chunk-2">
+            <Card >
               <CardHeader>
                 <CardTitle className="text-blue-500">
                   Product Category
@@ -400,6 +353,7 @@ export const EditProductForm = ({
                 <FormField
                   control={form.control}
                   name="category"
+                  defaultValue={product.category}
                   render={({ field }) => (
                     <FormItem>
                       <div className="grid gap-3">
@@ -407,8 +361,9 @@ export const EditProductForm = ({
                           Category
                         </Label>
                         <Select
+                        defaultValue={product.category}
                           onValueChange={field.onChange}
-                          defaultValue={product.category}
+                        
                         >
                           <SelectTrigger
                             id="category"
@@ -450,8 +405,9 @@ export const EditProductForm = ({
                             Status
                           </Label>
                           <Select
+                              defaultValue={product.status}
                             onValueChange={field.onChange}
-                            defaultValue={product.status}
+                           
                           >
                             <SelectTrigger
                               id="status"
@@ -467,10 +423,10 @@ export const EditProductForm = ({
                                 Draft
                               </SelectItem>
                               <SelectItem className="" value="published">
-                                Active
+                              Published
                               </SelectItem>
-                              <SelectItem className="" value="archived">
-                                Archived
+                              <SelectItem className="" value="archive">
+                                Archive
                               </SelectItem>
                             </SelectContent>
                           </Select>
@@ -488,65 +444,24 @@ export const EditProductForm = ({
                 <CardDescription>select images for the product</CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-sm mb-2 text-destructive font-medium">
-                  {form.formState.errors["images"] &&
-                    form.formState.errors["images"].message}
-                </p>
-                <div className="grid grid-cols-2 gap-6">
-                  <SelectImage
-                    className="h-44 col-span-2 "
-                    addImageToState={addImageToState}
-                    removeImageFromState={removeImageFromState}
-                    isProductCreated={isProductCreated}
-                    images={images}
-                  />
-                  <SelectImage
-                    className="h-28 "
-                    addImageToState={addImageToState}
-                    removeImageFromState={removeImageFromState}
-                    isProductCreated={isProductCreated}
-                    images={images}
-                  />
-                  <SelectImage
-                    className="h-28 "
-                    addImageToState={addImageToState}
-                    removeImageFromState={removeImageFromState}
-                    isProductCreated={isProductCreated}
-                    images={images}
-                  />
-                  <SelectImage
-                    className="h-44 col-span-2"
-                    addImageToState={addImageToState}
-                    removeImageFromState={removeImageFromState}
-                    isProductCreated={isProductCreated}
-                    images={images}
-                  />
-                  {/* <div className=" h-28 w-full rounded-lg col-span-2 flex justify-center items-center border-dashed border-muted-foreground text-sm text-blue-500 border cursor-pointer hover:bg-muted">
-          <Upload />
-        </div> */}
-                </div>
+              <p className="text-sm mb-2 text-destructive font-medium">
+                    {form.formState.errors["images"] &&
+                      form.formState.errors["images"].message}
+                               </p>
+                  <div>
+                    <UploadImageProduct
+                      fileStates={fileStates}
+                      createImageFile={createImageFile}
+                      setFileStates={setFileStates}
+                    />
+                  </div>
+            
               </CardContent>
             </Card>
 
-            {/* <Card x-chunk="dashboard-07-chunk-5">
-                <CardHeader>
-                  <CardTitle>Archive Product</CardTitle>
-                  <CardDescription>
-                    Lipsum dolor sit amet, consectetur adipiscing elit.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div></div>
-                  <Button size="sm" variant="secondary">
-                    Archive Product
-                  </Button>
-                </CardContent>
-              </Card> */}
           </div>
           <div className="flex justify-center ml:auto md:hidden">
-            {/* <Button variant="outline" size="sm">
-              Discard
-            </Button> */}
+           
             <Button variant={"defaultBtn"} size="sm">
               Add Product
             </Button>

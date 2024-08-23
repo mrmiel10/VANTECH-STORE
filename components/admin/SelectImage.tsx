@@ -3,7 +3,7 @@ import clsx from "clsx";
 import { Upload } from "lucide-react";
 import Shoe from "../../public/blackShoe.jpg";
 import Image from "next/image";
-import { imageType } from "@/app/admin/add-products/AddProductsForm";
+import { imageType } from "@/app/admin/add-products/AddProductsForme";
 import { useCallback, useEffect, useState } from "react";
 import { DropImage } from "./DropImage";
 import { Button } from "@/components/ui/button";

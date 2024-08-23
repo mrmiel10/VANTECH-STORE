@@ -12,6 +12,7 @@ import { unstable_noStore as noStore } from "next/cache";
 import { Product, Review } from "@prisma/client";
 import searchProduct from "../../public/searchProduct.png"
 import Image from "next/image";
+
 export type typeFiltersSort = {
   price?: string;
   rating?: string;
@@ -33,6 +34,7 @@ const getData = async ({
   querySearch?: string;
   category?: string;
 }) => {
+
   noStore();
   console.log(filtersByFeatures);
   
@@ -66,7 +68,7 @@ const getData = async ({
         : undefined,
     },
   });
-
+ 
   if (filtersByFeatures && filtersByFeatures.length != 0) {
     const dataFiltersByFeatures: (Product & { reviews: Review[] })[] = [];
     datas.map((product, _) =>
@@ -91,7 +93,7 @@ export const ShowItems = async ({
   searchParams?: { [key: string]: string };
   category?: string;
 }) => {
-  await new Promise((resolve) => setTimeout(resolve, 10000));
+  //await new Promise((resolve) => setTimeout(resolve, 10000));
   console.log(searchParams);
   console.log(category);
 
@@ -129,7 +131,7 @@ export const ShowItems = async ({
 export const NoProducts = () => {
   return (
     <div className="size-full flex flex-col justify-center items-center gap-2">
-      <Image alt="imageNoProduct" src={searchProduct} className="size-40 object-contain aspect-square" />
+      <Image alt="imageNoProduct" src={searchProduct} className="size-60 object-contain aspect-square" />
       <div>No products found!</div>
     </div>
   )

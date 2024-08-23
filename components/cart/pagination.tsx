@@ -4,7 +4,7 @@ import { generatePagination } from '@/lib/generatePagination';
 import { usePathname, useSearchParams } from 'next/navigation';
 import React from 'react'
 
-export const PaginationProduct = ({totalPages}:{totalPages:number}) => {
+export const PaginationProductCart = ({totalPages}:{totalPages:number}) => {
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const currentPage = Number(searchParams.get("page")) || 1;

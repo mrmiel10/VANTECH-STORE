@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import { MoreHorizontal, PlusCircle } from "lucide-react";
 
@@ -31,24 +32,11 @@ import Image from "next/image";
 
 import { formatPrice } from "@/lib/formatPrice";
 import * as z from "zod";
-
-import prisma from "../../db";
-import {
-  deleteProduct,
-  deleteStorageImages,
-  editProduct,
-  handleSetStatusProduct,
-} from "@/lib/actions";
-
-import { revalidatePath } from "next/cache";
-
 import { Product, Review } from "@prisma/client";
-import { MapStatus } from "./ProductsTable";
 import { ParseImages } from "./ProductsTable";
 import { EditProductButton } from "../SubmitButtons";
-import clsx from "clsx";
-import { allTabs } from "@/lib/navigation";
-import { toast } from "sonner";
+import { HandleSetStatusProduct } from "./HandleSetStatusProduct";
+import { DeleteProductBtn } from "../SubmitButtons";
 export const ProductsTableAdmin = ({
   products,
 }: {
@@ -80,10 +68,10 @@ export const ProductsTableAdmin = ({
       <TableBody>
         {products.map((product, i) => (
           <TableRow key={product.id}>
-            <TableCell className="">
+            <TableCell className="flex-shrink-0">
               <Image
                 alt="Product image"
-                className="aspect-square rounded-md object-cover"
+                className="aspect-square rounded-md object-contain flex-shrink-0"
                 height="64"
                 src={ParseImages(product.images)[0].image}
                 width="64"
@@ -128,39 +116,10 @@ export const ProductsTableAdmin = ({
                     Set product Status
                   </DropdownMenuLabel>
                   {/* <DropdownMenuSeparator /> */}
-                  {MapStatus.map((status, _) => (
-                    <DropdownMenuItem
-                      key={"status"}
-                      className={clsx("focus:text-blue-500 cursor-pointer", {
-                        "bg-muted-foreground text-blue-500 pointer-events-none":
-                          product.status === status,
-                      })}
-                    >
-                      <form
-                        // action={createProduct}
-                        action={async (formData) => {
-                          // "use server";
-                          try {
-                            await handleSetStatusProduct(formData);
-                            revalidatePath("admin/dashboard/manage-products");
-                            toast.success(" updated!");
-                          } catch (error) {
-                            toast.error("error updated!");
-                          }
-                        }}
-                      >
-                        <input type="hidden" name="status" value={status} />
-                        <input
-                          type="hidden"
-                          name="productId"
-                          value={product.id}
-                        />
-                        <Button type="submit">
-                          {status[0].toUpperCase() + status.slice(1)}
-                        </Button>
-                      </form>
-                    </DropdownMenuItem>
-                  ))}
+                  <HandleSetStatusProduct
+                    status={product.status}
+                    productId={product.id}
+                  />
                 </DropdownMenuContent>
               </DropdownMenu>
             </TableCell>
@@ -169,32 +128,10 @@ export const ProductsTableAdmin = ({
               <div className="flex gap-2">
                 {" "}
                 <EditProductButton productId={product.id} />
-                {/* <Button
-                onClick={()=>{router.push(`/${product.id}/editProduct`)}}
-                  className="text-muted-foreground hover:bg-blue-500 hover:text-white rounded-full p-2"
-                  variant={"outline"}
-                >
-                  <Pencil className="size-5" />
-                </Button> */}
-                <Button
-                  onClick={async () => {
-                    try {
-                      await Promise.all([
-                        deleteProduct(product.id),
-                        deleteStorageImages(ParseImages(product.images)),
-                      ]);
-                      revalidatePath("/admin/manage-products");
-                      toast.success(" delete product!");
-                    } catch (error) {
-                      toast.error("Error deleting product!");
-                    }
-                  }}
-                  className="text-muted-foreground hover:bg-blue-500 hover:text-white rounded-full p-2"
-                  variant={"outline"}
-                >
-                  {" "}
-                  <TrashIcon className="size-5" />
-                </Button>
+                <DeleteProductBtn
+                  images={ParseImages(product.images)}
+                  id={product.id}
+                />
               </div>
             </TableCell>
           </TableRow>

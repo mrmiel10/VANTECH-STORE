@@ -75,7 +75,7 @@ const productImages = ParseImages(product.images)
   return (
     <div>
       <main className="container mx-auto grid grid-cols-1 gap-8 px-4 py-8 sm:grid-cols-2 sm:gap-10 md:px-6 lg:max-w-7xl">
-        <div className="flex flex-col justify-end gap-4">
+        <div className="flex flex-col  gap-4">
         
           {/* <div className="aspect-square w-full rounded-lg flex"> */}
         
@@ -88,11 +88,14 @@ const productImages = ParseImages(product.images)
             />
       
           {/* </div> */}
-          <div className="border-2 border-muted-foreground rounded-lg h-20 max-h-20 flex justify-center items-center">
+          <div className="border-2 border-slate-300 rounded-lg h-16 max-h-20 flex justify-center items-center">
             {productImages.map((imageProduct,_)=>(
-              <div key={imageProduct.image} className="relative aspect-square w-20">
+              <div key={imageProduct.image} className="cursor-pointer border p-1 rounded-md ">
+                 <div  className="p-4 relative aspect-square h-10 w-10 rounded-md">
                 <Image src={imageProduct.image} alt="image-du-produit" fill className="object-contain " />
               </div>
+              </div>
+             
             ))}
           </div>
          

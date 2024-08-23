@@ -7,7 +7,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-export const CardTotalOrders = async() => {
+import { formatPrice } from '@/lib/formatPrice';
+export const CardAllOrders = async() => {
   return (
     <Card >
     <CardHeader className="pb-3">
@@ -21,30 +22,92 @@ export const CardTotalOrders = async() => {
     </CardHeader>
     <CardFooter>
       <div className="grid grid-cols-2 gap-8 text-muted-foreground text-sm">
-        <Card className="px-2 py-1 text-muted-foreground ">
+      <Card className="px-2 py-1 text-muted-foreground grid grid-cols-1 border-muted w-full h-full gap-2">
           {" "}
-          <div className="grid grid-cols-1">
+         
             <div> 50 unpaid orders </div>
 
-            <div className="font-semibold text-blue-500 text-xs">
-              $122,99
+            <div className="font-semibold text-blue-500 text-xs self-end">
+             {formatPrice(1227514)} 
             </div>
-          </div>
+        
         </Card>
 
-        <Card>
+        <Card className="px-2 py-1 text-muted-foreground grid grid-cols-1 border-muted w-full h-full gap-2">
           {" "}
-          <div className="grid grid-cols-1">
-            <div> 50 unpaid orders </div>
+         
+            <div> 50 paid orders </div>
 
-            <div className="font-semibold text-blue-500 text-xs">
-              $122,99
+            <div className="font-semibold text-blue-500 text-xs self-end">
+             {formatPrice(1227514)} 
             </div>
-          </div>
+        
         </Card>
       </div>
     </CardFooter>
   </Card>
   )
 }
+export const CardWeekOrders = ()=>{
+  return (
+    <Card>
+    <CardHeader className="pb-2">
+      <CardDescription>This Week</CardDescription>
+      <CardTitle className="text-4xl text-blue-500">$1,329</CardTitle>
+    </CardHeader>
+  
+    <CardFooter>
+      <div className="grid grid-cols-2 gap-1 text-muted-foreground text-sm">
+        <div className="grid grid-cols-1">
+          <div> 50 unpaid orders </div>
 
+          <div className="font-semibold text-blue-500 text-xs">
+            $122,99
+          </div>
+        </div>
+        <div className="grid grid-cols-1">
+          50 paid orders{" "}
+          <span className="font-semibold text-blue-500 text-xs">
+            $122,99
+          </span>
+        </div>
+      </div>
+    </CardFooter>
+  </Card>
+  )
+}
+export const CardMonthOrders = () =>{
+  return (
+    <Card >
+    <CardHeader className="pb-2">
+      <CardDescription>This Month</CardDescription>
+      <CardTitle className="text-4xl text-blue-500">$5,329</CardTitle>
+    </CardHeader>
+    {/* <CardContent>
+          <div className="text-xs text-muted-foreground">
+            +10% from last month
+          </div>
+        </CardContent>
+        <CardFooter>
+          <Progress value={12} aria-label="12% increase" />
+        </CardFooter> */}
+    <CardFooter>
+      <div className="grid grid-cols-2 gap-1 text-muted-foreground text-sm">
+        <div className="grid grid-cols-1">
+          <div> 50 unpaid orders </div>
+
+          <div className="font-semibold text-blue-500 text-xs">
+            $122,99
+          </div>
+        </div>
+        <div className="grid grid-cols-1">
+          50 paid orders{" "}
+          <span className="font-semibold text-blue-500 text-xs">
+            $122,99
+          </span>
+        </div>
+      </div>
+    </CardFooter>
+  </Card>
+  )
+}

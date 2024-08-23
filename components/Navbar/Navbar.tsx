@@ -19,13 +19,11 @@ import { allTabs } from "@/lib/navigation";
 import { ChevronDownIcon } from "lucide-react";
 import ButtonCartNav from "./ButtonCartNav";
 import clsx from "clsx";
-
 import { MenuNavigation } from "../MenuNavigationUser";
-import { fakePathname } from "../FirstHeader";
 import { PropsWithChildren } from "react";
 import { usePathname } from "next/navigation";
 export function Navbar(props:PropsWithChildren) {
-// console.log(window.location.href)
+
 const navigationAllTabs = allTabs;
 const pathname  = usePathname()
 if(pathname.startsWith("/admin")) return null

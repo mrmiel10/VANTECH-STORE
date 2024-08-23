@@ -11,7 +11,7 @@ generator client {
 // prisma/schema.prisma
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://V-store_owner:GKU9jdIu5TRb@ep-shrill-waterfall-a5xbnzft-pooler.us-east-2.aws.neon.tech/V-store?sslmode=require"
+  url      = env("DATABASE_URL")
   // uncomment next line if you use Prisma <5.10
   // directUrl = env("DATABASE_URL_UNPOOLED")
 }
@@ -58,6 +58,7 @@ model User {
   firstName String?
   lastName  String?
   picture   String
+  bio       String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   orders    Order[]

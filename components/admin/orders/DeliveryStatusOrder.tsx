@@ -5,12 +5,14 @@ import { Check } from 'lucide-react'
 import { Clock } from 'lucide-react'
 import { LucideCircleX } from 'lucide-react'
 import { TruckIcon } from 'lucide-react'
-export const DeliveryStatusOrder = ({status}:{
-    status:string
+export const DeliveryStatusOrder = ({status,className}:{
+    status:string,
+    className?:string
 }) => {
   return (
     <Badge className={clsx(
         "text-xs pointer-events-none ",
+        className,
       {"bg-green-500" : status.toLowerCase() === "delivered"},
       {"bg-gray-300" : status.toLowerCase() === "pending"},
       {"bg-muted-foreground" : status.toLowerCase() === "cancelled"},

@@ -1,3 +1,4 @@
+"use client"
 import React from 'react'
 import { Button } from "@/components/ui/button";
 
@@ -11,7 +12,32 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ListFilter } from 'lucide-react';
+import { MapStatus } from './ProductsTable';
+import { CheckedState } from "@radix-ui/react-checkbox";
+import { useSearchParams } from 'next/navigation';
+import { useCallback } from 'react';
+import { useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
+import clsx from 'clsx';
 const FilterStatusProducts = () => {
+  const searchParams = useSearchParams()
+  const {replace} = useRouter();
+
+  const pathname = usePathname();
+  
+  const handleFilterChange = useCallback(
+    (status: string, checked: CheckedState) => {
+      const params = new URLSearchParams(searchParams.toString());
+
+      if (checked) {
+        params.set("status", status);             
+      } else {
+        params.delete("status", status);
+      }
+      replace(`${pathname}?${params.toString()}`)
+    },
+    [searchParams, pathname, replace]
+  );
   return (
     <DropdownMenu>
     <DropdownMenuTrigger asChild>
@@ -23,15 +49,22 @@ const FilterStatusProducts = () => {
       </Button>
     </DropdownMenuTrigger>
     <DropdownMenuContent align="end">
-      <DropdownMenuLabel>Filter by</DropdownMenuLabel>
+      <DropdownMenuLabel className='text-blue-500'>Filter by</DropdownMenuLabel>
       <DropdownMenuSeparator />
-      <DropdownMenuCheckboxItem checked>
-        Active
-      </DropdownMenuCheckboxItem>
-      <DropdownMenuCheckboxItem>Draft</DropdownMenuCheckboxItem>
-      <DropdownMenuCheckboxItem>
-        Archived
-      </DropdownMenuCheckboxItem>
+      {MapStatus.map((status,_)=>(
+         <DropdownMenuCheckboxItem
+         className={clsx(
+          'text-muted-foreground focus:text-blue-500 ',
+          searchParams.has("status",status) && "bg-muted text-blue-500 "
+         )}
+          key={status} 
+          checked={searchParams.has("status",status)}
+          onCheckedChange={(checked)=> handleFilterChange(status,checked)}
+          >
+        {status}
+        </DropdownMenuCheckboxItem>
+      ))}
+ 
     </DropdownMenuContent>
   </DropdownMenu>
   )

@@ -1,3 +1,4 @@
+
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -7,28 +8,11 @@ import {
   CreditCard,
   File,
   Home,
-  LineChart,
-  ListFilter,
   MoreVertical,
-  Package,
-  Package2,
-  PanelLeft,
-  Search,
-  Settings,
-  ShoppingCart,
-  Truck,
-  Users2,
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -39,16 +23,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
-import {
   Pagination,
   PaginationContent,
   PaginationItem,
@@ -56,14 +30,6 @@ import {
 // import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Tooltip,
@@ -72,112 +38,38 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
+import { DeliveryStatusOrder } from "../../../../components/admin/orders/DeliveryStatusOrder";
+import {
+  CardAllOrders,
+  CardMonthOrders,
+  CardWeekOrders,
+} from "../../../../components/admin/orders/CardOrders";
+import { FilterDeliveryStatusOrder } from "../../../../components/admin/orders/FilterDeliveryStatusOrder";
+import { OrdersTableAdmin } from "../../../../components/admin/orders/OrdersTableAdmin";
+import { AdminSearch } from "../../../../components/admin/AdminSearch";
+import PaymentStatus from "../../../../components/admin/orders/PaymentStatus";
+import { HandleSetDeliveryOrderStatus } from "../../../../components/admin/orders/HandleSetDeliveryOrderStatus";
+import { useOrderDetailStore } from "@/lib/GetFilteredProductsCart";
+import { useEffect } from "react";
+import { setOrderDetail } from "@/lib/GetFilteredProductsCart";
+import { searchParamsCache } from "@/lib/nuqs";
+import OrderDetails from "./OrderDetails";
+export default function OrdersPage({
+  searchParams,
+}: {
+  searchParams: Record<string, string | string[] | undefined>;
+}) {
+   const paramSearch = searchParamsCache.parse(searchParams);
 
-import { DeliveryStatusOrder } from "../../../../components/DeliveryStatusOrder";
-export default function OrdersPage() {
   return (
     <main className="grid flex-1 items-start gap-4 p-4 sm:px-6  md:gap-8 lg:grid-cols-3 xl:grid-cols-3">
       <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
         <div className="text-blue-500 grid gap-4 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
-          <Card >
-            <CardHeader className="pb-3">
-              <CardDescription className="max-w-lg text-balance ">
-                All
-              </CardDescription>
-              <CardTitle className="text-blue-500 text-4xl">
-                {/* <Card className="h-16 w-52 flex justify-center items-center text-blue-500 antialiased border-2 border-blue-500 ">192 Orders</Card> */}
-                192 orders
-              </CardTitle>
-            </CardHeader>
-            <CardFooter>
-              <div className="grid grid-cols-2 gap-8 text-muted-foreground text-sm">
-                <Card className="px-2 py-1 text-muted-foreground ">
-                  {" "}
-                  <div className="grid grid-cols-1">
-                    <div> 50 unpaid orders </div>
-
-                    <div className="font-semibold text-blue-500 text-xs">
-                      $122,99
-                    </div>
-                  </div>
-                </Card>
-
-                <Card>
-                  {" "}
-                  <div className="grid grid-cols-1">
-                    <div> 50 unpaid orders </div>
-
-                    <div className="font-semibold text-blue-500 text-xs">
-                      $122,99
-                    </div>
-                  </div>
-                </Card>
-              </div>
-            </CardFooter>
-          </Card>
-          <Card>
-            <CardHeader className="pb-2">
-              <CardDescription>This Week</CardDescription>
-              <CardTitle className="text-4xl text-blue-500">$1,329</CardTitle>
-            </CardHeader>
-            {/* <CardContent>
-                  <div className="text-xs text-muted-foreground">
-                    +25% from last week
-                  </div>
-                </CardContent> */}
-            {/* <CardFooter>
-                  <Progress value={25} aria-label="25% increase" />
-                </CardFooter> */}
-            <CardFooter>
-              <div className="grid grid-cols-2 gap-1 text-muted-foreground text-sm">
-                <div className="grid grid-cols-1">
-                  <div> 50 unpaid orders </div>
-
-                  <div className="font-semibold text-blue-500 text-xs">
-                    $122,99
-                  </div>
-                </div>
-                <div className="grid grid-cols-1">
-                  50 paid orders{" "}
-                  <span className="font-semibold text-blue-500 text-xs">
-                    $122,99
-                  </span>
-                </div>
-              </div>
-            </CardFooter>
-          </Card>
-          <Card >
-            <CardHeader className="pb-2">
-              <CardDescription>This Month</CardDescription>
-              <CardTitle className="text-4xl text-blue-500">$5,329</CardTitle>
-            </CardHeader>
-            {/* <CardContent>
-                  <div className="text-xs text-muted-foreground">
-                    +10% from last month
-                  </div>
-                </CardContent>
-                <CardFooter>
-                  <Progress value={12} aria-label="12% increase" />
-                </CardFooter> */}
-            <CardFooter>
-              <div className="grid grid-cols-2 gap-1 text-muted-foreground text-sm">
-                <div className="grid grid-cols-1">
-                  <div> 50 unpaid orders </div>
-
-                  <div className="font-semibold text-blue-500 text-xs">
-                    $122,99
-                  </div>
-                </div>
-                <div className="grid grid-cols-1">
-                  50 paid orders{" "}
-                  <span className="font-semibold text-blue-500 text-xs">
-                    $122,99
-                  </span>
-                </div>
-              </div>
-            </CardFooter>
-          </Card>
+          <CardAllOrders />
+          <CardWeekOrders />
+          <CardMonthOrders />
         </div>
+        <AdminSearch placeholder="search order..." />
         <Tabs defaultValue="all">
           <div className="flex items-center text-muted-foreground">
             <TabsList>
@@ -187,34 +79,7 @@ export default function OrdersPage() {
               <TabsTrigger value="year">Year</TabsTrigger>
             </TabsList>
             <div className="ml-auto flex items-center gap-2">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="h-7 gap-1 text-sm hover:text-blue-500 focus-visible:text-blue-500"
-                  >
-                    <ListFilter className="h-3.5 w-3.5" />
-                    <span className="sr-only sm:not-sr-only">Filter</span>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuLabel className="text-blue-500">
-                    Filter by
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuCheckboxItem className="focus:text-blue-500">
-                    Delivered
-                  </DropdownMenuCheckboxItem>
-                  <DropdownMenuCheckboxItem checked>
-                    pending
-                  </DropdownMenuCheckboxItem>
-                  <DropdownMenuCheckboxItem>
-                    Dispatched
-                  </DropdownMenuCheckboxItem>
-                  <DropdownMenuCheckboxItem>Cancelled</DropdownMenuCheckboxItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <FilterDeliveryStatusOrder />
               <Button
                 size="sm"
                 variant="outline"
@@ -234,180 +99,7 @@ export default function OrdersPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <Table>
-                  <TableHeader>
-                    <TableRow className="text-blue-500">
-                      <TableHead>Customer</TableHead>
-                      <TableHead className="hidden sm:table-cell">
-                        Payment status
-                      </TableHead>
-                      <TableHead className="hidden sm:table-cell">
-                        Delivery Status
-                      </TableHead>
-                      <TableHead className="hidden md:table-cell">
-                        Date
-                      </TableHead>
-                      <TableHead className="text-right">Amount</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    <TableRow className="bg-accent">
-                      <TableCell>
-                        <div className="font-medium">Liam Johnson</div>
-                        <div className="hidden text-sm text-muted-foreground md:inline">
-                          liam@example.com
-                        </div>
-                      </TableCell>
-                      <TableCell className="hidden sm:table-cell">
-                        Sale
-                      </TableCell>
-                      <TableCell className="hidden sm:table-cell">
-                        <DeliveryStatusOrder status="Delivered" />
-                        {/* <Badge className="text-xs" variant="secondary">
-                              delivered
-                            </Badge> */}
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        2023-06-23
-                      </TableCell>
-                      <TableCell className="text-right">$250.00</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>
-                        <div className="font-medium">Olivia Smith</div>
-                        <div className="hidden text-sm text-muted-foreground md:inline">
-                          olivia@example.com
-                        </div>
-                      </TableCell>
-                      <TableCell className="hidden sm:table-cell">
-                        Refund
-                      </TableCell>
-                      <TableCell className="hidden sm:table-cell">
-                        <DeliveryStatusOrder status="Dispatched" />
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        2023-06-24
-                      </TableCell>
-                      <TableCell className="text-right">$150.00</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>
-                        <div className="font-medium">Noah Williams</div>
-                        <div className="hidden text-sm text-muted-foreground md:inline">
-                          noah@example.com
-                        </div>
-                      </TableCell>
-                      <TableCell className="hidden sm:table-cell">
-                        Subscription
-                      </TableCell>
-                      <TableCell className="hidden sm:table-cell">
-                        <DeliveryStatusOrder status="Pending" />
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        2023-06-25
-                      </TableCell>
-                      <TableCell className="text-right">$350.00</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>
-                        <div className="font-medium">Emma Brown</div>
-                        <div className="hidden text-sm text-muted-foreground md:inline">
-                          emma@example.com
-                        </div>
-                      </TableCell>
-                      <TableCell className="hidden sm:table-cell">
-                        Sale
-                      </TableCell>
-                      <TableCell className="hidden sm:table-cell">
-                        <DeliveryStatusOrder status="Cancelled" />
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        2023-06-26
-                      </TableCell>
-                      <TableCell className="text-right">$450.00</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>
-                        <div className="font-medium">Liam Johnson</div>
-                        <div className="hidden text-sm text-muted-foreground md:inline">
-                          liam@example.com
-                        </div>
-                      </TableCell>
-                      <TableCell className="hidden sm:table-cell">
-                        Sale
-                      </TableCell>
-                      <TableCell className="hidden sm:table-cell">
-                        <Badge className="text-xs" variant="secondary">
-                          Fulfilled
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        2023-06-23
-                      </TableCell>
-                      <TableCell className="text-right">$250.00</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>
-                        <div className="font-medium">Liam Johnson</div>
-                        <div className="hidden text-sm text-muted-foreground md:inline">
-                          liam@example.com
-                        </div>
-                      </TableCell>
-                      <TableCell className="hidden sm:table-cell">
-                        Sale
-                      </TableCell>
-                      <TableCell className="hidden sm:table-cell">
-                        <Badge className="text-xs" variant="secondary">
-                          Fulfilled
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        2023-06-23
-                      </TableCell>
-                      <TableCell className="text-right">$250.00</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>
-                        <div className="font-medium">Olivia Smith</div>
-                        <div className="hidden text-sm text-muted-foreground md:inline">
-                          olivia@example.com
-                        </div>
-                      </TableCell>
-                      <TableCell className="hidden sm:table-cell">
-                        Refund
-                      </TableCell>
-                      <TableCell className="hidden sm:table-cell">
-                        <Badge className="text-xs" variant="outline">
-                          Declined
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        2023-06-24
-                      </TableCell>
-                      <TableCell className="text-right">$150.00</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>
-                        <div className="font-medium">Emma Brown</div>
-                        <div className="hidden text-sm text-muted-foreground md:inline">
-                          emma@example.com
-                        </div>
-                      </TableCell>
-                      <TableCell className="hidden sm:table-cell">
-                        Sale
-                      </TableCell>
-                      <TableCell className="hidden sm:table-cell">
-                        <Badge className="text-xs" variant="secondary">
-                          Fulfilled
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        2023-06-26
-                      </TableCell>
-                      <TableCell className="text-right">$450.00</TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
+                <OrdersTableAdmin />
               </CardContent>
               <CardFooter>
                 <div className="text-xs text-muted-foreground">
@@ -419,186 +111,7 @@ export default function OrdersPage() {
         </Tabs>
       </div>
       <div>
-        <Card className="overflow-hidden">
-          <CardHeader className="flex flex-row items-start bg-muted/50">
-            <div className="grid gap-0.5">
-              <CardTitle className="text-blue-500 group flex items-center gap-2 text-lg">
-                Order Oe31b70H
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        size="icon"
-                        variant="outline"
-                        className="h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
-                      >
-                        <Copy className="h-3 w-3" />
-                        <span className="sr-only">Copy Order ID</span>
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent className="text-muted-foreground">
-                      Copier
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </CardTitle>
-              <CardDescription>Date: November 23, 2023</CardDescription>
-            </div>
-            <div className="ml-auto flex items-center gap-1">
-              {/* <Button size="sm" variant="outline" className="h-8 gap-1">
-                    <Truck className="h-3.5 w-3.5" />
-                    <span className="lg:sr-only xl:not-sr-only xl:whitespace-nowrap">
-                      Track Order
-                    </span>
-                  </Button> */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    size="icon"
-                    variant="outline"
-                    className="size-8 group"
-                  >
-                    <MoreVertical className="h-3.5 w-3.5 text-muted-foreground group-hover:text-blue-500" />
-                    <span className="sr-only">More</span>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-[200px]">
-                  <DropdownMenuLabel className="text-blue-500 text-ce">
-                    Set delivery Status
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem className="text-muted-foreground">
-                    Pending
-                  </DropdownMenuItem>
-
-                  <DropdownMenuItem>Dispacthed</DropdownMenuItem>
-                  <DropdownMenuItem>Delivered</DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem>Cancelled</DropdownMenuItem>
-                  <DropdownMenuItem>Refunded</DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-            {/* <div className="flex flex-col"><p><Button className="px-0 py-0 h-fit w-fit"  variant={"outline"}><kbd  className="px-1 py-">Ctrl</kbd></Button> +</p></div> */}
-          </CardHeader>
-          <CardContent className="p-6 text-sm text-muted-foreground">
-            <div className="grid gap-3">
-              <div className="font-semibold text-blue-500">Order Details</div>
-              <ul className="grid gap-3 ">
-                <li className="flex items-center justify-between">
-                  <span className="">
-                    Glimmer Lamps x <span>2</span>
-                  </span>
-                  <span>$250.00</span>
-                </li>
-                <li className="flex items-center justify-between">
-                  <span className="">
-                    Aqua Filters x <span>1</span>
-                  </span>
-                  <span>$49.00</span>
-                </li>
-              </ul>
-              <Separator className="my-2" />
-              <ul className="grid gap-3">
-                <li className="flex items-center justify-between">
-                  <span className="">Subtotal</span>
-                  <span>$299.00</span>
-                </li>
-                <li className="flex items-center justify-between">
-                  <span className="">Shipping</span>
-                  <span>$5.00</span>
-                </li>
-                <li className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Tax</span>
-                  <span>$25.00</span>
-                </li>
-                <li className="text-blue-500 flex items-center justify-between font-semibold">
-                  <span className="">Total</span>
-                  <span>$329.00</span>
-                </li>
-              </ul>
-            </div>
-            <Separator className="my-4" />
-            <div className="grid grid-cols-2 gap-4">
-              <div className="grid gap-3">
-                <div className="font-semibold text-blue-500">
-                  Shipping Information
-                </div>
-                <address className="grid gap-0.5 not-italic text-muted-foreground">
-                  <span>Liam Johnson</span>
-                  <span>1234 Main St.</span>
-                  <span>Anytown, CA 12345</span>
-                </address>
-              </div>
-              <div className="grid auto-rows-max gap-3">
-                <div className="font-semibold text-blue-500">
-                  Billing Information
-                </div>
-                <div className="">Same as shipping address</div>
-              </div>
-            </div>
-            <Separator className="my-4" />
-            <div className="grid gap-3">
-              <div className="font-semibold text-blue-500">
-                Customer Information
-              </div>
-              <dl className="grid gap-3">
-                <div className="flex items-center justify-between">
-                  <dt className="text-muted-foreground">Customer</dt>
-                  <dd>Liam Johnson</dd>
-                </div>
-                <div className="flex items-center justify-between">
-                  <dt className="text-muted-foreground">Email</dt>
-                  <dd>
-                    <a href="mailto:">liam@acme.com</a>
-                  </dd>
-                </div>
-                <div className="flex items-center justify-between">
-                  <dt className="text-muted-foreground">Phone</dt>
-                  <dd>
-                    <a href="tel:">+1 234 567 890</a>
-                  </dd>
-                </div>
-              </dl>
-            </div>
-            <Separator className="my-4" />
-            <div className="grid gap-3">
-              <div className="font-semibold text-blue-500">
-                Payment Information
-              </div>
-              <dl className="grid gap-3">
-                <div className="flex items-center justify-between">
-                  <dt className="flex items-center gap-1 text-muted-foreground">
-                    <CreditCard className="h-4 w-4" />
-                    Visa
-                  </dt>
-                  <dd>**** **** **** 4532</dd>
-                </div>
-              </dl>
-            </div>
-          </CardContent>
-          <CardFooter className="flex flex-row items-center border-t bg-muted/50 px-6 py-3">
-            <div className="text-xs text-muted-foreground">
-              Updated <time dateTime="2023-11-23">November 23, 2023</time>
-            </div>
-            <Pagination className="ml-auto mr-0 w-auto">
-              <PaginationContent>
-                <PaginationItem>
-                  <Button size="icon" variant="outline" className="h-6 w-6">
-                    <ChevronLeft className="h-3.5 w-3.5" />
-                    <span className="sr-only">Previous Order</span>
-                  </Button>
-                </PaginationItem>
-                <PaginationItem>
-                  <Button size="icon" variant="outline" className="h-6 w-6">
-                    <ChevronRight className="h-3.5 w-3.5" />
-                    <span className="sr-only">Next Order</span>
-                  </Button>
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-          </CardFooter>
-        </Card>
+     <OrderDetails />
       </div>
     </main>
   );

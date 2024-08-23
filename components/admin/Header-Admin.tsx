@@ -15,7 +15,7 @@ import { PropsWithChildren } from "react";
 export const HeaderAdmin = (props: PropsWithChildren) => {
   const pathname = usePathname();
   return (
-    <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 lg:static lg:h-auto lg:border-0 lg:bg-transparent lg:px-6">
+    <header className=" justify-between sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 lg:static lg:h-auto lg:border-0 lg:bg-transparent lg:px-6">
       <Sheet>
         <SheetTrigger asChild>
           <Button size="icon" variant="outline" className="lg:hidden ">

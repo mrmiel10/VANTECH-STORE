@@ -4,11 +4,33 @@ export const filtersComputers = [
   
       value: ["3Go", "4Go", "8Go"],
     },
+    {
+      id: "Disque dur",
+  
+      value: ["256G","260G", "500G", "8G"],
+    },
   
     {
       id: "Marque",
   
       value: ["Dell", "Hp","Lenovo","Apple"],
+    },
+ 
+    {
+      id: "Système d'exploitation",
+  
+      value: ["Windows11", "Windows10","Windows8"],
+    },
+    {
+      id: "Marque du Processeur",
+  
+      value: ["Intel", "AMD"],
+    },
+ 
+    {
+      id: "Fréquence du Processeur",
+  
+      value: ["2.60GHZ", "3GHZ","3.1GHZ"],
     },
  
   ];

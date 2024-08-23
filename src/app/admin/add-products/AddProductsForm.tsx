@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useState, useEffect, useCallback } from "react";
 import {
   Card,
@@ -36,52 +36,50 @@ import {
 import SelectImage from "../../../../components/admin/SelectImage";
 import { formValidateProducts } from "../../../../schemas/schema";
 import { toast } from "sonner";
-import firebaseApp from "@/lib/firebase";
-import {
-  getDownloadURL,
-  getStorage,
-  ref,
-  uploadBytesResumable,
-} from "firebase/storage";
 import { useRouter } from "next/navigation";
-import addProducts from "@/lib/actions";
+//import addProducts from "@/lib/actions";
+import { useServerAction } from "zsa-react";
+import { addProductAction } from "@/lib/actions";
+import {
+  FileState,
+} from "../../../../components/MultiImageDropzone";
+import { useEdgeStore } from "@/lib/edgestore";
+import { UploadImageProduct } from "../../../../components/UploadImageProduct";
 
-export type imageType = {
-  image: File | null;
-};
 export type uploadImageType = {
   image: string;
 };
 export const AddProductsForm = () => {
- 
-   const addImageToState = useCallback((value: imageType) => {
-    setImages((prev) => {
-      if (!prev) {
-        return [value];
-      }
-      if (prev.some((item) => item.image?.name === value.image?.name))
-        return [...prev];
-      return [...prev, value];
-    });
-  }, []);
-   const removeImageFromState = useCallback((value: imageType) => {
-    setImages((prev) => {
-      if (prev) {
-        const filteredImages = prev.filter(
-          (item) => String(item.image?.name) !== String(value.image?.name)
-        );
+  const [fileStates, setFileStates] = useState<FileState[]>([]);
+  console.log(fileStates)
+   const { edgestore } = useEdgeStore();
+  const addProduct = useServerAction(addProductAction, {
+    onSuccess: () => {
+    
+      form.reset({
+        name: "",
+        brand: "",
+        category: "",
+        description: "",
+        price: 0,
+        quantity: 0,
+        status: "",
+      });
+      setFileStates([]);
+      Router.refresh();
 
-        console.log(filteredImages);
-        return filteredImages;
-      }
-      return prev;
-    });
-  }, []);
-const Router = useRouter()
-  const [isLoading, setIsLoading] = useState(false);
-  const [images, setImages] = useState<imageType[] | null>(null);
+      toast.success("the product has been created successfully");
+    },
+    onError: (err) => {
+      toast.error(err.err.message)
+    //  toast.error("Error for creating product!");
+    },
+  });
+  const Router = useRouter();
+
   const [isProductCreated, setIsProductCreated] = useState(false);
-  console.log(images);
+  const [isUploadImage, setUploadImage] = React.useState(false);
+
   const form = useForm<z.infer<typeof formValidateProducts>>({
     resolver: zodResolver(formValidateProducts),
     defaultValues: {
@@ -91,26 +89,18 @@ const Router = useRouter()
       category: undefined,
       status: undefined,
       images: [],
-      // price: undefined,
+      price: undefined,
       quantity: undefined,
     },
   });
 
   useEffect(() => {
-    if (!images) return;
-    const filenameImages = images?.map((item, _) => {
-      if (item.image) return item.image?.name;
-    });
-    setCustomValue("images", filenameImages);
-  }, [images]);
-
-  useEffect(() => {
     if (isProductCreated) {
       form.reset();
-      setImages(null);
+      setFileStates([]);
       setIsProductCreated(false);
     }
-  }, [form]);
+  }, [form, isProductCreated]);
   const setCustomValue = (id: any, value: any) => {
     form.setValue(id, value, {
       shouldValidate: true,
@@ -119,96 +109,72 @@ const Router = useRouter()
     });
   };
 
+  const createImageFile = (files: FileState[]) => {
+    const imagesFile = files.map((i) => {
+      return { image: i.file.name };
+    });
+    setCustomValue("images", imagesFile);
+  };
   async function onSubmit(values: z.infer<typeof formValidateProducts>) {
-    setIsLoading(true);
+    console.log("verite")
+    setUploadImage(true);
     console.log(values);
-console.log()
     let uploadedImages: uploadImageType[] = [];
     console.log(uploadedImages);
-    if(!images) return
-    const handleImageUploads = async() => {
-      toast("creating product,please wait...");
-      try {
-        for(const item of images){
-          if(item.image){
-            const filename = new Date().getTime() + "-" + item.image.name;
-           
-            const storage = getStorage(firebaseApp);
-            const storageRef = ref(storage, `products/${filename}`);
-            const uploadTask = uploadBytesResumable(storageRef, item.image);
-            await new Promise<void>((resolve, reject) => {
-              uploadTask.on(
-                "state_changed",
-                (snapshot) => {
-                  // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-                  const progress =
-                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                  console.log("Upload is " + progress + "% done");
-                  switch (snapshot.state) {
-                    case "paused":
-                      console.log("Upload is paused");
-                      break;
-                    case "running":
-                      console.log("Upload is running");
-                      break;
-                  }
-                },
-                (error) => {
-                  console.log("Eror uploading image", error);
-                  return toast.error("Error handling image uploads");
 
-                  reject(error);
-
-                },
-                () => {
-                  {
-                    // Upload completed successfully, now we can get the download URL
-                    getDownloadURL(uploadTask.snapshot.ref)
-                      .then((downloadURL) => {
-                        uploadedImages.push({
-                          ...item,
-                          image: downloadURL,
-                        });
-                        console.log("File available at", downloadURL);
-                        resolve();
-                      })
-                      .catch((error) => {
-                        console.log("Error getting the download URL", error);
-                        return toast.error("Error handling image uploads");
-
-                        reject(error);
-                      });
-                  }
-                }
-              );
-            });
-          }else return null
+    await Promise.all([
+      fileStates.map(async (fileState, index) => {
+        try {
+          if (
+            fileState.progress !== "PENDING"
+            // typeof values.images[index].image === "string"
+          ) {
+            return;
+          }
+          const res = await edgestore.publicFiles.upload({
+            file: fileState.file,
+            input:{type:"product"},
         
+            onProgressChange: async (progress) => {
+              updateFileProgress(fileState.key, progress,setFileStates);
+              if (progress === 100) {
+                // wait 1 second to set it to complete
+                // so that the user can see the progress bar
+                await new Promise((resolve) => setTimeout(resolve, 1000));
+                updateFileProgress(fileState.key, "COMPLETE",setFileStates);
+              }
+            },
+          });
+          console.log("resUrl:",res.url)
+          uploadedImages.push({
+            ...values.images[index],
+            image: res.url,
+          });
+          await addProduct.execute({ ...values, images: uploadedImages })
           
+        } catch (err) {
+          updateFileProgress(fileState.key, "ERROR",setFileStates);
+        } finally {
+          setUploadImage(false);
         }
-      } catch (error) {
-        console.log("Error handling image uploads", error);
-        toast.error("Error handling image uploadse");
+      }),
 
-      }finally{
-        setIsLoading(false);
-      }
-    }
-    await handleImageUploads();
-    const productData = { ...values, images: uploadedImages };
-    console.log(productData);
-    console.log(uploadedImages);
-    try {
-      const product = await addProducts(productData);
-      toast.success("This product has been created");
-      Router.refresh();
-      setIsProductCreated(true)
-    } catch (error) {
-      toast.error("Error creating product");
-    } finally {
-      setIsLoading(false);
-    }
+      console.log('uploadedImages:',uploadedImages),
+  
+    ]);
+
+    // setFileStates([]);
+    // form.reset({
+    //   name: "",
+    //   brand: "",
+    //   category: "",
+    //   description: "",
+    //   price: undefined,
+    //   quantity: undefined,
+    //   status: "",
+    // });
   }
+
   return (
     <>
       <Form {...form}>
@@ -221,29 +187,27 @@ console.log()
             <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0 text-blue-500">
               Add Product
             </h1>
-            {/* <Badge variant="outline" className="ml-auto sm:ml-0">
-      In stock
-    </Badge> */}
+
             <div className="hidden items-center gap-2 md:ml-auto md:flex">
-              {/* <Button variant="outline" size="sm">
-        Discard
-      </Button> */}
-      {isLoading ? (
-   <Button variant={"defaultBtn"} size="sm">
-  <Loader2 className="animate-spin" />
- </Button>
-      ):(
-        <Button variant={"defaultBtn"} size="sm">
-        Add Product
-      </Button>
-      )}
-           
+            
+              <Button
+                disabled={isUploadImage || addProduct.isPending}
+                variant={"defaultBtn"}
+                size="sm"
+              >
+                {" "}
+                {isUploadImage || addProduct.isPending ? (
+                  <Loader2 className="animate-spin size-5" />
+                ) : (
+                  <span>Add Product</span>
+                )}{" "}
+              </Button>
             </div>
           </div>
-          <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
+          <div className="grid gap-4 md:grid-cols-[1fr_400px] lg:grid-cols-3 lg:gap-16">
             <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
-              <Card x-chunk="dashboard-07-chunk-0">
-                <CardHeader>
+              <Card>
+                <CardHeader className="px-12">
                   <CardTitle className="text-blue-500">
                     Product Details
                   </CardTitle>
@@ -251,7 +215,7 @@ console.log()
                     Add name and description of a product
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="px-12">
                   <div className="grid gap-6">
                     <FormField
                       control={form.control}
@@ -262,11 +226,10 @@ console.log()
                             <Label htmlFor="name" className="text-blue-500">
                               Name
                             </Label>
-                            <Input
-                            
+                            <Textarea
                               {...field}
                               id="name"
-                              className="text-muted-foreground"
+                              className="min-h-20 text-muted-foreground"
                             />
                           </div>
                           <FormMessage />
@@ -298,14 +261,14 @@ console.log()
                   </div>
                 </CardContent>
               </Card>
-              <Card x-chunk="dashboard-07-chunk-1">
-                <CardHeader>
+              <Card>
+                <CardHeader className="px-12">
                   <CardTitle className="text-blue-500">Stock</CardTitle>
                   <CardDescription>
                     Add brand,price and the quantity of a product
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="px-12">
                   <div className="grid gap-6">
                     <FormField
                       control={form.control}
@@ -338,6 +301,7 @@ console.log()
                               Quantity
                             </Label>
                             <Input
+                             defaultValue={""}
                               {...field}
                               id="quantity"
                               type="text"
@@ -360,6 +324,7 @@ console.log()
                               Price
                             </Label>
                             <Input
+                            defaultValue={""}
                               {...field}
                               id="price"
                               type="text"
@@ -373,20 +338,14 @@ console.log()
                     />
                   </div>
                 </CardContent>
-                {/* <CardFooter className="justify-center border-t p-4">
-          <Button size="sm" variant="ghost" className="gap-1">
-            <PlusCircle className="h-3.5 w-3.5" />
-            Add Variant
-          </Button>
-        </CardFooter> */}
               </Card>
-              <Card x-chunk="chunk-2">
-                <CardHeader>
+              <Card>
+                <CardHeader className="px-12">
                   <CardTitle className="text-blue-500">
                     Product Category
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="px-12">
                   <FormField
                     control={form.control}
                     name="category"
@@ -411,12 +370,8 @@ console.log()
                             </SelectTrigger>
                             <SelectContent id="category">
                               <SelectItem value="desktops">Desktops</SelectItem>
-                              <SelectItem value="laptops">
-                               Laptops
-                              </SelectItem>
-                              <SelectItem value="mouses">
-                               Mouses
-                              </SelectItem>
+                              <SelectItem value="laptops">Laptops</SelectItem>
+                              <SelectItem value="mouses">Mouses</SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
@@ -478,8 +433,8 @@ console.log()
                   </div>
                 </CardContent>
               </Card>
-              <Card className="overflow-hidden" x-chunk="chunk-4">
-                <CardHeader>
+              <Card className="overflow-hidden" >
+                <CardHeader className="">
                   <CardTitle className="text-blue-500">
                     Product Images
                   </CardTitle>
@@ -487,75 +442,50 @@ console.log()
                     select images for the product
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="">
                   <p className="text-sm mb-2 text-destructive font-medium">
                     {form.formState.errors["images"] &&
                       form.formState.errors["images"].message}
-                  </p>
-                  <div className="grid grid-cols-2 gap-6">
-                    <SelectImage
-                      className="h-44 col-span-2 "
-                   
-                      addImageToState={addImageToState}
-                      removeImageFromState={removeImageFromState}
-                      isProductCreated={isProductCreated}
-                      images={images}
+                               </p>
+                  <div>
+                    <UploadImageProduct
+                      fileStates={fileStates}
+                      createImageFile={createImageFile}
+                      setFileStates={setFileStates}
                     />
-                    <SelectImage
-                      className="h-28 "
-                    
-                      addImageToState={addImageToState}
-                      removeImageFromState={removeImageFromState}
-                      isProductCreated={isProductCreated}
-                      images={images}
-                    />
-                    <SelectImage
-                      className="h-28 "
-                     
-                      addImageToState={addImageToState}
-                      removeImageFromState={removeImageFromState}
-                      isProductCreated={isProductCreated}
-                      images={images}
-                    />
-                    <SelectImage
-                      className="h-44 col-span-2"
-                     
-                      addImageToState={addImageToState}
-                      removeImageFromState={removeImageFromState}
-                      isProductCreated={isProductCreated}
-                      images={images}
-                    />
-                    {/* <div className=" h-28 w-full rounded-lg col-span-2 flex justify-center items-center border-dashed border-muted-foreground text-sm text-blue-500 border cursor-pointer hover:bg-muted">
-          <Upload />
-        </div> */}
                   </div>
                 </CardContent>
               </Card>
-
-              {/* <Card x-chunk="dashboard-07-chunk-5">
-                <CardHeader>
-                  <CardTitle>Archive Product</CardTitle>
-                  <CardDescription>
-                    Lipsum dolor sit amet, consectetur adipiscing elit.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div></div>
-                  <Button size="sm" variant="secondary">
-                    Archive Product
-                  </Button>
-                </CardContent>
-              </Card> */}
             </div>
-          <div className="flex justify-center ml:auto md:hidden">
-            {/* <Button variant="outline" size="sm">
-              Discard
-            </Button> */}
-            <Button variant={"defaultBtn"} size="sm">Add Product</Button>
-          </div>
+            <div className="flex justify-center ml:auto md:hidden">
+              <Button
+                disabled={isUploadImage || addProduct.isPending}
+                variant={"defaultBtn"}
+                size="sm"
+              >
+                {" "}
+                {isUploadImage || addProduct.isPending ? (
+                  <Loader2 className="animate-spin size-5" />
+                ) : (
+                  <span>Add Product</span>
+                )}{" "}
+              </Button>
+            </div>
           </div>
         </form>
       </Form>
     </>
   );
 };
+export function updateFileProgress(key: string, progress: FileState["progress"],setFileStates:React.Dispatch<React.SetStateAction<FileState[]>>) {
+  setFileStates((fileStates) => {
+    const newFileStates = structuredClone(fileStates);
+    const fileState = newFileStates.find(
+      (fileState) => fileState.key === key
+    );
+    if (fileState) {
+      fileState.progress = progress;
+    }
+    return newFileStates;
+  });
+}

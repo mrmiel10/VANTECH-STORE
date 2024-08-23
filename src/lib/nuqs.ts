@@ -4,6 +4,7 @@ export const searchParamsCache = createSearchParamsCache({
     rating: parseAsInteger,
     page:parseAsInteger.withDefault(1),
     query:parseAsString.withDefault(""),
-    searchProduct:parseAsString.withDefault(""),
+    search:parseAsString.withDefault(""),
     status:parseAsString.withDefault(""),
+    deliveryStatus:parseAsString.withDefault(""),
   })

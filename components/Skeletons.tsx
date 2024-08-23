@@ -1,5 +1,5 @@
 import { Skeleton } from "@/components/ui/skeleton";
-import ListRating from "@/app/[id]/product/ListRating";
+
 export const ProductFeaturesLoading = () => {
   return (
     <div className="container mx-auto grid grid-cols-1 gap-8 px-4 py-8 sm:grid-cols-2 sm:gap-10 md:px-6 lg:max-w-7xl">
@@ -153,4 +153,36 @@ export const SkeletonItemCartLoading = () => {
       </div>
     </div>
   )
+}
+export const SkeletonLoadingTableProducts = () =>{
+  const customerReviewsLength_PER_PAGE = 3
+  const SkeletonProductTable = Array.from({length:3},(_,i)=> (
+    <RowSkeletonLoadingProduct key={i} />
+  ))
+return (
+  <div>
+   
+     {SkeletonProductTable}
+  </div>
+ 
+)
+}
+export const RowSkeletonLoadingProduct = () =>{
+  return (
+
+    <div className="flex flex-row items-center justify-between border-b border-muted py-4">
+    <Skeleton className="size-16"/>      
+  
+    <Skeleton className=" h-16 w-96" />
+    <Skeleton className="rounded-full h-5 w-20" />
+    <Skeleton className=" h-7 w-28" />
+    <Skeleton className=" h-4 w-6" />
+    <div className="flex gap-2">
+      <Skeleton className="size-10 rounded-full" />
+      <Skeleton className="size-10 rounded-full" />
+    </div>
+    {/* <Skeleton className=" h-4 w-6" /> */}
+  </div>
+  )
+
 }

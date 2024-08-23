@@ -116,11 +116,13 @@ const Filters = () => {
                             className="flex items-center gap-2 font-normal text-muted-foreground"
                           >
                             <Checkbox
+                            
                               className="text-blue-500 border-muted-foreground"
                               checked={searchParams.has(i)}
+                          
                               onCheckedChange={(checked) =>
-                                handleFilterChange(i, checked)
-                              }
+                                 handleFilterChange(i, checked)
+                               }
                             />
                             {i}
                           </Label>

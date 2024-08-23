@@ -4,127 +4,123 @@ import { Rating } from "@mui/material";
 
 import { FiltersByRating } from "./FiltersByRating";
 import { searchParamsCache } from "@/lib/nuqs";
-export const ListRating = () => {
+import { User, Review, Product } from "@prisma/client";
+import prisma from "../../../../db";
+import { getInitials } from "../../../../components/Navbar/UserNav";
+export const ListRating = async ({ productId }: { productId: string }) => {
+  const filterRating = searchParamsCache.get("rating") ?? undefined;
+  const reviews = await prisma.review.findMany({
+    where: {
+      productId,
+      OR: [
+        {
+          rating: {
+            equals: filterRating,
+          },
+        },
+        {
+          rating: filterRating && {
+            equals: filterRating + 0.5,
+          },
+        },
+      ],
+    },
 
-const filterRating = searchParamsCache.get("rating")!
+  include:{
+    product:true,
+  user:true
+  }
+  });
 
+  // const reviewsProduct = await prisma.product.findUnique({
+  //   where: {
+  //     id: productId,
+  //     reviews: {
+  //       some: {
+  //         OR: [
+  //           {
+  //             rating: {
+  //               equals: filterRating,
+  //             },
+  //           },
+  //           {
+  //             rating: filterRating && {
+  //               equals: filterRating + 0.5,
+  //             },
+  //           },
+  //         ],
+  //       },
+  //     },
+  //   },
+  //   include: {
+  //     reviews: {
+  //       include: {
+  //         user: true,
+  //       },
+  //     },
+  //   },
+  // });
+  if (!reviews) return <p>No comments check antoher filter!</p>;
   return (
     <div className="grid gap-4">
-          <h2 className="text-2xl font-bold text-blue-500">Customer Reviews</h2>
-  
-    <FiltersByRating />
-     <p>Vous avez sélectionnez {Number(filterRating )} étoiles</p> 
+      <h2 className="text-2xl font-bold text-blue-500">Customer Reviews</h2>
+
+      <FiltersByRating />
+      <p>Vous avez sélectionnez {Number(filterRating)} étoiles</p>
       <div className="grid gap-6">
-       
-        <div className="flex gap-4">
-          <Avatar className="w-10 h-10 border">
-            <AvatarImage alt="image-user" src="/placeholder-user.jpg" />
-            <AvatarFallback className="text-blue-500">CN</AvatarFallback>
-          </Avatar>
-          <div className="grid gap-2">
-            <div className="flex md:items-center max-md:gap-2 gap-4 max-md:flex-col">
-              <div className="grid gap-0.5 text-sm">
-                
-                <h3 className="font-semibold text-blue-500">Alex Smith</h3>
-                <time className=" text-muted-foreground italic font-bold">3 weeks ago</time>
-                
-              
+        {reviews.map((review, _) => (
+          <div className="flex gap-4">
+            <Avatar className="w-10 h-10 border">
+              <AvatarImage
+                alt="image-user"
+                src={
+                  review.user.picture ??
+                  `https://api.dicebear.com/9.x/adventurer/svg?seed=Buster`
+                }
+              />
+              <AvatarFallback className="text-blue-500">
+                {" "}
+                {getInitials(
+                  review.user.firstName,
+                  review.user.lastName,
+                  review.user.email
+                )}
+              </AvatarFallback>
+            </Avatar>
+            <div className="grid gap-2">
+              <div className="flex md:items-center max-md:gap-2 gap-4 max-md:flex-col">
+                <div className="grid gap-0.5 text-sm">
+                  {!review.user.firstName || !review.user.lastName ? (
+                    <h3 className="font-semibold text-blue-500">
+                      {review.user.firstName} {review.user.lastName}
+                    </h3>
+                  ) : (
+                    <h3 className="font-semibold text-blue-500">
+                      {review.user.username}
+                    </h3>
+                  )}
+
+                  <time className=" text-muted-foreground italic font-bold">
+                    3 weeks ago
+                  </time>
+                </div>
+                <div className="flex items-center gap-0.5 md:ml-auto">
+                  <Rating
+                    className="border-blue-400 mr-1"
+                    value={review.rating}
+                    readOnly
+                    precision={0.5}
+                    size="small"
+                  />
+                </div>
               </div>
-              <div className="flex items-center gap-0.5 md:ml-auto">
-                <Rating
-                  className="border-blue-400 mr-1"
-                  value={4.5}
-                  readOnly
-                  precision={0.5}
-                  size="small"
-                />
+              <div className="text-sm leading-loose text-muted-foreground">
+                <p>{review.comment}</p>
               </div>
-            </div>
-            <div className="text-sm leading-loose text-muted-foreground">
-              <p>
-                I recently purchased this t-shirt and I&apos;m really happy with it.
-                The fit is great and the material is high quality. I would
-                definitely recommend this to anyone looking for a new t-shirt.
-              </p>
             </div>
           </div>
-        </div>
+        ))}
       </div>
     </div>
   );
 };
-
-
-// const ShowReviews = async({
-  
-// }) =>{
-//   return (
-//     <Suspense fallback>
-
-//     </Suspense>
-//   )
-//   <div className="grid gap-6">
-//   <div className="flex gap-4">
-//     <Avatar className="w-10 h-10 border">
-//       <AvatarImage src="/placeholder-user.jpg" />
-//       <AvatarFallback>CN</AvatarFallback>
-//     </Avatar>
-//     <div className="grid gap-2">
-//       <div className="flex items-center gap-4">
-//         <div className="grid gap-0.5 text-sm">
-//           <h3 className="font-semibold">Sarah Johnson</h3>
-//           <time className="text-sm text-muted-foreground">
-//             2 days ago
-//           </time>
-//         </div>
-//         <div className="flex items-center gap-0.5 ml-auto">
-//           <Rating
-//             className="border-blue-400 mr-1"
-//             value={4.5}
-//             readOnly
-//             precision={0.5}
-//             size="small"
-//           />
-//         </div>
-//       </div>
-//       <div className="text-sm leading-loose text-muted-foreground">
-//         <p>
-//           I've been wearing this t-shirt for a few weeks now and I'm
-//           really impressed with the quality. The fabric is soft and
-//           comfortable, and it's held up well to washing. Highly recommend!
-//         </p>
-//       </div>
-//     </div>
-//   </div>
-//   <div className="flex gap-4">
-//     <Avatar className="w-10 h-10 border">
-//       <AvatarImage src="/placeholder-user.jpg" />
-//       <AvatarFallback className="text-blue-500">CN</AvatarFallback>
-//     </Avatar>
-//     <div className="grid gap-2">
-//       <div className="flex items-center gap-4">
-//         <div className="grid gap-0.5 text-sm">
-//           <h3 className="font-semibold text-blue-500">Alex Smith</h3>
-//           <time className=" text-muted-foreground italic font-bold">3 weeks ago</time>
-//         </div>
-//         <div className="flex items-center gap-0.5 ml-auto">
-//           <Rating
-//             className="border-blue-400 mr-1"
-//             value={4.5}
-//             readOnly
-//             precision={0.5}
-//             size="small"
-//           />
-//         </div>
-//       </div>
-//       <div className="text-sm leading-loose text-muted-foreground">
-//         <p>
-//           I recently purchased this t-shirt and I'm really happy with it.
-//           The fit is great and the material is high quality. I would
-//           definitely recommend this to anyone looking for a new t-shirt.
-//         </p>
-//       </div>
-//     </div>
-//   </div>
-// </div>
-// }

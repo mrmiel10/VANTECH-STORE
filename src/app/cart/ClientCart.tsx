@@ -12,7 +12,7 @@ import { deleteAllProductsInCart } from "@/lib/cart.store";
 import Link from "next/link";
 import ItemContent from "./ItemContent";
 import { truncateText } from "@/lib/truncate";
-import PaginationProductCart from "../../../components/cart/pagination";
+import { PaginationProductCart } from "../../../components/cart/pagination";
 import { GetFilteredProductsCart } from "@/lib/GetFilteredProductsCart";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Suspense } from "react";

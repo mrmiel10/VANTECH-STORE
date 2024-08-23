@@ -18,21 +18,13 @@ import { formatPrice } from "@/lib/formatPrice";
 import { filtersByCategories } from "@/lib/listFiltersProducts";
 import { sortFilters } from "@/lib/listFiltersProducts";
 import { Card } from "@/components/ui/card";
+import { ParseImages } from "./admin/ProductsTable";
 // import { products } from "@/lib/products";
 export const CardProduct = (
-  product?: PropsWithChildren<{
-    id?: String;
-    name?: string;
-    description?: string | null;
-    price?: number;
-    brand?: string;
-    category?: string;
-    status?: string
-    images?: Prisma.JsonValue;
-} | undefined & { reviews: Review[] }>
+  product: PropsWithChildren< Product & { reviews: Review[] }>
 ) => {
   const Router = useRouter();
-  if(!product === undefined) return null
+  if (!product === undefined) return null;
 
   return (
     <div className="text-muted-foreground flex flex-col w-full shadow-md rounded-md overflow-hidden  cursor-pointer ">
@@ -40,15 +32,17 @@ export const CardProduct = (
         onClick={() => Router.push(`/${product?.id}/product`)}
         className=" w-full relative aspect-square overflow-hidden h-52"
       >
-        <Image
-          fill
-          src={ParseImage(product?.images)[0].image}
-          alt={product?.description!}
-          className="object-contain"
-        />
+        { product && product.images && (
+          <Image
+            fill
+            src={ParseImages(product.images)[0].image}
+            alt={product?.description!}
+            className="object-contain"
+          />
+        )}
       </div>
       <div className="border-t grid grid-cols-1 flex-grow gap-y-4 min-h-5  bg-white text-sm p-4  ">
-        <p className="font-semibold text-blue-500">{product?.name}</p>
+        <p className="font-semibold text-blue-500">{product.name}</p>
         {/* <p className="font-semibold">{truncateText(product.name)}</p> */}
         {/* <p>{product.description}</p> */}
         <div className="flex  items-center w-full flex-col justify-end">
@@ -68,17 +62,17 @@ export const CardProduct = (
 export const ToggleCartButton = ({
   product,
 }: {
-  product?: Product & { reviews: Review[] };
+  product: Product & { reviews: Review[] };
 }) => {
   const [cartProduct, setCartProduct] = useState({
-    id:  product?.id,
-    name: product?.name,
-    description: product?.description,
-    brand: product?.brand,
-    category: product?.category,
+    id: product.id,
+    name: product.name,
+    description: product.description,
+    brand: product.brand,
+    category: product.category,
     quantity: 1,
-    image: ParseImage(product?.images)[0].image,
-    price: product?.price,
+    image: ParseImages(product.images),
+    price: product.price,
   });
 
   const { isInCart, toggleCart } = useCartStore(
@@ -105,23 +99,23 @@ export const ToggleCartButton = ({
 export const ToggleLikeButton = ({
   product,
 }: {
-  product?: Product & { reviews: Review[] };
+  product: Product & { reviews: Review[] };
 }) => {
   // const favorites = useCartStore((s) => s.favorites)
   // const toggleFavorite = useCartStore((s) => s.toggleFavorite)
   const [cartProduct, setCartProduct] = useState({
-    id: product?.id,
-    name: product?.name,
-    description: product?.description,
-    brand: product?.brand,
-    category: product?.category,
+    id: product.id,
+    name: product.name,
+    description: product.description,
+    brand: product.brand,
+    category: product.category,
     quantity: 1,
-    image: ParseImage(product?.images)[0].image,
-    price: product?.price,
+    image: ParseImages(product.images),
+    price: product.price,
   });
   const { isFavorite, toggleFavorite } = useCartStore(
     useShallow((s) => ({
-      isFavorite: s.favorites.some((product) => product?.id === cartProduct.id),
+      isFavorite: s.favorites.some((product) => product.id === cartProduct.id),
       toggleFavorite: s.toggleFavorite,
     }))
   );
@@ -165,12 +159,3 @@ export const SkeletonCard = () => {
     </Card>
   );
 };
-export const ParseImage = (images: any) => {
-  const safeImages: { image: string }[] = JSON.parse(
-    JSON.stringify(images as string)
-  );
-  return safeImages;
-};
- const ParseNombre = () =>{
-  return "dddd"
-}

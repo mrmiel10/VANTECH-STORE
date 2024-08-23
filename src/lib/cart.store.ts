@@ -2,26 +2,26 @@ import { StaticImageData } from "next/image";
 import { create, useStore } from "zustand";
 import { persist } from "zustand/middleware";
 export type CartProductType = {
-    id?: String;
-    name?: string;
-    description?: string | null;   
-    brand?: string;
-    category?:string,  
-    quantity?:number
-    price?: number;
-    image?: {
+    id: string;
+    name: string;
+    description: string | null;   
+    brand: string;
+    category:string,  
+    quantity:number
+    price: number;
+    image: {
         image: string;
     }[]
 } 
   
 export type FavoriteProductType = {
-    id?: String;
-    name?: string;
-    description?: string | null;   
-    brand?: string;
-    category?:string,    
-    price?: number;
-    image?: {
+    id: string;
+    name: string;
+    description: string | null;   
+    brand: string;
+    category:string,    
+    price: number;
+    image: {
         image: string;
     }[]
   } ;
@@ -57,24 +57,7 @@ export const useCartStore = create(persist<CartStoreType>((set) =>(
         [product,...state.cart]
     })),
   
-    // handleQtyIncrease:(product) => {
-    //     const cart = useCartStore.getState().cart
-    //         let updatedCart
-        
-    //         if(cart){
-    //             updatedCart = [...cart]
-              
-    //             const existingIndex = cart.findIndex((item) => item.id === product.id)
-    //             if (existingIndex > -1 ){
-    //                 updatedCart[existingIndex].quantity == ++updatedCart[existingIndex].quantity
-                  
-    //         }
-    //         useCartStore.setState({
-    //             cart:updatedCart
-    //         })
-    // }
   
-    // },
     getTotalQty:()=> {
         const cart = useCartStore.getState().cart
            // if(cart){
@@ -107,6 +90,7 @@ export const useCartStore = create(persist<CartStoreType>((set) =>(
                 },0)
 
                 useCartStore.setState({
+                    
                     totalPrice:totalPrice
                 })
             }

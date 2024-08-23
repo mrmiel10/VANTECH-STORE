@@ -44,6 +44,7 @@ export const SetStatusProduct = () => {
       {" "} 
       {mapStatus.map((status, _) => (
         <DropdownMenuCheckboxItem
+        key={status}
           className="focus:text-blue-500"
           checked={searchParams.has("status", status)}
           onCheckedChange={(checked) => handleFilterChange(status, checked)}

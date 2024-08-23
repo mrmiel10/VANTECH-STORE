@@ -5,10 +5,11 @@ import { Search } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { useQueryState } from 'nuqs'
 import { useSearchParams } from 'next/navigation'
-export const AdminSearchProducts = ({placeholder}:{
+import clsx from 'clsx'
+export const AdminSearch = ({placeholder}:{
     placeholder:string
 }) => {
-  const [searchProduct,setsearchProduct] = useQueryState("searchProduct",{
+  const [search,setsearch] = useQueryState("search",{
     defaultValue:"",
     shallow:false,
      throttleMs:500,
@@ -17,26 +18,29 @@ export const AdminSearchProducts = ({placeholder}:{
 
 })
 const searchParams = useSearchParams()
-console.log(searchProduct)
+console.log(search)
 const handleSearch = (term:string) => {
   // console.log(term);
   console.log(`Searching... ${term}`);
    const params = new URLSearchParams(searchParams);
    params.set('page', '1');
   
-   setsearchProduct(term)
+   setsearch(term)
 
 };
 
   return (
-    <Card className="px-16 py-8 flex">
+    <Card className="px-12 py-8 flex">
             <div className="relative  w-full">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Search className={clsx(
+                "absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground",
+                { "hidden":search !== ""}
+              )} />
               <Input
                 type="search"
                 placeholder={placeholder}
-                className="w-full rounded-lg bg-background pl-8"
-                value={searchProduct}
+                className="w-full rounded-lg bg-background pl-8 ring-blue-500 focus:ring-blue-500"
+                value={search}
                 // defaultValue={searchParams.get("query")?.toString() || ""}
                 onChange={(e)=>{
                     handleSearch(e.target.value)

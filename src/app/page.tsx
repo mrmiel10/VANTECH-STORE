@@ -17,7 +17,7 @@ export default function Home({
     <div className=" grid lg:grid-cols-[270px_1fr] gap-10 items-start">
       <FiltersSheet />
       <Filters />
-      <div className="grid gap-6 md:gap-8">
+      <div className="grid gap-6 md:gap-8 h-ful auto-rows-max">
         <TitleProductsByCategories
           title=" Nos produits"
           description=" Découvrez notre collection de produits !"

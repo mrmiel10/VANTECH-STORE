@@ -1,88 +1,19 @@
 import Shoe from "../../../../../public/blackShoe.jpg";
 import Image from "next/image";
 import { MobileProductsAdmin } from "./MobileProductsAdmin";
-
-import { Prisma } from "@prisma/client";
-
-import { formatPrice } from "@/lib/formatPrice";
-import * as z from "zod";
-
 import { searchParamsCache } from "@/lib/nuqs";
-
-import { toast } from "sonner";
-
 import { ProductsTableAdmin } from "./ProductsTableAdmin";
 import { getFilteredProducts } from "@/lib/actions";
-// const getData = async (query: string) => {
-//   noStore();
-//   const datas = await prisma.product.findMany({
-//     include: {
-//       reviews: true,
-//     },
-//     where: {
-//       OR: [
-//         {
-//           name: query
-//             ? {
-//                 contains: query,
-//                 mode: "insensitive",
-//               }
-//             : undefined,
-//         },
-//         {
-//           description: query
-//             ? {
-//                 contains: query,
-//                 mode: "insensitive",
-//               }
-//             : undefined,
-//         },
-//         {
-//           category: query
-//             ? {
-//                 contains: query,
-//                 mode: "insensitive",
-//               }
-//             : undefined,
-//         },
-//         {
-//           brand: query
-//             ? {
-//                 contains: query,
-//                 mode: "insensitive",
-//               }
-//             : undefined,
-//         },
-//         {
-//           status: query
-//             ? {
-//                 contains: query,
-//                 mode: "insensitive",
-//               }
-//             : undefined,
-//         },
-//         {
-//           price:
-//             query && Number(query)
-//               ? {
-//                   equals: Number(query),
-//                 }
-//               : undefined,
-//         },
-//       ],
-//     },
-//   });
-//   return datas;
-// };
+import { JsonValue } from "@prisma/client/runtime/library";
+import { SchemaSafeImages } from "../../schemas/schema";
+
 export const ProductsTable = async () => {
   const currentPage = searchParamsCache.get("page");
-  const searchProduct = searchParamsCache.get("searchProduct");
-  const products = await getFilteredProducts(searchProduct, currentPage);
+  const searchProduct = searchParamsCache.get("search");
+  const productStatus= searchParamsCache.get("status");
+  console.log(`searchProduct:${searchProduct}`)
+  const products = await getFilteredProducts(searchProduct, currentPage,productStatus);
   console.log(products);
-
-  // for (const product of products) {
-  //   console.log(parseImages(product.images)[0].image);
-  // }
 
   return (
     <>
@@ -92,10 +23,9 @@ export const ProductsTable = async () => {
   );
 };
 
-export const MapStatus = ["active", "draft", "archive"];
-export const ParseImages = (images: any) => {
-  const safeImages: { image: string }[] = JSON.parse(
-    JSON.stringify(images as string)
-  );
-  return safeImages;
+export const MapStatus = ["published", "draft", "archive"];
+export const ParseImages = (images: JsonValue) => {
+  
+  const stringImages = images as string;
+  return SchemaSafeImages.parse(JSON.parse(JSON.stringify(stringImages)));
 };

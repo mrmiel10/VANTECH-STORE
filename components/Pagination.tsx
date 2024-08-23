@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/pagination";
 
 import { generatePagination } from "@/lib/generatePagination";
+import clsx from "clsx";
 import { usePathname, useSearchParams } from "next/navigation";
 
 
@@ -41,7 +42,11 @@ export default  function PaginationTable({totalPages}:
           <PaginationItem>
             <PaginationPrevious
             isDisabled={currentPage <= 1 }
-              className={`${currentPage <= 1 ? "pointer-events-none" : ""}`}
+            className={clsx(
+              "text-muted-foreground",
+              currentPage <= 1 ? "pointer-events-none text-muted-foreground" : ""
+            )}
+         
               href={createPageURL(currentPage - 1)}
             />
           </PaginationItem>
@@ -54,6 +59,12 @@ export default  function PaginationTable({totalPages}:
              (
               <PaginationItem key={page}>
                 <PaginationLink
+                className={clsx(
+                 { "text-muted-foreground":currentPage !== page}
+                )
+                
+                }
+                // className="text-muted-foreground"
                   href={createPageURL(page)}
                   isActive={currentPage === page}
                 >
@@ -66,9 +77,11 @@ export default  function PaginationTable({totalPages}:
           <PaginationItem>
             <PaginationNext
              isDisabled={currentPage >= totalPages }
-              className={`${
-                currentPage >= totalPages ? "pointer-events-none" : ""
-              }`}
+             className={clsx(
+              "text-muted-foreground",
+              currentPage >= totalPages  ? "pointer-events-none text-muted-foreground" : ""
+            )}
+         
               href={createPageURL(currentPage + 1)}
             />
           </PaginationItem>

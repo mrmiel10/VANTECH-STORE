@@ -9,7 +9,7 @@ import FirstHeader from "../../components/FirstHeader";
 import Footer from "../../components/Footer";
 import { Footer2 } from "../../components/Footer2";
 import { UserNav } from "../../components/Navbar/UserNav";
-
+import { EdgeStoreProvider } from '../lib/edgestore';
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -27,15 +27,15 @@ export default function RootLayout({
       <body className={inter.className}>
         <div className="flex flex-col min-h-screen  w-full ">
           <div>
-            {/* <NavbarPage /> */}
-            <Navbar >
+          <Navbar >
+           
               <UserNav />
 
               </Navbar>
             <FirstHeader />
           </div>
 
-          <main className="">{children}</main>
+          <main className=""><EdgeStoreProvider>{children}</EdgeStoreProvider></main>
           <div>
             <Footer2 />
           </div>

@@ -1,7 +1,6 @@
 import Link from "next/link";
 import {
   File,
-
   PlusCircle,
   Search,
   Settings,
@@ -26,26 +25,26 @@ import Image from "next/image";
 import Status from "../../../../components/admin/Status";
 import FilterStatusProducts from "../../../../components/admin/FilterStatusProducts";
 // import MobileProducts from "../../../../../components/admin/MobileProductsAdmin";
-import { AdminSearchProducts } from "../../../../components/admin/AdminSearchProducts";
+import { AdminSearch } from "../../../../components/admin/AdminSearch";
 
 import { ProductsTable } from "../../../../components/admin/ProductsTable";
 import { Suspense } from "react";
 import { searchParamsCache } from "@/lib/nuqs";
-import {  getProductsPages } from "@/lib/actions";
-import { PaginationProduct } from "../../../../components/cart/pagination";
+import { getProductsPages } from "@/lib/actions";
+import PaginationTable from "../../../../components/Pagination";
+import { SkeletonLoadingTableProducts } from "../../../../components/Skeletons";
 export default function ManageProducts({
   searchParams,
- }: {
- searchParams: Record<string, string | string[] | undefined>
- }) {
-  const paramSearch = searchParamsCache.parse(searchParams)
-  const currentPage = paramSearch.page
-  
+}: {
+  searchParams: Record<string, string | string[] | undefined>;
+}) {
+  const paramSearch = searchParamsCache.parse(searchParams);
+  const currentPage = paramSearch.page;
+
   return (
     <div>
-    
       <main className="grid flex-1 items-start gap-4 p-4 sm:px-6  md:gap-8">
-        <AdminSearchProducts placeholder="search products..." />
+        <AdminSearch placeholder="search products..." />
         <Tabs defaultValue="all">
           <div className="flex items-center">
             <TabsList>
@@ -65,7 +64,12 @@ export default function ManageProducts({
                   Export
                 </span>
               </Button>
-              <Button size="sm" className="h-8 gap-1" asChild>
+              <Button
+                variant={"defaultBtn"}
+                size="sm"
+                className="h-8 gap-1"
+                asChild
+              >
                 <Link href="/add-products">
                   {" "}
                   <PlusCircle className="h-3.5 w-3.5" />
@@ -77,7 +81,7 @@ export default function ManageProducts({
             </div>
           </div>
           <TabsContent value="all">
-            <Card x-chunk="">
+            <Card >
               <CardHeader>
                 <CardTitle className="text-blue-500">Products</CardTitle>
                 <CardDescription>
@@ -85,16 +89,12 @@ export default function ManageProducts({
                 </CardDescription>
               </CardHeader>
               <CardContent>
-              
-                  <Suspense fallback={"Loading"}>
+                <Suspense fallback={<SkeletonLoadingTableProducts />}>
                   <DisplayProductsAndPagination currentPage={currentPage} />
-                  </Suspense>
-                
+                </Suspense>
               </CardContent>
               <CardFooter>
-                <div className="text-xs text-muted-foreground">
-                  Showing <strong>1-10</strong> of <strong>32</strong> products
-                </div>
+                <ShowingNumberProducts />
               </CardFooter>
             </Card>
           </TabsContent>
@@ -103,13 +103,41 @@ export default function ManageProducts({
     </div>
   );
 }
-export const DisplayProductsAndPagination = async({currentPage}:{currentPage:number})=>{
-  const searchProduct = searchParamsCache.get("searchProduct")
-  const totalPages = await getProductsPages(searchProduct)
-  return(
+export const DisplayProductsAndPagination = async ({
+  currentPage,
+}: {
+  currentPage: number;
+}) => {
+// await new Promise((resolve) => setTimeout(resolve, 20000));
+  const searchProduct = searchParamsCache.get("search");
+  const productStatus = searchParamsCache.get("status");
+  const { totalPages } = await getProductsPages(searchProduct, productStatus);
+  console.log(`totalsPages:${totalPages}`);
+  return (
     <>
-     <ProductsTable />
-     <PaginationProduct totalPages={totalPages} />
+  
+    <ProductsTable />
+    <PaginationTable totalPages={totalPages} />
+  
+     
     </>
-  )
-}
+  );
+};
+export const ShowingNumberProducts = async () => {
+  const searchProduct = searchParamsCache.get("search");
+  const productStatus = searchParamsCache.get("status");
+  const currentPage = searchParamsCache.get("page");
+  const ITEMS_PER_PAGE = 3;
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+  const { count } = await getProductsPages(searchProduct, productStatus);
+  const totalProducts = count;
+  return (
+    <div className="text-xs text-muted-foreground">
+      Showing{" "}
+      <strong>
+        {offset + 1}-{offset + ITEMS_PER_PAGE}
+      </strong>{" "}
+      of <strong>{totalProducts}</strong> products
+    </div>
+  );
+};

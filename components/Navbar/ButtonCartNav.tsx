@@ -21,6 +21,7 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 const ButtonCartNav = () => {
   const cart = useCartStore((s) => s.cart);
+
   const totalQty = useCartStore(useCallback((s) => s.totalQty, []));
   const getQty = useCartStore(useCallback((s) => s.getTotalQty, []));
   useEffect(() => {

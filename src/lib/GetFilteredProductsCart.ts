@@ -7,4 +7,3 @@ export const GetFilteredProductsCart = (currentPage:number) =>  {
     const limit = offset + ITEMS_PER_PAGE
     const products = cart.slice(offset,limit)
     return products
-}
