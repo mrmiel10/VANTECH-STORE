@@ -7,12 +7,12 @@ const PaymentStatus = ({status,className}:{status:string,className?:string}) => 
     <Badge className={clsx(
         "text-xs pointer-events-none ",
         className,
-      {"bg-green-500" : status.toLowerCase() === "completed"},
+      {"bg-green-400 text-green-200" : status.toLowerCase() === "paid"},
       {"bg-gray-300" : status.toLowerCase() === "pending"},
   
         
        )} >
-        {status.toLowerCase() === "completed" && <Check className='size-4 mr-1'/>}
+        {status.toLowerCase() === "paid" && <Check className='size-4 mr-1'/>}
         {status.toLowerCase() === "pending" && <Clock className='size-4 mr-1'/>}
     
         {status}</Badge>

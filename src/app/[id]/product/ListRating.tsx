@@ -32,34 +32,6 @@ export const ListRating = async ({ productId }: { productId: string }) => {
   }
   });
 
-  // const reviewsProduct = await prisma.product.findUnique({
-  //   where: {
-  //     id: productId,
-  //     reviews: {
-  //       some: {
-  //         OR: [
-  //           {
-  //             rating: {
-  //               equals: filterRating,
-  //             },
-  //           },
-  //           {
-  //             rating: filterRating && {
-  //               equals: filterRating + 0.5,
-  //             },
-  //           },
-  //         ],
-  //       },
-  //     },
-  //   },
-  //   include: {
-  //     reviews: {
-  //       include: {
-  //         user: true,
-  //       },
-  //     },
-  //   },
-  // });
   if (!reviews) return <p>No comments check antoher filter!</p>;
   return (
     <div className="grid gap-4">

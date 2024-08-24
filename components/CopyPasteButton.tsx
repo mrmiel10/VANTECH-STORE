@@ -20,6 +20,7 @@ const CopyPasteButton = ({className}:{className:string}) => {
 
   return (
     <motion.button
+    
       whileTap={{ scale: 0.9, opacity: 0.8 }}
       onClick={() => setCopied(!copied)}
       className={clsx(

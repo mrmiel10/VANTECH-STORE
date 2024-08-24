@@ -1,3 +1,4 @@
+"use client"
 import React from 'react'
 import {
     Tooltip,
@@ -17,7 +18,9 @@ import Image from "next/image";
 import { Separator } from '@/components/ui/separator';
 import { Button } from "@/components/ui/button";
 import { useRouter } from 'next/navigation';
- const ItemContent = async ({item}:{item:CartProductType}) => {
+import { ParseImages } from '../../../components/admin/ProductsTable';
+import { formatPrice } from '@/lib/formatPrice';
+ const ItemContent = ({item}:{item:CartProductType}) => {
   const router = useRouter()
   //await new Promise((resolve) => setTimeout(resolve, 10000));
 
@@ -29,8 +32,8 @@ import { useRouter } from 'next/navigation';
                     <div onClick={()=>router.push(`/${item.id}/product`)} className="hover:cursor-pointer max-sm:h-32 col-span-2 sm:col-span-1 flex justify-center items-center">
                     <Image
                     
-                    src={item.image}
-                    alt={item.description!}
+                    src={ParseImages(item.image)[0].image}
+                    alt={"ddd"}
                     width={150}
                     height={150}
                     className="rounded-md object-cover "
@@ -42,13 +45,13 @@ import { useRouter } from 'next/navigation';
                       <h1 className="max-sm:text-center text-wrap text-blue-500">{item.name}</h1>
                       <div className="max-sm:justify-center text-sm flex max-sm:flex-row gap-1 font-medium">
                         <p className="text-muted-foreground ">
-                          ${item.price.toFixed(2)}
+                       {formatPrice(item.price)}
                         </p>
                        <Separator orientation="vertical" />
                         <p>
                           Total:{" "}
                           <span className="font-semibold">
-                            {item.quantity * item.price}
+                            {formatPrice(item.quantity * item.price)}
                           </span>
                         </p>
                       </div>

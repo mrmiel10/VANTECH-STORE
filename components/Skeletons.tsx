@@ -125,6 +125,16 @@ const ReviewLoading = () => {
   </div>
   )
 }
+export const SkeletonCartLoading = () =>{
+  const SkeletonItems = Array.from({length:3},(_,i)=>(
+    <SkeletonItemCartLoading key={i} />
+  ))
+  return (
+    <div className="grid gap-8">
+      {SkeletonItems}
+    </div>
+  )
+}
 export const SkeletonItemCartLoading = () => {
   return (
     <div className="grid grid-cols-[150px_1fr_auto] items-center gap-y-8  sm:gap-4">

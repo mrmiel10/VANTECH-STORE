@@ -24,12 +24,7 @@ import {
 } from "@/components/ui/table";
 
 import Status from "./Status";
-
-import { Pencil } from "lucide-react";
-import { TrashIcon } from "lucide-react";
-
 import Image from "next/image";
-
 import { formatPrice } from "@/lib/formatPrice";
 import * as z from "zod";
 import { Product, Review } from "@prisma/client";
@@ -88,7 +83,6 @@ export const ProductsTableAdmin = ({
               {formatPrice(product.price)}
             </TableCell>
             <TableCell className="font-semibold">25</TableCell>
-
             <TableCell>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>

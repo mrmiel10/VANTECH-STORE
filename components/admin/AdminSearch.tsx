@@ -39,7 +39,7 @@ const handleSearch = (term:string) => {
               <Input
                 type="search"
                 placeholder={placeholder}
-                className="w-full rounded-lg bg-background pl-8 ring-blue-500 focus:ring-blue-500"
+                className="text-muted-foreground w-full rounded-lg bg-background pl-8 ring-blue-500 focus:ring-blue-500"
                 value={search}
                 // defaultValue={searchParams.get("query")?.toString() || ""}
                 onChange={(e)=>{

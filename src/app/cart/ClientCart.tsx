@@ -1,43 +1,40 @@
-"use client";
+"use client"
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CartProductType, useCartStore } from "@/lib/cart.store";
-import React, { useCallback, useEffect, useState } from "react";
+import { useCartStore } from "@/lib/cart.store";
+import React, { useCallback, useEffect} from "react";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useShallow } from "zustand/react/shallow";
-import { FolderLock, Terminal } from "lucide-react";
 import { deleteAllProductsInCart } from "@/lib/cart.store";
 import Link from "next/link";
 import ItemContent from "./ItemContent";
-import { truncateText } from "@/lib/truncate";
 import { PaginationProductCart } from "../../../components/cart/pagination";
 import { GetFilteredProductsCart } from "@/lib/GetFilteredProductsCart";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Suspense } from "react";
-import { SkeletonItemCartLoading } from "../../../components/Skeletons";
+import { SkeletonCartLoading } from "../../../components/Skeletons";
 import cart from "../../../public/cart.png";
 import { Skeleton } from "@/components/ui/skeleton";
-const ClientCart = ({ currentPage }: { currentPage: number }) => {
-  // const currentPage = Number(searchParams?.page) || 1;
-  const Router = useRouter();
-  const { cart, getTotalPrice, totalPrice } = useCartStore(
-    useShallow((s) => ({
-      cart: s.cart,
-      getTotalPrice: s.getTotalPrice,
-      totalPrice: s.totalPrice,
-    }))
-  );
+import { formatPrice } from "@/lib/formatPrice";
+import { PropsWithChildren } from "react";
 
-  const totalPages = Math.ceil(cart.length / 3);
-  const cartProduct = GetFilteredProductsCart(currentPage);
-
-  useEffect(() => {
-    getTotalPrice();
-  }, [getTotalPrice, cart]);
+export const ClientCart = (props:PropsWithChildren) => {
+    const { cart, getTotalPrice, totalPrice } = useCartStore(
+        useShallow((s) => ({
+          cart: s.cart,
+          getTotalPrice: s.getTotalPrice,
+          totalPrice: s.totalPrice,
+        }))
+      );
+        const totalPages = Math.ceil(cart.length / 3);
+      useEffect(() => {
+        getTotalPrice();
+      }, [getTotalPrice, cart]);
+      console.log(cart)
   return (
-    <>
+    <div className="container p-4 flex  justify-center items-center">
       {!cart.length ? (
         <NoItems />
       ) : (
@@ -61,15 +58,10 @@ const ClientCart = ({ currentPage }: { currentPage: number }) => {
             </CardHeader>
             <CardContent className="text-muted-foreground">
               <div className="grid gap-6">
-                <div className="grid gap-8">
-                  {cartProduct.map((item) => (
-                    <Suspense
-                      key={item.id}
-                      fallback={<SkeletonItemCartLoading />}
-                    >
-                      <ItemContent key={item.id} item={item} />
-                    </Suspense>
-                  ))}
+                <div>
+                  <Suspense fallback={<SkeletonCartLoading />}>
+                    <ShowItemsCart />
+                  </Suspense>
                 </div>
                 <Separator />
                 <PaginationProductCart totalPages={totalPages} />
@@ -78,75 +70,82 @@ const ClientCart = ({ currentPage }: { currentPage: number }) => {
                     TotalPrice:{" "}
                     <Suspense fallback={<Skeleton className="w-11 h-5" />}>
                       <span className="text-blue-500 font-semibold">
-                        {totalPrice}
+                        {formatPrice(totalPrice)}
                       </span>
                     </Suspense>
                   </p>
                   <div className="flex gap-2 max-sm:flex-col-reverse max-sm:w-full">
                     <Button
+                    asChild
                       className="hover:text-blue-500 transition ease duration-100"
                       variant="outline"
-                      onClick={() => Router.push("/")}
+                    
                     >
-                      Continue Shopping
+                      <Link href="/"> Continue Shopping</Link>
+                     
                     </Button>
-                    <Button variant={"defaultBtn"}>Proceed to Checkout</Button>
+                   {props.children}
+                    {/* <Button variant={"defaultBtn"}>Proceed to Checkout</Button> */}
+                   
+               
                   </div>
                 </div>
               </div>
             </CardContent>
           </Card>
-          {/* <ProductsDetailsSelect productSelect= {selectProduct} /> */}
+      
         </>
       )}
-    </>
-  );
-};
+    </div>
+  )
+}
 
-export default ClientCart;
 
-export const NoItems = () => {
-  return (
-    <Alert className="p-6">
-      <div className="flex sm:items-stretch max-sm:flex-col items-center">
-        <div className="relative w-64">
-          <Image
-            src={cart}
-            alt={"cartImage"}
-            className="aspect-square object-contain"
-          />
-        </div>
-        <div className="max-sm:self-stretch">
-          <div className="h-full flex flex-col mt-8 max-sm:space-y-2 gap-4">
-            <div className="text-lg space-y-2">
-              <AlertTitle className="font-bold text-blue-500">
-                Your cart is empty!
-              </AlertTitle>
-              <AlertDescription className="text-muted-foreground">
-                Please back to add product in a cart
-              </AlertDescription>
+const NoItems = () => {
+    return (
+      <Alert className="p-6">
+        <div className="flex sm:items-stretch max-sm:flex-col items-center">
+          <div className="relative w-64 aspect-squar">
+            <Image
+              src={cart}
+              alt={"cartImage"}
+              className="e object-contain"
+            />
+          </div>
+          <div className="max-sm:self-stretch">
+            <div className="h-full flex flex-col mt-8 max-sm:space-y-2 gap-4">
+              <div className="text-lg space-y-2">
+                <AlertTitle className="font-bold text-blue-500">
+                  Your cart is empty!
+                </AlertTitle>
+                <AlertDescription className="text-muted-foreground">
+                  Please back to add product in a cart
+                </AlertDescription>
+              </div>
+              {/* <div className="flex-grow flex flex-col"> */}
+              <Button className="" variant={"defaultBtn"} asChild>
+                <Link href="/">Add porduct</Link>
+              </Button>
+              {/* </div> */}
             </div>
-            {/* <div className="flex-grow flex flex-col"> */}
-            <Button className="" variant={"defaultBtn"} asChild>
-              <Link href="/">Add porduct</Link>
-            </Button>
-            {/* </div> */}
           </div>
         </div>
+      </Alert>
+    );
+  };
+  const ShowItemsCart =() => {
+    const searchParams = useSearchParams();
+   const currentPage = Number(searchParams.get("page")) || 1;
+    //const currentPage = searchParamsCache.get("page");
+    const cartProduct = GetFilteredProductsCart(currentPage);
+    return (
+      <div className="grid gap-8">
+        {cartProduct.map((item) => (
+          <ItemContent key={item.id} item={item} />
+        ))}
       </div>
-    </Alert>
+    );
+  };
 
-    // <div className="gap-4 text-muted-foreground w-full border-2 rounded-lg border-dashed min-h-60 flex flex-col justify-center items-center">
-    //   <div className="rounded-full border-dashed border size-28 flex justify-center items-center">
-    //     <FolderLock size={75} />
-    //   </div>
-
-    //   <div className="space-y-1">
-    //     <p className="text-center">Your cart is empty</p>
-    //     <Button variant={"defaultBtn"} asChild>
-    //       <Link href="/"> Back to add product in a cart</Link>
-    //     </Button>
-    //   </div>
-    // </div>
-  );
-};
+ 
+  

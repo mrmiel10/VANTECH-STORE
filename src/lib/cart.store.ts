@@ -103,6 +103,26 @@ export const useCartStore = create(persist<CartStoreType>((set) =>(
 }),{
     name:"cartStorage"
 }))
+export const getPrice = async()=>{
+    const cart = useCartStore.getState().cart
+    console.log(cart)
+    if(cart){
+          
+    const totalPrice = cart.reduce((total,item)=>
+        {
+            const itemTotal = item.price * item.quantity
+            total +=itemTotal
+            return total 
+        },0)
+
+        // useCartStore.setState({
+            
+        //     totalPrice:totalPrice
+        // })
+        return totalPrice
+    }
+   
+}
 export const deleteProductInCart = (id:string) => {
     const cart = useCartStore.getState().cart
     useCartStore.setState({

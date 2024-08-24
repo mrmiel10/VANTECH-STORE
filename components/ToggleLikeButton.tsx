@@ -1,17 +1,18 @@
 import { Button } from "@/components/ui/button"
-import { useCartStore } from "@/lib/cart.store"
+import { CartProductType, useCartStore } from "@/lib/cart.store"
 import { productsType } from "@/lib/typeProducts"
 import { Heart } from "lucide-react"
 import { useState } from "react"
 import { useShallow } from "zustand/react/shallow"
 
-export const ToggleLikeButton = ({product}:{product:productsType}) =>{
+export const ToggleLikeButton = ({product}:{product:CartProductType}) =>{
     // const favorites = useCartStore((s) => s.favorites)
     // const toggleFavorite = useCartStore((s) => s.toggleFavorite)
     const [cartProduct,setCartProduct] = useState({
       id: product.id,
       name: product.name,
       description: product.description,   
+      category:product.category,
       brand: product.brand,
       quantity:1,
       image:product.image,

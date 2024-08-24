@@ -49,9 +49,9 @@ import { OrdersTableAdmin } from "../../../../components/admin/orders/OrdersTabl
 import { AdminSearch } from "../../../../components/admin/AdminSearch";
 import PaymentStatus from "../../../../components/admin/orders/PaymentStatus";
 import { HandleSetDeliveryOrderStatus } from "../../../../components/admin/orders/HandleSetDeliveryOrderStatus";
-import { useOrderDetailStore } from "@/lib/GetFilteredProductsCart";
+
 import { useEffect } from "react";
-import { setOrderDetail } from "@/lib/GetFilteredProductsCart";
+
 import { searchParamsCache } from "@/lib/nuqs";
 import OrderDetails from "./OrderDetails";
 export default function OrdersPage({

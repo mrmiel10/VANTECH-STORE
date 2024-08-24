@@ -1,5 +1,5 @@
 export  const tabAddProductActive = [
-    { label: "dashboard", href: "admin/add-products" },
+    { label: "dashboard", href: "admin" },
     {
         label: "manage products",
         href: "manage-products",
@@ -13,9 +13,9 @@ export  const tabAddProductActive = [
   ]
   
 export const tabManageProductActive = [
-    { label: "dashboard", href: "admin/manage-products" },
+    { label: "dashboard", href: "admin" },
     {
-      label: "manage products",
+      label: "add products",
       href: "add-products",
     },
     {
@@ -23,5 +23,14 @@ export const tabManageProductActive = [
       href: "manage-products",
       active: true,
     },
+  ]
+  
+export const tabOrdersActive = [
+    { label: "dashboard", href: "admin" },
+    {
+      label: "orders",
+      href: "orders",
+    }
+ 
   ]
   

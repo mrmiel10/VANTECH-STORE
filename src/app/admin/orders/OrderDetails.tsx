@@ -32,32 +32,17 @@ const OrderDetails = () => {
       <div className="grid gap-0.5">
         <CardTitle className="text-blue-500 group flex items-center gap-2 text-lg">
           Order Oe31b70H
-         
-      
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  size="icon"
-                  variant="outline"
-                  className="h-6 w-6 text-muted-foreground hover:text-blue-500 "
-                >
-              
-                  <CopyPasteButton className="" />
+                      
+                  <CopyPasteButton  className="bg-background flex items-center justify-center size-6 rounded-md  text-muted-foreground hover:text-blue-500 " />
                   <span className="sr-only">Copy Order ID</span>
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent className="text-muted-foreground">
-                Copier
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+            
+     
         </CardTitle>
         <div className="grid grid-cols-1 gap-2">
           <CardDescription>Date: November 23, 2023</CardDescription>
           <div className="flex items-center text-sm text-muted-foreground">
             <span>Payment: </span>
-            <PaymentStatus status="completed" className="ml-1" />
+            <PaymentStatus status="paid" className="ml-1 bg-transparent" />
           </div>
           <div className="flex items-center  text-sm text-muted-foreground">
             <span>Delivery:{" "} </span>{"  "}
