@@ -14,7 +14,7 @@ const PaymentStatus = ({status,className}:{status:string,className?:string}) => 
        )} >
         {status.toLowerCase() === "paid" && <Check className='size-4 mr-1'/>}
         {status.toLowerCase() === "pending" && <Clock className='size-4 mr-1'/>}
-    
+   
         {status}</Badge>
   )
 }
