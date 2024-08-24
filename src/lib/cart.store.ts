@@ -1,6 +1,7 @@
 import { StaticImageData } from "next/image";
 import { create, useStore } from "zustand";
 import { persist } from "zustand/middleware";
+import { useEffect,useState } from "react";
 export type CartProductType = {
     id: string;
     name: string;
@@ -103,25 +104,32 @@ export const useCartStore = create(persist<CartStoreType>((set) =>(
 }),{
     name:"cartStorage"
 }))
-export const getPrice = async()=>{
-    const cart = useCartStore.getState().cart
-    console.log(cart)
-    if(cart){
-          
-    const totalPrice = cart.reduce((total,item)=>
-        {
-            const itemTotal = item.price * item.quantity
-            total +=itemTotal
-            return total 
-        },0)
-
-        // useCartStore.setState({
-            
-        //     totalPrice:totalPrice
-        // })
-        return totalPrice
-    }
+export const getPrice = ()=>{
+    // const cart:any = localStorage.getItem('state')
+    // const getItems:CartProductType[] | null = JSON.parse(cart)
    
+   
+        const cart = useCartStore.getState().cart
+        // const getItems = 
+        console.log(cart)
+        if(cart){
+              
+        const totalPrice = cart.reduce((total,item)=>
+            {
+                const itemTotal = item.price * item.quantity
+                total +=itemTotal
+                return total 
+            },0)
+    
+            // useCartStore.setState({
+                
+            //     totalPrice:totalPrice
+            // })
+            return totalPrice
+        
+        }
+  
+    
 }
 export const deleteProductInCart = (id:string) => {
     const cart = useCartStore.getState().cart

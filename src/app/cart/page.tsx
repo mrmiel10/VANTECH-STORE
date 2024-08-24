@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { RegisterLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import { getCurrentUser } from "@/lib/actions";
 import prisma from "../../../db";
-import { getPrice } from "@/lib/cart.store";
+import { CartProductType, getPrice } from "@/lib/cart.store";
 const PageCart = ({
   searchParams,
 }: {
@@ -21,7 +21,8 @@ const PageCart = ({
 
 export default PageCart;
 const PayOrderButton = async() => {
-  const cart = localStorage.getItem("cartStorage")
+  // const cart:any = localStorage.getItem("cartStorage")
+  // const getItems:CartProductType[] | null = JSON.parse(cart)
   // const user = await getCurrentUser()
   // if(!user) return    <Button onClick={(e)=>{
   //   const totalPrice = getPrice()
@@ -32,14 +33,14 @@ const PayOrderButton = async() => {
   // </RegisterLink> */}
   // eeeeeeeee
   // </Button>
-  const totalPrice = await getPrice()
+  const totalPrice = getPrice()
   console.log(totalPrice)
 return (
   
   <form>
     <Button formAction={async()=>{
       "use server"
-      const totalPrice = await getPrice()
+      const totalPrice = getPrice()
       console.log(totalPrice)
       //await prisma.order
 
