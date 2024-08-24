@@ -20,7 +20,8 @@ const PageCart = ({
 };
 
 export default PageCart;
-export const PayOrderButton = async() => {
+const PayOrderButton = async() => {
+  const cart = localStorage.getItem("cartStorage")
   // const user = await getCurrentUser()
   // if(!user) return    <Button onClick={(e)=>{
   //   const totalPrice = getPrice()
