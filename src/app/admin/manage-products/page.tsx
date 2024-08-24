@@ -70,7 +70,7 @@ export default function ManageProducts({
                 className="h-8 gap-1"
                 asChild
               >
-                <Link href="/add-products">
+                <Link href="/admin/add-products">
                   {" "}
                   <PlusCircle className="h-3.5 w-3.5" />
                   <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
