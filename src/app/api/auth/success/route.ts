@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 
 export async function GET() {
     noStore()
-    const apiUrl = process.env.NODE_ENV === "production" ? "https://vantechv-store.vercel.app" : "http://localhost:3000"
+    const apiUrl = process.env.NODE_ENV === "production" ? "https://v-storehardware.vercel.app/" : "http://localhost:3000"
   const {getUser} = getKindeServerSession();
     const user = await getUser();
 
