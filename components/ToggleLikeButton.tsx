@@ -14,8 +14,9 @@ export const ToggleLikeButton = ({product}:{product:CartProductType}) =>{
       description: product.description,   
       category:product.category,
       brand: product.brand,
+      status:product.status,
       quantity:1,
-      image:product.image,
+      images:ParseImages(product.images),
       price: product.price,
     })
     const {isFavorite,toggleFavorite} = useCartStore(useShallow((s)=>({

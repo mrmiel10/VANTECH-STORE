@@ -13,9 +13,10 @@ export const ToggleCartButton = ({ product }: { product:CartProductType }) => {
       name: product.name,
       description: product.description,
       category:product.category,
+      status:product.status,
       brand: product.brand,
       quantity: 1,
-      image: ParseImages(product.images),
+      images: ParseImages(product.images),
       price: product.price,
     });
   
