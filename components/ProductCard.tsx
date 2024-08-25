@@ -70,8 +70,9 @@ export const ToggleCartButton = ({
     description: product.description,
     brand: product.brand,
     category: product.category,
+    status:product.status,
     quantity: 1,
-    image: ParseImages(product.images),
+    images: ParseImages(product.images),
     price: product.price,
   });
 
@@ -108,9 +109,10 @@ export const ToggleLikeButton = ({
     name: product.name,
     description: product.description,
     brand: product.brand,
+    status:product.status,
     category: product.category,
     quantity: 1,
-    image: ParseImages(product.images),
+    images: ParseImages(product.images),
     price: product.price,
   });
   const { isFavorite, toggleFavorite } = useCartStore(

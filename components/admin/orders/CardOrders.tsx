@@ -10,6 +10,7 @@ import {
 import { formatPrice } from "@/lib/formatPrice";
 import { Separator } from "@/components/ui/separator";
 export const CardAllOrders = async () => {
+  // await new Promise((resolve) => setTimeout(resolve, 10000));
   return (
     <Card>
       <CardHeader className="pb-3">
@@ -43,7 +44,8 @@ export const CardAllOrders = async () => {
     </Card>
   );
 };
-export const CardWeekOrders = () => {
+export const CardWeekOrders = async() => {
+  // await new Promise((resolve) => setTimeout(resolve, 10000));
   return (
     <Card>
       <CardHeader className="pb-2">
@@ -67,7 +69,8 @@ export const CardWeekOrders = () => {
     </Card>
   );
 };
-export const CardMonthOrders = () => {
+export const CardMonthOrders = async() => {
+  // await new Promise((resolve) => setTimeout(resolve, 10000));
   return (
     <Card>
       <CardHeader className="pb-2">

@@ -1,5 +1,20 @@
+import {
+  Card,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 export const ProductFeaturesLoading = () => {
   return (
     <div className="container mx-auto grid grid-cols-1 gap-8 px-4 py-8 sm:grid-cols-2 sm:gap-10 md:px-6 lg:max-w-7xl">
@@ -50,106 +65,95 @@ export const ProductFeaturesLoading = () => {
   );
 };
 const CustomerReviewsLoading = () => {
-  const customerReviewsLength_PER_PAGE = 3
-  const SkeletonsReviews = Array.from({length:3},(_,i)=> (
+  const customerReviewsLength_PER_PAGE = 3;
+  const SkeletonsReviews = Array.from({ length: 3 }, (_, i) => (
     <ReviewLoading key={i} />
-  ))
+  ));
   return (
     <div className="grid gap-4">
       <Skeleton className="w-56 h-8" />
       <div className="flex max-md:flex-col max-md:items-start items-center  mb-4 gap-2 ">
-     <Skeleton className="w-28 h-6" />
-      <div className="flex gap-2">
-        <Skeleton className=" size-10" />
-        <Skeleton className=" size-10" />
-        <Skeleton className=" size-10" />
-        <Skeleton className=" size-10" />
-        <Skeleton className=" size-10" />
+        <Skeleton className="w-28 h-6" />
+        <div className="flex gap-2">
+          <Skeleton className=" size-10" />
+          <Skeleton className=" size-10" />
+          <Skeleton className=" size-10" />
+          <Skeleton className=" size-10" />
+          <Skeleton className=" size-10" />
+        </div>
       </div>
-    </div>
-     { SkeletonsReviews }
+      {SkeletonsReviews}
     </div>
   );
 };
 export const ProductCartLoading = () => {
-  return(
+  return (
     <div>
-<ProductFeaturesLoading />;
-<section className="container mx-auto grid grid-cols-1 gap-8 px-4 py-8 sm:grid-cols-2 sm:gap-12 md:px-6 lg:max-w-7xl">
-   
-    <CustomerReviewsLoading />
-    <LeaveReviewLoading  />
-   </section>
+      <ProductFeaturesLoading />;
+      <section className="container mx-auto grid grid-cols-1 gap-8 px-4 py-8 sm:grid-cols-2 sm:gap-12 md:px-6 lg:max-w-7xl">
+        <CustomerReviewsLoading />
+        <LeaveReviewLoading />
+      </section>
     </div>
-   
-  ) 
+  );
 };
-const LeaveReviewLoading = () =>{
+const LeaveReviewLoading = () => {
   return (
     <div className="grid gap-8">
-    <Skeleton className="w-48 h-8" />
-    <div className="grid gap-8">
-      <div className="flex flex-col gap-1">
-        <Skeleton className="w-14 h-7" />
-        <Skeleton className="w-28 h-6" />
-
-        
+      <Skeleton className="w-48 h-8" />
+      <div className="grid gap-8">
+        <div className="flex flex-col gap-1">
+          <Skeleton className="w-14 h-7" />
+          <Skeleton className="w-28 h-6" />
+        </div>
+        <div className="flex flex-col gap-1">
+          <Skeleton className="w-14 h-7" />
+          <Skeleton className="w-full h-32" />
+        </div>
+        <Skeleton className="w-full h-11" />
       </div>
-      <div className="flex flex-col gap-1">
-        <Skeleton className="w-14 h-7" />
-        <Skeleton className="w-full h-32" />
-      </div>
-      <Skeleton className="w-full h-11" />
     </div>
-    </div>
-  )
-}
+  );
+};
 const ReviewLoading = () => {
   return (
     <div className="grid gap-6">
-    <div className="flex gap-4 w-full">
-      <Skeleton className="size-10 rounded-full" />
-      <div className="grid gap-2 w-full">
-        <div className="flex md:items-center max-md:gap-2 gap-4  max-md:flex-col w-full">
-          <div className="grid gap-1">
-            <Skeleton className="w-20 h-5" />
-            <Skeleton className="w-24 h-5" />
+      <div className="flex gap-4 w-full">
+        <Skeleton className="size-10 rounded-full" />
+        <div className="grid gap-2 w-full">
+          <div className="flex md:items-center max-md:gap-2 gap-4  max-md:flex-col w-full">
+            <div className="grid gap-1">
+              <Skeleton className="w-20 h-5" />
+              <Skeleton className="w-24 h-5" />
+            </div>
+            <Skeleton className="flex w-24 h-4 md:ml-auto" />
           </div>
-          <Skeleton className="flex w-24 h-4 md:ml-auto" />
+          <Skeleton className="w-full h-36 sm:h-20 " />
         </div>
-        <Skeleton className="w-full h-36 sm:h-20 " />
       </div>
-     
     </div>
-   
-  </div>
-  )
-}
-export const SkeletonCartLoading = () =>{
-  const SkeletonItems = Array.from({length:3},(_,i)=>(
+  );
+};
+export const SkeletonCartLoading = ({ length }: { length: number }) => {
+  const SkeletonItems = Array.from({ length }, (_, i) => (
     <SkeletonItemCartLoading key={i} />
-  ))
-  return (
-    <div className="grid gap-8">
-      {SkeletonItems}
-    </div>
-  )
-}
+  ));
+  return <div className="grid gap-8">{SkeletonItems}</div>;
+};
 export const SkeletonItemCartLoading = () => {
   return (
     <div className="grid grid-cols-[150px_1fr_auto] items-center gap-y-8  sm:gap-4">
-     <div className=" h-32 flex justify-center items-center col-span-2 sm:col-span-1">
-     <Skeleton className="w-full h-full "/>
-     </div>
-    
+      <div className=" h-32 flex justify-center items-center col-span-2 sm:col-span-1">
+        <Skeleton className="w-full h-full " />
+      </div>
+
       <div className="grid gap-2 col-span-2 sm:col-span-1">
         <div className="space-y-4">
           <Skeleton className="w-full h-24 sm:h-16 md:h-12 " />
           <div className="max-sm:justify-center flex max-sm:flex-row gap-1">
-          <Skeleton className="w-14 h-5" />
-          <Skeleton className="w-14 h-5" />
+            <Skeleton className="w-14 h-5" />
+            <Skeleton className="w-14 h-5" />
           </div>
-         
         </div>
       </div>
       <div className="col-span-2 sm:col-span-1">
@@ -162,37 +166,156 @@ export const SkeletonItemCartLoading = () => {
         </div>
       </div>
     </div>
-  )
-}
-export const SkeletonLoadingTableProducts = () =>{
-  const customerReviewsLength_PER_PAGE = 3
-  const SkeletonProductTable = Array.from({length:3},(_,i)=> (
-    <RowSkeletonLoadingProduct key={i} />
-  ))
-return (
-  <div>
-   
-     {SkeletonProductTable}
-  </div>
- 
-)
-}
-export const RowSkeletonLoadingProduct = () =>{
+  );
+};
+export const SkeletonLoadingOrdersTable = () => {
+  const SkeletonOrdersTable = Array.from({ length: 3 }, (_, i) => (
+    <RowSkeletonOrderTable key={i} />
+  ));
   return (
+    <Table>
+      <TableHeader className="">
+        <TableRow>
+          <TableHead>Customer</TableHead>
+          <TableHead className="hidden sm:table-cell">Payment status</TableHead>
+          <TableHead className="hidden sm:table-cell">
+            Delivery Status
+          </TableHead>
+          <TableHead className="hidden md:table-cell">Date</TableHead>
+          <TableHead className="text-right">Amount</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>{SkeletonOrdersTable}</TableBody>
+    </Table>
+  );
+};
+export const RowSkeletonOrderTable = () => {
+  return (
+    <TableRow className="">
+      <TableCell className="flex flex-col gap-2">
+        <Skeleton className="w-36 h-5" />
+        <Skeleton className="w-32 h-4" />
+      </TableCell>
+      <TableCell className="hidden sm:table-cell">
+        <Skeleton className="w-32 h-7 rounded-full" />
+      </TableCell>
+      <TableCell className="hidden sm:table-cell">
+        <Skeleton className="w-32 h-7 rounded-full" />
+      </TableCell>
+      <TableCell className="hidden md:table-cell">
+        <Skeleton className="w-12 h-7" />
+      </TableCell>
+      <TableCell>
+        <Skeleton className="w-16 h-7" />
+      </TableCell>
+    </TableRow>
+  );
+};
+export const SkeletonLoadingManageProducts = () => {
+  const SkeletonsManageMobileProducts = Array.from({ length: 3 }, (_, i) => (
+    <RowSkeletonManageMobileProducts key={i} />
+  ));
+  const SkeletonManageProductTable = Array.from({ length: 3 }, (_, i) => (
+    <RowSkeletonLoadingProductTable key={i} />
+  ));
+  return (
+    <div>
+      <div className="md:hidden block">{SkeletonsManageMobileProducts} </div>
+      <Table className=" hidden md:table">
+      <TableHeader className="">
+        <TableRow>
+          <TableHead className=" w-[100px]">
+            <span className="sr-only">Image</span>
+          </TableHead>
+          <TableHead className="text-blue-500 font-semibold ">Name</TableHead>
+          <TableHead className="text-blue-500 font-semibold ">Status</TableHead>
+          <TableHead className="text-blue-500 font-semibold ">Price</TableHead>
+          <TableHead className="text-blue-500 font-semibold ">
+            Total Sales
+          </TableHead>
 
-    <div className="flex flex-row items-center justify-between border-b border-muted py-4">
-    <Skeleton className="size-16"/>      
-  
-    <Skeleton className=" h-16 w-96" />
-    <Skeleton className="rounded-full h-5 w-20" />
-    <Skeleton className=" h-7 w-28" />
-    <Skeleton className=" h-4 w-6" />
-    <div className="flex gap-2">
-      <Skeleton className="size-10 rounded-full" />
-      <Skeleton className="size-10 rounded-full" />
+          <TableHead>
+            <span className="sr-only w-7">others features</span>
+          </TableHead>
+          <TableHead>
+            <span className="sr-only">Actions</span>
+          </TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>{SkeletonManageProductTable}</TableBody>
+    </Table>
     </div>
-    {/* <Skeleton className=" h-4 w-6" /> */}
-  </div>
-  )
+  
+  );
+};
+export const RowSkeletonManageMobileProducts = () => {
+  return <div>Loading</div>;
+};
+export const RowSkeletonLoadingProductTable = () => {
+  return (
+    <TableRow>
+      {/* <div className="flex flex-row items-center justify-between border-b border-muted py-4"> */}
+      <TableCell>
+        {" "}
+        <Skeleton className="size-16" />
+      </TableCell>
 
-}
+      <TableCell>
+        {" "}
+        <Skeleton className=" h-16 w-96" />
+      </TableCell>
+      <TableCell>
+        {" "}
+        <Skeleton className="rounded-full h-5 w-20" />
+      </TableCell>
+      <TableCell>
+        {" "}
+        <Skeleton className=" h-7 w-28" />
+      </TableCell>
+      <TableCell>
+        {" "}
+        <Skeleton className=" h-4 w-6" />
+      </TableCell>
+
+      <TableCell>
+        <div className="flex gap-2">
+          <Skeleton className="size-10 rounded-full" />
+          <Skeleton className="size-10 rounded-full" />
+        </div>
+      </TableCell>
+    </TableRow>
+  );
+};
+export const SkeletonLoadingCardOrder = ({
+  description,
+}: {
+  description: string;
+}) => {
+  return (
+    <Card>
+      <CardHeader className="pb-3">
+        <CardDescription className="max-w-lg  h-5">
+          {description}
+        </CardDescription>
+        <CardTitle className="">
+          <Skeleton className="w-40 h-10" />
+        </CardTitle>
+      </CardHeader>
+      <CardFooter>
+        <div className=" max-md:gap-4 gap-8 flex flex-row items-stretch">
+          <div className="flex-1 flex flex-col gap-2 ">
+            {" "}
+            <Skeleton className="w-28 h-5" />
+            <Skeleton className="w-28 h-5" />
+          </div>
+          <Separator orientation="vertical" className="h-full min-h-12" />
+          <div className="flex-1 flex flex-col gap-2  ">
+            {" "}
+            <Skeleton className="w-28 h-5" />
+            <Skeleton className="w-28 h-5" />
+          </div>
+        </div>
+      </CardFooter>
+    </Card>
+  );
+};

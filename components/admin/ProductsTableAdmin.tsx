@@ -1,9 +1,7 @@
-"use client";
+"use client"
 import Link from "next/link";
 import { MoreHorizontal, PlusCircle } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
-
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -113,7 +111,7 @@ export const ProductsTableAdmin = ({
                   <HandleSetStatusProduct
                     status={product.status}
                     productId={product.id}
-                  />
+                  /> 
                 </DropdownMenuContent>
               </DropdownMenu>
             </TableCell>

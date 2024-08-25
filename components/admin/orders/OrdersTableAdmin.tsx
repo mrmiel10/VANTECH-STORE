@@ -11,185 +11,89 @@ import {
 import { Badge } from '@/components/ui/badge';
 import PaymentStatus from './PaymentStatus';
 import { searchParamsCache } from '@/lib/nuqs';
+import prisma from '../../../db';
+import PaginationTable from '../../Pagination';
+import { getFilteredOrders, getOrdersPages } from '@/lib/actions';
+import { formatDateToLocal } from '@/lib/formatDate';
+import { formatPrice } from '@/lib/formatPrice';
 export const OrdersTableAdmin = async() => {
-    const deliveryStatus = searchParamsCache.get("deliveryStatus")
+  const currentPage = searchParamsCache.get("page");
+  const searchOrder = searchParamsCache.get("search")
+  const deliveryStatus = searchParamsCache.get("deliveryStatus")
+
+    // await new Promise((resolve) => setTimeout(resolve, 20000));
+ 
+  const {totalPages} = await getOrdersPages(searchOrder,deliveryStatus)
+  const orders= await getFilteredOrders(searchOrder,currentPage,deliveryStatus);
     console.log(deliveryStatus)
   return (
-    <Table>
+    <div>
+       <Table>
         
-    <TableHeader className=''>
-      <TableRow >
-        <TableHead>Customer</TableHead>
-        <TableHead className="hidden sm:table-cell">
-          Payment status
-        </TableHead>
-        <TableHead className="hidden sm:table-cell">
-          Delivery Status
-        </TableHead>
-        <TableHead className="hidden md:table-cell">
-          Date
-        </TableHead>
-        <TableHead className="text-right">Amount</TableHead>
-      </TableRow>
-    </TableHeader>
-    <TableBody>
-      <TableRow className="bg-accent text-muted-foreground">
-        <TableCell className='text-muted-foreground'>
-          <div className="font-semibold text-blue-500">Liam Johnson</div>
-          <div className="hidden text-sm text-muted-foreground md:inline">
-            liam@example.com
-          </div>
-        </TableCell>
-        <TableCell className="hidden sm:table-cell">
-       <PaymentStatus status={"pending"} />
-        </TableCell>
-        <TableCell className="hidden sm:table-cell">
-          <DeliveryStatusOrder status="Delivered" />
-          {/* <Badge className="text-xs" variant="secondary">
-                delivered
-              </Badge> */}
-        </TableCell>
-        <TableCell className="hidden md:table-cell">
-          2023-06-23
-        </TableCell>
-        <TableCell className="text-right">$250.00</TableCell>
-      </TableRow>
-      <TableRow className="bg-accent text-muted-foreground">
-        <TableCell>
-          <div className="font-semibold text-blue-500">Olivia Smith</div>
-          <div className="hidden text-sm text-muted-foreground md:inline">
-            olivia@example.com
-          </div>
-        </TableCell>
-        <TableCell className="hidden sm:table-cell">
-        <PaymentStatus status={"completed"} />
-        </TableCell>
-        <TableCell className="hidden sm:table-cell">
-          <DeliveryStatusOrder status="Dispatched" />
-        </TableCell>
-        <TableCell className="hidden md:table-cell">
-          2023-06-24
-        </TableCell>
-        <TableCell className="text-right">$150.00</TableCell>
-      </TableRow>
-      <TableRow>
-        <TableCell>
-          <div className="font-medium">Noah Williams</div>
-          <div className="hidden text-sm text-muted-foreground md:inline">
-            noah@example.com
-          </div>
-        </TableCell>
-        <TableCell className="hidden sm:table-cell">
-          Subscription
-        </TableCell>
-        <TableCell className="hidden sm:table-cell">
-          <DeliveryStatusOrder status="Pending" />
-        </TableCell>
-        <TableCell className="hidden md:table-cell">
-          2023-06-25
-        </TableCell>
-        <TableCell className="text-right">$350.00</TableCell>
-      </TableRow>
-      <TableRow>
-        <TableCell>
-          <div className="font-medium">Emma Brown</div>
-          <div className="hidden text-sm text-muted-foreground md:inline">
-            emma@example.com
-          </div>
-        </TableCell>
-        <TableCell className="hidden sm:table-cell">
-          Sale
-        </TableCell>
-        <TableCell className="hidden sm:table-cell">
-          <DeliveryStatusOrder status="Cancelled" />
-        </TableCell>
-        <TableCell className="hidden md:table-cell">
-          2023-06-26
-        </TableCell>
-        <TableCell className="text-right">$450.00</TableCell>
-      </TableRow>
-      <TableRow>
-        <TableCell>
-          <div className="font-medium">Liam Johnson</div>
-          <div className="hidden text-sm text-muted-foreground md:inline">
-            liam@example.com
-          </div>
-        </TableCell>
-        <TableCell className="hidden sm:table-cell">
-          Sale
-        </TableCell>
-        <TableCell className="hidden sm:table-cell">
-          <Badge className="text-xs" variant="secondary">
-            Fulfilled
-          </Badge>
-        </TableCell>
-        <TableCell className="hidden md:table-cell">
-          2023-06-23
-        </TableCell>
-        <TableCell className="text-right">$250.00</TableCell>
-      </TableRow>
-      <TableRow>
-        <TableCell>
-          <div className="font-medium">Liam Johnson</div>
-          <div className="hidden text-sm text-muted-foreground md:inline">
-            liam@example.com
-          </div>
-        </TableCell>
-        <TableCell className="hidden sm:table-cell">
-          Sale
-        </TableCell>
-        <TableCell className="hidden sm:table-cell">
-          <Badge className="text-xs" variant="secondary">
-            Fulfilled
-          </Badge>
-        </TableCell>
-        <TableCell className="hidden md:table-cell">
-          2023-06-23
-        </TableCell>
-        <TableCell className="text-right">$250.00</TableCell>
-      </TableRow>
-      <TableRow>
-        <TableCell>
-          <div className="font-medium">Olivia Smith</div>
-          <div className="hidden text-sm text-muted-foreground md:inline">
-            olivia@example.com
-          </div>
-        </TableCell>
-        <TableCell className="hidden sm:table-cell">
-          Refund
-        </TableCell>
-        <TableCell className="hidden sm:table-cell">
-          <Badge className="text-xs" variant="outline">
-            Declined
-          </Badge>
-        </TableCell>
-        <TableCell className="hidden md:table-cell">
-          2023-06-24
-        </TableCell>
-        <TableCell className="text-right">$150.00</TableCell>
-      </TableRow>
-      <TableRow>
-        <TableCell>
-          <div className="font-medium">Emma Brown</div>
-          <div className="hidden text-sm text-muted-foreground md:inline">
-            emma@example.com
-          </div>
-        </TableCell>
-        <TableCell className="hidden sm:table-cell">
-          Sale
-        </TableCell>
-        <TableCell className="hidden sm:table-cell">
-          <Badge className="text-xs" variant="secondary">
-            Fulfilled
-          </Badge>
-        </TableCell>
-        <TableCell className="hidden md:table-cell">
-          2023-06-26
-        </TableCell>
-        <TableCell className="text-right">$450.00</TableCell>
-      </TableRow>
-    </TableBody>
-  </Table>
+        <TableHeader className=''>
+          <TableRow >
+            <TableHead className='w-[50px]'>Customer</TableHead>
+            <TableHead className="hidden sm:table-cell">
+              Payment status
+            </TableHead>
+            <TableHead className="hidden sm:table-cell">
+              Delivery Status
+            </TableHead>
+            <TableHead className="hidden md:table-cell">
+              Date
+            </TableHead>
+            <TableHead className="text-right">Amount</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {orders.map((order,_)=>(
+    <TableRow key={order.id} className="bg-accent text-muted-foreground">
+    <TableCell className='text-muted-foreground flex flex-wrap'>
+      <div className="font-semibold text-blue-500">{order.user.firstName} {order.user.lastName}</div>
+      <div className="hidden text-sm text-muted-foreground md:inline">
+       {order.user.email}
+      </div>
+    </TableCell>
+    <TableCell className="hidden sm:table-cell">
+   <PaymentStatus status={order.status ?? "pending"} />
+    </TableCell>
+    <TableCell className="hidden sm:table-cell">
+      <DeliveryStatusOrder status={order.deliveryStatus ?? "pending"} />
+    
+    </TableCell>
+    <TableCell className="hidden md:table-cell">
+      {formatDateToLocal(order.createdDate.toDateString())}
+    </TableCell>
+    <TableCell className="text-right">{formatPrice(order.amount)}</TableCell>
+  </TableRow>
+          ))}
+      
+          {/* <TableRow className="bg-accent text-muted-foreground">
+            <TableCell className='text-muted-foreground'>
+              <div className="font-semibold text-blue-500">Liam Johnson</div>
+              <div className="hidden text-sm text-muted-foreground md:inline">
+                liam@example.com
+              </div>
+            </TableCell>
+            <TableCell className="hidden sm:table-cell">
+           <PaymentStatus status={"pending"} />
+            </TableCell>
+            <TableCell className="hidden sm:table-cell">
+              <DeliveryStatusOrder status="Delivered" />
+            
+            </TableCell>
+            <TableCell className="hidden md:table-cell">
+              2023-06-23
+            </TableCell>
+            <TableCell className="text-right">$250.00</TableCell>
+          </TableRow> */}
+         
+        </TableBody>
+      </Table>
+      <PaginationTable totalPages={totalPages} />
+    </div>
+   
   )
 }
+
 

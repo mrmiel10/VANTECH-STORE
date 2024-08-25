@@ -32,7 +32,7 @@ import { Suspense } from "react";
 import { searchParamsCache } from "@/lib/nuqs";
 import { getProductsPages } from "@/lib/actions";
 import PaginationTable from "../../../../components/Pagination";
-import { SkeletonLoadingTableProducts } from "../../../../components/Skeletons";
+import { SkeletonLoadingManageProducts } from "../../../../components/Skeletons";
 export default function ManageProducts({
   searchParams,
 }: {
@@ -89,7 +89,7 @@ export default function ManageProducts({
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <Suspense fallback={<SkeletonLoadingTableProducts />}>
+                <Suspense fallback={<SkeletonLoadingManageProducts/>}>
                   <DisplayProductsAndPagination currentPage={currentPage} />
                 </Suspense>
               </CardContent>
@@ -108,7 +108,7 @@ export default function ManageProducts({
 }: {
   currentPage: number;
 }) => {
-// await new Promise((resolve) => setTimeout(resolve, 20000));
+ //await new Promise((resolve) => setTimeout(resolve, 20000));
   const searchProduct = searchParamsCache.get("search");
   const productStatus = searchParamsCache.get("status");
   const { totalPages } = await getProductsPages(searchProduct, productStatus);

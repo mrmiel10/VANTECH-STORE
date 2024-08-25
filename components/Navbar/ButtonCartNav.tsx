@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/tooltip";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
+import { formatPrice } from "@/lib/formatPrice";
 const ButtonCartNav = () => {
   const cart = useCartStore((s) => s.cart);
 
@@ -72,7 +73,7 @@ const ButtonCartNav = () => {
             <li key={index} className="py-3">
               <div className="flex items-center">
                 <div>
-                  <p className="text-blue-500 font-bold">$ {product.price}</p>
+                  <p className="text-blue-500 font-bold">{formatPrice(product.price)}</p>
                   <h3 className="text-md font-medium leading-none">
                     {truncateText(product.name!)}
                   </h3>

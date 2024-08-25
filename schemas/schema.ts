@@ -39,17 +39,7 @@ export const formValidateProducts = z.object({
       }),
     )
     .min(1),
-  
-  
-  
-  // z
-  //   .array(
-  //     z.object({
-  //       image: z.string({ invalid_type_error: "not valid url image" }),
-  //     })
-  //   )
-  //   .min(1, { message: "Please choose at least one image" }),
-
+   
   price: z.coerce.number({
     required_error: "Please enter a price of the product",
     invalid_type_error: "Please enter a price of the product",
@@ -90,9 +80,9 @@ export const SchemaSafeProductsOrder = z.array(
     id:z.string(),
     name:z.string(),
     description:z.optional(z.string()),
-    brandd:z.string(),
+    brand:z.string(),
     category:z.string(),
-    status:z.string(),
+     status:z.string(),
     price:z.coerce.number(),
     quantity:z.coerce.number(),
     images: z

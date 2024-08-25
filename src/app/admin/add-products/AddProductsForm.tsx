@@ -50,12 +50,15 @@ export type uploadImageType = {
   image: string;
 };
 export const AddProductsForm = () => {
+  const Router = useRouter();
+  const [isProductCreated, setIsProductCreated] = useState(false);
+  const [isUploadImage, setUploadImage] = React.useState(false);
   const [fileStates, setFileStates] = useState<FileState[]>([]);
+  const { edgestore } = useEdgeStore();
   console.log(fileStates)
-   const { edgestore } = useEdgeStore();
+
   const addProduct = useServerAction(addProductAction, {
-    onSuccess: () => {
-    
+    onSuccess: () => {    
       form.reset({
         name: "",
         brand: "",
@@ -67,7 +70,6 @@ export const AddProductsForm = () => {
       });
       setFileStates([]);
       Router.refresh();
-
       toast.success("the product has been created successfully");
     },
     onError: (err) => {
@@ -75,10 +77,6 @@ export const AddProductsForm = () => {
     //  toast.error("Error for creating product!");
     },
   });
-  const Router = useRouter();
-
-  const [isProductCreated, setIsProductCreated] = useState(false);
-  const [isUploadImage, setUploadImage] = React.useState(false);
 
   const form = useForm<z.infer<typeof formValidateProducts>>({
     resolver: zodResolver(formValidateProducts),
@@ -94,13 +92,6 @@ export const AddProductsForm = () => {
     },
   });
 
-  useEffect(() => {
-    if (isProductCreated) {
-      form.reset();
-      setFileStates([]);
-      setIsProductCreated(false);
-    }
-  }, [form, isProductCreated]);
   const setCustomValue = (id: any, value: any) => {
     form.setValue(id, value, {
       shouldValidate: true,
@@ -110,13 +101,14 @@ export const AddProductsForm = () => {
   };
 
   const createImageFile = (files: FileState[]) => {
-    const imagesFile = files.map((i) => {
-      return { image: i.file.name };
+    if(!files) return
+    const imagesFile = files.map((img) => {
+      if(typeof img.file ==='string') return {image:img.file}
+      return { image: img.file.name };
     });
     setCustomValue("images", imagesFile);
   };
-  async function onSubmit(values: z.infer<typeof formValidateProducts>) {
-    console.log("verite")
+  async function onSubmit(values: z.infer<typeof formValidateProducts>) {   
     setUploadImage(true);
     console.log(values);
     let uploadedImages: uploadImageType[] = [];
@@ -126,7 +118,7 @@ export const AddProductsForm = () => {
       fileStates.map(async (fileState, index) => {
         try {
           if (
-            fileState.progress !== "PENDING"
+          fileState.progress !== "PENDING" || typeof fileState.file === "string"
             // typeof values.images[index].image === "string"
           ) {
             return;
@@ -135,14 +127,16 @@ export const AddProductsForm = () => {
             file: fileState.file,
             input:{type:"product"},
         
-            onProgressChange: async (progress) => {
-              updateFileProgress(fileState.key, progress,setFileStates);
-              if (progress === 100) {
-                // wait 1 second to set it to complete
-                // so that the user can see the progress bar
-                await new Promise((resolve) => setTimeout(resolve, 1000));
-                updateFileProgress(fileState.key, "COMPLETE",setFileStates);
-              }
+            onProgressChange: async (progress) => {          
+                updateFileProgress(progress,setFileStates,fileState.key);
+                if (progress === 100) {
+                  // wait 1 second to set it to complete
+                  // so that the user can see the progress bar
+                  await new Promise((resolve) => setTimeout(resolve, 1000));
+                  updateFileProgress("COMPLETE",setFileStates,fileState.key);
+                }
+            
+            
             },
           });
           console.log("resUrl:",res.url)
@@ -153,7 +147,7 @@ export const AddProductsForm = () => {
           await addProduct.execute({ ...values, images: uploadedImages })
           
         } catch (err) {
-          updateFileProgress(fileState.key, "ERROR",setFileStates);
+          updateFileProgress("ERROR",setFileStates,fileState.key);
         } finally {
           setUploadImage(false);
         }
@@ -162,17 +156,6 @@ export const AddProductsForm = () => {
       console.log('uploadedImages:',uploadedImages),
   
     ]);
-
-    // setFileStates([]);
-    // form.reset({
-    //   name: "",
-    //   brand: "",
-    //   category: "",
-    //   description: "",
-    //   price: undefined,
-    //   quantity: undefined,
-    //   status: "",
-    // });
   }
 
   return (
@@ -180,7 +163,10 @@ export const AddProductsForm = () => {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="flex items-center gap-4 mb-4">
-            <Button variant="outline" size="icon" className="h-7 w-7">
+            <Button  onClick={(e)=>{
+              e.preventDefault()
+              Router.push("/admin/manage-products")
+            }} variant="outline" size="icon" className="h-7 w-7">
               <ChevronLeft className="h-4 w-4" />
               <span className="sr-only">Back</span>
             </Button>
@@ -301,12 +287,12 @@ export const AddProductsForm = () => {
                               Quantity
                             </Label>
                             <Input
-                             defaultValue={""}
+                            
                               {...field}
                               id="quantity"
                               type="text"
                               name="quantity"
-                              className="w-full text-muted-foreground "
+                              className="w-full text-muted-foreground"
                             />
                           </div>
                           <FormMessage />
@@ -477,7 +463,7 @@ export const AddProductsForm = () => {
     </>
   );
 };
-export function updateFileProgress(key: string, progress: FileState["progress"],setFileStates:React.Dispatch<React.SetStateAction<FileState[]>>) {
+export function updateFileProgress(progress : FileState["progress"], setFileStates:React.Dispatch<React.SetStateAction<FileState[]>>,key?: string,) {
   setFileStates((fileStates) => {
     const newFileStates = structuredClone(fileStates);
     const fileState = newFileStates.find(

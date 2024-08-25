@@ -15,14 +15,15 @@ export  const tabAddProductActive = [
 export const tabManageProductActive = [
     { label: "dashboard", href: "admin" },
     {
-      label: "add products",
-      href: "add-products",
-    },
-    {
       label: "manage products",
       href: "manage-products",
       active: true,
     },
+    {
+      label: "add products",
+      href: "add-products",
+    }
+  
   ]
   
 export const tabOrdersActive = [

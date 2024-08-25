@@ -32,7 +32,7 @@ import { formatPrice } from '@/lib/formatPrice';
                     <div onClick={()=>router.push(`/${item.id}/product`)} className="hover:cursor-pointer max-sm:h-32 col-span-2 sm:col-span-1 flex justify-center items-center">
                     <Image
                     
-                    src={ParseImages(item.image)[0].image}
+                    src={ParseImages(item.images)[0].image}
                     alt={"ddd"}
                     width={150}
                     height={150}

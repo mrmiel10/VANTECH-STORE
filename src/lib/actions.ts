@@ -18,6 +18,7 @@ import {
   formValidateProducts,
   formValidateReview,
   schemaInfoUser,
+  SchemaSafeProductsOrder,
 } from "../../schemas/schema";
 import { authedAction } from "./zsa";
 import { updateProfileSchema } from "@/app/editprofil/EditProfil";
@@ -39,7 +40,7 @@ export const addProductAction = authedAction
   .input(formValidateProducts)
 
   .handler(async ({ input }) => {
-    const products = await prisma.product.create({
+    await prisma.product.create({
       data: {
         name: input.name,
         description: input.description,
@@ -100,6 +101,75 @@ export const getProductsPages = async (
         status: productStatus
           ? {
               contains: productStatus,
+              mode: "insensitive",
+            }
+          : undefined,
+      },
+    });
+    const totalPages = Math.ceil(Number(count) / ITEMS_PER_PAGE);
+    return { totalPages, count };
+  } catch (error) {
+    throw error;
+  }
+};
+export const getOrdersPages = async (
+  searchOrder: string,
+deliveryStatus: string
+) => {
+  try {
+    const count = await prisma.order.count({
+      where: {
+        OR: [
+          {
+            status: {
+              contains: searchOrder,
+              mode: "insensitive",
+            },
+          },
+          {
+            deliveryStatus: {
+              contains: searchOrder,
+              mode: "insensitive",
+            },
+          },
+          {
+            user: {
+              OR:[
+               { firstName: {
+                  contains: searchOrder,
+                  mode: "insensitive",
+                }
+              },
+              {  lastName: {
+                  contains: searchOrder,
+                  mode: "insensitive",
+                }
+              },
+              {  email: {
+                  contains: searchOrder,
+                  mode: "insensitive",
+                }
+              }
+              ]
+             
+            },
+          },
+
+          {
+            status: {
+              contains: searchOrder,
+              mode: "insensitive",
+            },
+          },
+          {
+            amount: {
+              equals: Number(searchOrder) || undefined,
+            },
+          },
+        ],
+        deliveryStatus: deliveryStatus
+          ? {
+           equals:deliveryStatus,
               mode: "insensitive",
             }
           : undefined,
@@ -178,6 +248,83 @@ export const getFilteredProducts = async (
     throw error;
   }
 };
+export const getFilteredOrders = async (
+  searchOrder: string,
+  currentPage: number,
+  deliveryStatus: string
+) => {
+  noStore();
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
+  try {
+    const orders= await prisma.order.findMany({
+      take: ITEMS_PER_PAGE,
+      skip: offset,
+      where: {
+        OR: [
+          {
+            status: {
+              contains: searchOrder,
+              mode: "insensitive",
+            },
+          },
+          {
+            deliveryStatus: {
+              contains: searchOrder,
+              mode: "insensitive",
+            },
+          },
+          {
+            user: {
+              OR:[
+               { firstName: {
+                  contains: searchOrder,
+                  mode: "insensitive",
+                }
+              },
+              {  lastName: {
+                  contains: searchOrder,
+                  mode: "insensitive",
+                }
+              },
+              {  email: {
+                  contains: searchOrder,
+                  mode: "insensitive",
+                }
+              }
+              ]
+             
+            },
+          },
+
+          {
+            status: {
+              contains: searchOrder,
+              mode: "insensitive",
+            },
+          },
+          {
+            amount: {
+              equals: Number(searchOrder) || undefined,
+            },
+          },
+        ],
+        deliveryStatus: deliveryStatus
+          ? {
+           equals:deliveryStatus,
+              mode: "insensitive",
+            }
+          : undefined,
+      },
+      include: {
+        user: true,
+      },
+    });
+    return orders;
+  } catch (error) {
+    throw error;
+  }
+};
 export const handleSetStatusProductAction = action
   .input(
     z.object({
@@ -192,7 +339,7 @@ export const handleSetStatusProductAction = action
     const newStatus = input.productStatus;
     const productId = input.productId;
 
-    await prisma.product.update({
+    const update = await prisma.product.update({
       where: {
         id: productId,
       },
@@ -200,7 +347,8 @@ export const handleSetStatusProductAction = action
         status: newStatus,
       },
     });
-        revalidatePath("/admin/manage-products")
+    return update
+    // revalidatePath("/admin/manage-products");
   });
 
 export const getCurrentUser = async () => {
@@ -245,7 +393,7 @@ export const editProductAction = authedAction
         images: input.images,
       },
     });
-   revalidatePath("/admin/manage-products")
+    revalidatePath("/admin/manage-products");
   });
 export const deleteImagesProductAction = authedAction
   .input(
@@ -379,3 +527,30 @@ export const handleSetDeliveryOrderStatusAction = authedAction
 export const deleteImageProfil = async (userImage: string) => {
   await del(userImage);
 };
+export const createOrderAction = authedAction
+  .input(
+    //SchemaSafeProductsOrder
+    z.object({
+      cartOrder: SchemaSafeProductsOrder,
+      userId: z.string(),
+      totalPrice: z.number(),
+    })
+  )
+  .handler(async ({ input }) => {
+    const userId = input.userId;
+    const amount = input.totalPrice;
+    const products = input.cartOrder;
+    await prisma.order.create({
+      data: {
+        currency: "xaf",
+        status:"pending",
+        deliveryStatus: "pending",
+        amount,
+        products,
+        userId,
+      },
+    });
+    console.log(input.cartOrder);
+    console.log(input.userId);
+    return input;
+  });

@@ -64,9 +64,22 @@ export const EditProductForm = ({
   product: Product
 }) => {
   const router = useRouter();
-  console.log(product);
+   console.log(product);
+  console.log("yessssss")
+  console.log(ParseImages(product.images));
+const safeImages = ParseImages(product.images)
+  const images:{
+    file: File | string;
+    //file: File | string;
+    key?: string; // used to identify the file in the progress callback
+    progress: "PENDING" | "COMPLETE" | "ERROR" | number;
+  }[] = safeImages.map((image,_)=>{
+    
+   return {file:image.image,progress:"COMPLETE"}
+  }
+  )
   const [isUploadImage, setUploadImage] = React.useState(false);
-  const [fileStates, setFileStates] = useState<FileState[]>([]);
+  const [fileStates, setFileStates] = useState<FileState[]>(images);
   const [isProductCreated, setIsProductCreated] = useState(false);
   const { edgestore } = useEdgeStore(); 
   const editProduct = useServerAction(editProductAction, {
@@ -91,7 +104,9 @@ export const EditProductForm = ({
     },
   });
   const createImageFile = (files: FileState[]) => {
+if(files.length !=0) return
     const imagesFile = files.map((i) => {
+      if(typeof i.file ==='string') return {image:i.file}
       return { image: i.file.name };
     });
     setCustomValue("images", imagesFile);
@@ -105,7 +120,7 @@ export const EditProductForm = ({
       brand: product.brand,
       category: product.category,
       status: product.status,
-      images: [],
+      images: ParseImages(product.images),
        price: product.price,
       quantity: product.quantity,
     },
@@ -137,9 +152,12 @@ export const EditProductForm = ({
       fileStates.map(async (fileState, index) => {
         try {
           if (
-            fileState.progress !== "PENDING"
+            fileState.progress !== "PENDING" || typeof fileState.file === "string"
             // typeof values.images[index].image === "string"
           ) {
+            uploadedImages.push({
+              ...values.images[index]
+            })
             return;
           }
           const res = await edgestore.publicFiles.upload({
@@ -147,13 +165,13 @@ export const EditProductForm = ({
             input:{type:"product"},
             options: {},
             onProgressChange: async (progress) => {
-              updateFileProgress(fileState.key, progress,setFileStates);
-              if (progress === 100) {
-                // wait 1 second to set it to complete
-                // so that the user can see the progress bar
-                await new Promise((resolve) => setTimeout(resolve, 1000));
-                updateFileProgress(fileState.key, "COMPLETE",setFileStates);
-              }
+              updateFileProgress(progress,setFileStates,fileState.key);
+                if (progress === 100) {
+                  // wait 1 second to set it to complete
+                  // so that the user can see the progress bar
+                  await new Promise((resolve) => setTimeout(resolve, 1000));
+                  updateFileProgress("COMPLETE",setFileStates,fileState.key);
+                }
             },
           });
           uploadedImages.push({
@@ -162,16 +180,13 @@ export const EditProductForm = ({
           });
           editProduct.execute({ ...values, images: uploadedImages,id:product.id})
         } catch (err) {
-          updateFileProgress(fileState.key, "ERROR",setFileStates);
-        } finally {
+          updateFileProgress("ERROR",setFileStates,fileState.key);
           setUploadImage(false);
         }
       }),
-
      // console.log(uploadedImages),
    
-       deleteImagesProduct.execute(ParseImages(product.images)),
-    
+       deleteImagesProduct.execute(ParseImages(product.images)),    
     ]);
  
   }
@@ -179,7 +194,9 @@ export const EditProductForm = ({
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="flex items-center gap-4 mb-4">
-          <Button onClick={()=>router.push("/admin/manage-products")} variant="outline" size="icon" className="h-7 w-7">
+          <Button onClick={(e)=>{
+            e.preventDefault()
+            router.push("/admin/manage-products")}} variant="outline" size="icon" className="h-7 w-7">
             <ChevronLeft className="h-4 w-4" />
             <span className="sr-only">Back</span>
           </Button>

@@ -7,10 +7,11 @@ export type CartProductType = {
     name: string;
     description: string | null;   
     brand: string;
+    status:string;
     category:string,  
     quantity:number
     price: number;
-    image: {
+    images: {
         image: string;
     }[]
 } 
@@ -20,9 +21,10 @@ export type FavoriteProductType = {
     name: string;
     description: string | null;   
     brand: string;
+    status:string
     category:string,    
     price: number;
-    image: {
+    images: {
         image: string;
     }[]
   } ;
@@ -128,7 +130,7 @@ export const getPrice = ()=>{
             return totalPrice
         
         }
-  
+  return 0
     
 }
 export const deleteProductInCart = (id:string) => {

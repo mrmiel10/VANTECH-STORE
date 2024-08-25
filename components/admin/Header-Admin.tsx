@@ -2,9 +2,7 @@
 import React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-
 import { Badge } from "@/components/ui/badge";
 import { navLinksAdmin } from "@/lib/navLinksAdmin";
 import { MenuIcon } from "lucide-react";
@@ -30,11 +28,11 @@ export const HeaderAdmin = (props: PropsWithChildren) => {
                 key={item.id}
                 href={item.href[0]}
                 className={clsx(
-                  "flex items-center gap-3 rounded-lg px-3 py-2  transition-all hover:text-blue-500  hover:bg-muted text-primary",
-                  {
-                    "bg-muted-foreground text-blue-500":
-                      item.href.includes(pathname),
-                  }
+                  "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-blue-500 hover:bg-muted",
+                  
+                   
+                      item.href.includes(pathname) ? "bg-muted text-blue-500": "text-muted-foreground"
+                
                 )}
               >
                 <item.Icon className="size-4" />

@@ -12,9 +12,7 @@ import { formatPrice } from "@/lib/formatPrice";
 import SetQuantity from "../../../../components/product/setQuantity";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-
 import { useShallow } from "zustand/react/shallow";
-
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
@@ -23,18 +21,23 @@ import { toast } from "sonner";
 import { Product } from "@prisma/client";
 import { Review } from "@prisma/client";
 import { ParseImages } from "../../../../components/admin/ProductsTable";
+import clsx from "clsx";
 const ProductsFeatures = ({ product }: { product: Product & {reviews:Review[]} }) => {
 // const ProductsFeatures = ({ product }: { product: productsType }) => {
 const productImages = ParseImages(product.images)
+const [selectProductImage,setSelectProductImage] = useState<{
+  image:string
+}>(productImages[0])
   const [cartProduct, setCartProduct] = useState<CartProductType>({
     id: product.id,
     name: product.name,
     description: product.description,
     brand: product.brand,
     category:product.category,
+    status:product.status,
     quantity: 1,
     // image: product.image,
-    image: productImages,
+    images: productImages,
     // selectedImg: ParseImage(product.images)[0].image,
     price: product.price,
   });
@@ -71,27 +74,36 @@ const productImages = ParseImages(product.images)
   const productRating =
   product.reviews.reduce((acc, item) => item.rating + acc, 0) /
   product.reviews.length;
-  const Router = useRouter();
+
   return (
     <div>
       <main className="container mx-auto grid grid-cols-1 gap-8 px-4 py-8 sm:grid-cols-2 sm:gap-10 md:px-6 lg:max-w-7xl">
-        <div className="flex flex-col  gap-4">
+        <div className="flex flex-col  gap-4 shrink-0">
         
           {/* <div className="aspect-square w-full rounded-lg flex"> */}
-        
-              <Image
-              src={ productImages[0].image}
+        <div className="w-full aspect-square relative">
+        <Image
+              src={ selectProductImage.image}
               alt="Product Image"
-               width={600}
-               height={600}
+             fill
               className=" w-full rounded-lg object-contain"
             />
       
+        </div>
+             
           {/* </div> */}
           <div className="border-2 border-slate-300 rounded-lg h-16 max-h-20 flex justify-center items-center">
             {productImages.map((imageProduct,_)=>(
-              <div key={imageProduct.image} className="cursor-pointer border p-1 rounded-md ">
-                 <div  className="p-4 relative aspect-square h-10 w-10 rounded-md">
+              <div onClick={()=>setSelectProductImage((prev)=>{
+                return {
+                  ...prev,
+                  image:imageProduct.image
+                }
+              })} key={imageProduct.image} className={clsx(
+                "cursor-pointer p-1 rounded-md",
+                imageProduct.image === selectProductImage.image ? "border" : "border-none"
+              )}>
+                 <div  className=" relative aspect-square h-10 w-10 rounded-md">
                 <Image src={imageProduct.image} alt="image-du-produit" fill className="object-contain " />
               </div>
               </div>
@@ -172,7 +184,7 @@ const productImages = ParseImages(product.images)
           <div className="grid gap-4">
             {isInCart ? (
               <div className="flex max-xs:flex-col gap-4">
-                {cartProduct?.id && (
+                {cartProduct.id && (
                   <Button
                   onClick={() => {
                     deleteProductInCart(product.id);
@@ -184,7 +196,7 @@ const productImages = ParseImages(product.images)
                 </Button>
                 )}
                 
-                <Button variant={"defaultBtn"} asChild>
+                <Button  variant={"defaultBtn"} asChild>
                   <Link href="/cart">Voir le panier</Link>
                 </Button>
               </div>
@@ -202,7 +214,7 @@ const productImages = ParseImages(product.images)
                     toast("Product added to cart");
                   }}
                   size="lg"
-                  className="group w-full"
+                  className=" w-full"
                   variant="defaultBtn"
                 >
                   Add to Cart

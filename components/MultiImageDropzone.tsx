@@ -18,9 +18,9 @@ const variants = {
 };
 
 export type FileState = {
-  file: File;
+  file: File | string;
   //file: File | string;
-  key: string; // used to identify the file in the progress callback
+  key?: string; // used to identify the file in the progress callback
   progress: "PENDING" | "COMPLETE" | "ERROR" | number;
 };
 
@@ -58,6 +58,7 @@ const MultiImageDropzone = React.forwardRef<HTMLInputElement, InputProps>(
     const imageUrls = React.useMemo(() => {
       if (value) {
         return value.map((fileState) => {
+          if(typeof fileState.file === 'string') return fileState.file
           return URL.createObjectURL(fileState.file);
           // if (typeof fileState.file === 'string') {
           //   // in case an url is passed in, use it to display the image
@@ -162,7 +163,7 @@ const MultiImageDropzone = React.forwardRef<HTMLInputElement, InputProps>(
                 </div>
               )}
               {/* Remove Image Icon */}
-              {imageUrls[index] && !disabled && progress === "PENDING" && (
+              {imageUrls[index] && !disabled && (progress === "PENDING" || progress === "COMPLETE") && (
                 <div
                   className="group absolute right-0 top-0 -translate-y-1/4 translate-x-1/4 transform"
                   onClick={(e) => {

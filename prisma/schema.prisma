@@ -82,14 +82,25 @@ model Order {
   userId          String
   amount          Float
   currency        String
-  status          String
-  deliveryStatus  String?
+  status       String
+  deliveryStatus  String
   createdDate     DateTime @default(now())
-  paymentIntentId String   @unique
+  paymentIntentId String?   @unique
   products        Json
-  address         Json
+  address         Json?
   user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
+// enum statusPaymentOrder{
+//   pending
+//   paid
+// }
+// enum deliveryStatus{
+//   delivered
+//   pending
+//   paid
+//   dispatched
+//   cancelled
+// }
 
 model Product {
   id          String   @id @default(uuid())
@@ -102,4 +113,5 @@ model Product {
   images      Json
   reviews     Review[]
   quantity    Int
+  createdAt DateTime @default(now())
 }
