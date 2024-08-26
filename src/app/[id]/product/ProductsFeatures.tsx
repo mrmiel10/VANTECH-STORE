@@ -158,19 +158,32 @@ const [selectProductImage,setSelectProductImage] = useState<{
             <div className="flex items-center gap-2 text-muted-foreground">
               <div className="flex flex-col  gap-1 font-semibold">
                 <div className="flex">
-                  <p>(4.5 out 5)</p>
+                  <p>({productRating} out 5)</p>
                 </div>
 
                 <div className="flex max-sm:flex-col sm:items-center gap-1">
                   {" "}
                   <Rating
                     className="border-blue-400 mr-1"
-                    value={4.5}
+                    value={productRating}
                     readOnly
                     precision={0.5}
                     size="large"
                   />
-                  <span className="text-sm "> (12 reviews)</span>
+                    {product.reviews.length !==0  ? (
+                        <span className="text-sm "> 
+                  
+                      ( {product.reviews.length}{" "}review(s))
+    
+                      </span>
+                    ):(
+                      <span className="text-sm "> 
+                  
+                      (No reviews)
+  
+                    </span>
+                    )}
+                
                 </div>
               </div>
             </div>

@@ -37,11 +37,11 @@ export const AddRating =({user,product}:{user:User & {orders:Order[]} , product:
   
 const commentProduct = useServerAction(commentProductAction,{
   onSuccess:()=>{
-    toast.success("your co")
+    toast.success("your review has been submitted Thanks you!")
     router.refresh()
   },
-  onError:()=>{
-    toast.error("")
+  onError:(err)=>{
+    toast.error(err.err.message)
   }
 })
   const form = useForm<z.infer<typeof formValidateReview>>({

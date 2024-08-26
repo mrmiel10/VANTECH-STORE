@@ -1,3 +1,4 @@
+"use client"
 import React from 'react'
 import {
     Card,
@@ -8,12 +9,7 @@ import {
     CardTitle,
   } from "@/components/ui/card";
 import { Button } from '@/components/ui/button';
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
-  } from "@/components/ui/tooltip";
+
 import { HandleSetDeliveryOrderStatus } from '../../../../components/admin/orders/HandleSetDeliveryOrderStatus';
 import { DeliveryStatusOrder } from '../../../../components/admin/orders/DeliveryStatusOrder';
 import {
@@ -25,40 +21,67 @@ import { Separator } from '@/components/ui/separator';
 import PaymentStatus from '../../../../components/admin/orders/PaymentStatus';
 import { ChevronLeft, ChevronRight, Copy, CreditCard } from 'lucide-react';
 import CopyPasteButton from '../../../../components/CopyPasteButton';
-const OrderDetails = () => {
+import { useShallow } from 'zustand/react/shallow';
+import { useOrderStore } from '@/lib/order.store';
+import { JsonValue } from '@prisma/client/runtime/library';
+import { SchemaSafeProductsOrder } from '../../../../schemas/schema';
+import { formatPrice } from '@/lib/formatPrice';
+import { formatDateToLocal } from '@/lib/formatDate';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
+ 
+export const OrderDetails = () => {
+  const { order} = useOrderStore(
+    useShallow((s) => ({
+    order:s.order
+     
+    }))
+  );
+  if(!order) return null
+  const productsOrder = ParseProducts(order.products)
   return (
     <Card className="overflow-hidden">
     <CardHeader className="flex flex-row items-start bg-muted/50">
       <div className="grid gap-0.5">
         <CardTitle className="text-blue-500 group flex items-center gap-2 text-lg">
-          Order Oe31b70H
-                      
+          {/* Order Oe31b70H */}
+        
+                 {order?.id.substring(0,20) + "..."}     
                   <CopyPasteButton  className="bg-background flex items-center justify-center size-6 rounded-md  text-muted-foreground hover:text-blue-500 " />
                   <span className="sr-only">Copy Order ID</span>
             
      
         </CardTitle>
         <div className="grid grid-cols-1 gap-2">
-          <CardDescription>Date: November 23, 2023</CardDescription>
+      
+  {/* <CardDescription>Date:  {formatDateToLocal(order.createdDate.toISOString())}</CardDescription>  */}
+          {/* <CardDescription>Date: November 23, 2023</CardDescription> */}
           <div className="flex items-center text-sm text-muted-foreground">
             <span>Payment: </span>
-            <PaymentStatus status="paid" className="ml-1 bg-transparent" />
+            {/* <PaymentStatus status="paid" className="ml-1 bg-transparent" /> */}
+            <PaymentStatus status={order.status} className="ml-1 bg-transparent" />
           </div>
           <div className="flex items-center  text-sm text-muted-foreground">
             <span>Delivery:{" "} </span>{"  "}
-            <DeliveryStatusOrder status="Dispatched" className="ml-1"/>
+            <DeliveryStatusOrder status={order.deliveryStatus} className="ml-1"/>
+            {/* <DeliveryStatusOrder status="Dispatched" className="ml-1"/> */}
           </div>
         </div>
       </div>
       <div className="ml-auto flex items-center gap-1">
-<HandleSetDeliveryOrderStatus status={"ddd"} orderId={"orde2347dds"} />
+<HandleSetDeliveryOrderStatus status={order.deliveryStatus} orderId={order.id} />
+{/* <HandleSetDeliveryOrderStatus status={"ddd"} orderId={"orde2347dds"} /> */}
       </div>
       {/* <div className="flex flex-col"><p><Button className="px-0 py-0 h-fit w-fit"  variant={"outline"}><kbd  className="px-1 py-">Ctrl</kbd></Button> +</p></div> */}
     </CardHeader>
     <CardContent className="p-6 text-sm text-muted-foreground">
       <div className="grid gap-3">
         <div className="font-semibold text-blue-500">Order Details</div>
-        <ul className="grid gap-3 ">
+        {/* <ul className="grid gap-3 ">
           <li className="flex items-center justify-between">
             <span className="">
               Glimmer Lamps x <span>2</span>
@@ -71,12 +94,43 @@ const OrderDetails = () => {
             </span>
             <span>$49.00</span>
           </li>
+        </ul> */}
+      
+        <ul className="grid gap-3 ">
+        {productsOrder.map((product,_)=>(
+         
+             <li key={product.id} className="flex items-center justify-between">
+                <TooltipProvider>
+           <Tooltip>
+             <TooltipTrigger asChild>
+             <span className="">
+              {product.name.length < 20 ? product.name : product.name.substring(0,20) + "..."}
+               <span className='ml-2'>x{" "}{product.quantity}</span>
+            </span>
+             </TooltipTrigger>         
+         
+             <TooltipContent className='text-muted-foreground hover:text-blue-500 hover:font-semibold w-52 min-h-20'>
+               <p>{product.name}</p>
+             </TooltipContent>
+           </Tooltip>
+         </TooltipProvider>
+            <span>{formatPrice(product.price * product.quantity)}</span>
+          </li>
+          
+          //   <li key={product.id} className="flex items-center justify-between">
+          //   <span className="">
+          //     {product.name.length < 20 ? product.name : product.name.substring(0,20) + "..."}
+          //      <span className='ml-2'>x{" "}{product.quantity}</span>
+          //   </span>
+          //   <span>{product.price}</span>
+          // </li>
+        ))}        
         </ul>
         <Separator className="my-2" />
         <ul className="grid gap-3">
           <li className="flex items-center justify-between">
             <span className="">Subtotal</span>
-            <span>$299.00</span>
+            <span>{formatPrice(order.amount)}</span>
           </li>
           <li className="flex items-center justify-between">
             <span className="">Shipping</span>
@@ -119,12 +173,12 @@ const OrderDetails = () => {
         <dl className="grid gap-3">
           <div className="flex items-center justify-between">
             <dt className="text-muted-foreground">Customer</dt>
-            <dd>Liam Johnson</dd>
+            <dd>{order.user.firstName}{" "} {order.user.lastName}</dd>
           </div>
           <div className="flex items-center justify-between">
             <dt className="text-muted-foreground">Email</dt>
             <dd>
-              <a href="mailto:">liam@acme.com</a>
+              <a href="mailto:">{order.user.email}</a>
             </dd>
           </div>
           <div className="flex items-center justify-between">
@@ -176,4 +230,7 @@ const OrderDetails = () => {
   )
 }
 
-export default OrderDetails
+export const ParseProducts = (products:JsonValue) =>{
+  const stringProducts = products as string
+  return SchemaSafeProductsOrder.parse(JSON.parse(JSON.stringify(stringProducts)))
+}

@@ -17,6 +17,7 @@ import {
     DropdownMenuTrigger,
   } from "@/components/ui/dropdown-menu";
 import { MoreVertical } from "lucide-react";
+import { Circle } from "lucide-react";
 export const HandleSetDeliveryOrderStatus = ({
  orderId,
   status,
@@ -26,12 +27,13 @@ export const HandleSetDeliveryOrderStatus = ({
 }) => {
   const router = useRouter();
   const handleSetDeliveryOrderStatus = useServerAction(handleSetDeliveryOrderStatusAction, {
-    onSuccess: () => {
+      onSuccess: () => {
       router.refresh();
       toast.success("the delivery status has been updated successfully");
     },
-    onError: () => {
-      toast.error("Not updated!");
+    onError: (err) => {
+      toast.error(err.err.message)
+     // toast.error("Not updated!");
     },
   });
   const deliveryStatus = status;
@@ -53,6 +55,7 @@ export const HandleSetDeliveryOrderStatus = ({
                     Set delivery Status
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
+                  <div className="flex flex-col gap-2">
                   {MapDeliveryStatusOrder.map((status, _) => (
         <div className="w-full space-y-2" key={status} >
           <DropdownMenuItem
@@ -66,16 +69,20 @@ export const HandleSetDeliveryOrderStatus = ({
               className="w-full"
               action={handleSetDeliveryOrderStatus.executeFormAction}
             >
-              <input type="hidden" name="status" value={deliveryStatus} />
-              {/* <input type="hidden" name="productId" value={productId} /> */}
+              <input type="hidden" name="status" value={status} />
+              <input type="hidden" name="orderId" value={orderId} />
               <Button variant={"pStatus"} className="p-0" type="submit">
-                {status[0].toUpperCase() + status.slice(1)}
+                <span>{status[0].toUpperCase() + status.slice(1)}</span>
+                {  deliveryStatus === status && (  <div className="ml-auto size-2 bg-blue-500 rounded-full"/>)}
+              
               </Button>
             </form>
           </DropdownMenuItem>
          </div>
         
       ))}
+                  </div>
+  
                 </DropdownMenuContent>
               </DropdownMenu>
     

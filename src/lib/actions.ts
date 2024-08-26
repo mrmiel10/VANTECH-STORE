@@ -4,15 +4,7 @@ import prisma from "../../db";
 import { uploadImageType } from "@/app/admin/add-products/AddProductsForme";
 import { unstable_noStore as noStore } from "next/cache";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import {
-  deleteObject,
-  getDownloadURL,
-  getStorage,
-  ref,
-  uploadBytesResumable,
-} from "firebase/storage";
-import { ParseImages } from "../../components/admin/ProductsTable";
-import firebaseApp from "./firebase";
+
 import { action } from "./zsa";
 import {
   formValidateProducts,
@@ -53,7 +45,30 @@ export const addProductAction = authedAction
       },
     });
   });
-
+export const getReviewsPages = async(filterRating:number | undefined) =>{
+try {
+ const count =  await prisma.review.count({
+where:{
+  OR: [
+    {
+      rating: {
+        equals: filterRating,
+      },
+    },
+    {
+      rating: filterRating && {
+        equals: filterRating + 0.5,
+      },
+    },
+  ],
+}
+  })
+  const totalPages = Math.ceil(Number(count) / 3);
+  return totalPages
+} catch (error) {
+  
+}
+}
 export const getProductsPages = async (
   searchProduct: string,
   productStatus: string
@@ -502,6 +517,7 @@ export const commentProductAction = authedAction
     )
   )
   .handler(async ({ input }) => {
+    console.log(input)
     await prisma.review.create({
       data: {
         comment: input.comment,
@@ -515,13 +531,24 @@ export const handleSetDeliveryOrderStatusAction = authedAction
   .input(
     z.object({
       status: z.string(),
-      productId: z.string(),
+     orderId: z.string(),
     }),
     {
       type: "formData",
     }
   )
-  .handler(async ({ input }) => {
+  .handler(async({ input }) => {
+    //console.log(input)
+    await prisma.order.update({
+      data:{
+        deliveryStatus:input.status
+        },
+      where:{
+        id:input.orderId
+
+      },
+      
+    })
     console.log(input);
   });
 export const deleteImageProfil = async (userImage: string) => {
@@ -554,3 +581,104 @@ export const createOrderAction = authedAction
     console.log(input.userId);
     return input;
   });
+export const getAmountOrdersInWeek = async()=>{
+  const today = new Date()
+  const startOfWeek =  new Date(today.getFullYear(),today.getMonth(),today.getDate() - today.getDay() + 1)
+  const endOfWeek = new Date(startOfWeek.getFullYear(),startOfWeek.getMonth(), startOfWeek.getDate() + 6)
+  console.log(startOfWeek,endOfWeek)
+ const totalAmount =  await prisma.order.aggregate({
+
+  //la semaine en cours, je recupere le montant total des commandes passées
+    where:{
+      createdDate:{
+        gte:startOfWeek,
+        lte:endOfWeek
+      }
+    },
+    _sum:{
+      amount:true
+    },
+   
+  }) 
+  console.log("total amount",totalAmount._sum.amount)
+  return totalAmount._sum.amount
+}
+export const getPaidOrUnpaidOrdersInWeek= async(status:string)=>{
+  const today = new Date()
+  const startOfWeek =  new Date(today.getFullYear(),today.getMonth(),today.getDate() - today.getDay() + 1)
+  const endOfWeek = new Date(startOfWeek.getFullYear(),startOfWeek.getMonth(), startOfWeek.getDate() + 6)
+  const orders =  await prisma.order.aggregate({
+    //En fonction du status de paiment, je recupere le montal total de commandes et le nombre de commandes
+
+    where:{
+      createdDate:{
+        gte:startOfWeek,
+        lte:endOfWeek
+      },
+status
+    },
+    _sum:{
+      amount:true
+    },
+ _count:true
+  }) 
+ 
+return orders
+}
+export const getAmountOrdersInMonth = async()=>{
+ // noStore()
+  const today = new Date()
+  const startOfMonth =  new Date(today.getFullYear(),today.getMonth() ,1)
+  const endOfMonth = new Date(startOfMonth.getFullYear(),startOfMonth.getMonth() + 1, 0)
+ const totalAmount =  await prisma.order.aggregate({
+  //la semaine en cours, je recupere le montant total des commandes passées
+    where:{
+      createdDate:{
+        gte:startOfMonth,
+        lte:endOfMonth
+      }
+    },
+    _sum:{
+      amount:true
+    },
+   
+  }) 
+  return totalAmount._sum.amount
+}
+export const getPaidOrUnpaidOrdersInMonth= async(status:string)=>{
+  //noStore()
+  const today = new Date()
+  const startOfMonth =  new Date(today.getFullYear(),today.getMonth() ,1)
+  const endOfMonth = new Date(startOfMonth.getFullYear(),startOfMonth.getMonth() + 1, 0)
+  const orders =  await prisma.order.aggregate({
+    //En fonction du status de paiment, je recupere le montal total de commandes et le nombre de commandes
+
+    where:{
+      createdDate:{
+        gte:startOfMonth,
+        lte:endOfMonth
+      },
+status
+    },
+    _sum:{
+      amount:true
+    },
+ _count:true
+  }) 
+ return orders
+
+}
+export const getAllPaidOrUnpaidOrders = async(status:string) =>{
+  //Je recupère le montal total de commandes et le nombre total de commandes passées en fonction du status de paiement
+  const orders =  await prisma.order.aggregate({
+      where:{
+        status
+      },
+      _sum:{
+        amount:true
+      },
+      _count:true
+
+    })
+    return orders
+}

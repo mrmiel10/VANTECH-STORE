@@ -5,6 +5,8 @@ import { AddRating } from "./AddRating";
 import { searchParamsCache } from "@/lib/nuqs";
 import ProductsFeatures from "./ProductsFeatures";
 import { getCurrentUser } from "@/lib/actions";
+import NoReview from "../../../../public/add review.png"
+import Image from "next/image";
 interface IParams {
   id: string;
 }
@@ -42,11 +44,17 @@ const PageProduct = async ({
         {product.reviews.length !== 0 ? (
           <ListRating productId={params.id} />
         ) : (
-          <p>Aucun commentaire</p>
+      
+         <>
+             <NoReviews /> 
+             {user && (
+          <AddRating product={product} user={user} />
+               ) }
+               
+        </>
+     
         )}
-        {user && (
-   <AddRating product={product} user={user} />
-        ) }
+
   
       </section>
     </div>
@@ -54,3 +62,14 @@ const PageProduct = async ({
 };
 
 export default PageProduct;
+const NoReviews = () =>{
+  return (
+    <div className="w-full min-h-40 grid grid-cols-1 gap-2 justify-items-center items-center">
+    <Image src={NoReview} alt={"add review!"} width={300} height={300}/>
+    <div className="grid gap-2 text-muted-foreground">
+      <div className="font-semi-bold text-blue-500 font-semibold text-lg">This product has no review!</div>
+      <div>You can leave a review </div>
+    </div>
+  </div>
+  )
+}

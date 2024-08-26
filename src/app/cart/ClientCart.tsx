@@ -103,7 +103,7 @@ export const ClientCart = ({
                 </RegisterLink>
                 </Button>
           
-           )}
+           )} 
                     {/* <PayOrderButton /> */}
                   </div>
                 </div>

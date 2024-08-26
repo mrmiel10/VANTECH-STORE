@@ -53,7 +53,7 @@ import { HandleSetDeliveryOrderStatus } from "../../../../components/admin/order
 import { useEffect } from "react";
 import { Suspense } from "react";
 import { searchParamsCache } from "@/lib/nuqs";
-import OrderDetails from "./OrderDetails";
+import {OrderDetails} from "./OrderDetails";
 import { SkeletonLoadingCardOrder, SkeletonLoadingOrdersTable } from "../../../../components/Skeletons";
 export default function OrdersPage({
   searchParams,
@@ -76,6 +76,7 @@ export default function OrdersPage({
           <CardMonthOrders />
           </Suspense>
          
+        
         
          
         </div>
