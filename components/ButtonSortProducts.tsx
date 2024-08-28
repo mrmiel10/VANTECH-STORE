@@ -1,6 +1,6 @@
 "use client"
 import React, { useCallback, useEffect, useState } from "react";
-import { ArrowDownAZ, ArrowUpAZ, ChevronDownIcon } from "lucide-react";
+
 import { ArrowUp,ArrowDown } from "lucide-react";
 import {
   DropdownMenuTrigger,
@@ -37,20 +37,7 @@ const ButtonSortProducts = () => {
     },
     [searchParams, pathname, router]
   );
-  // const handleSetParamsSortFilters = useCallback(
-  //   (name: string, value: string) => {
-  //     console.log(name, value);
 
-  //     const params = new URLSearchParams(searchParams.toString());
-  //     if (params.has(name, value)) {
-  //       params.delete(name, value);
-  //     } else {
-  //       params.set(name, value);
-  //     }
-  //     router.push(pathname + "?" + params.toString());
-  //   },
-  //   [searchParams, pathname, router]
-  // );
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild className="focus:outline-none">
@@ -77,23 +64,7 @@ const ButtonSortProducts = () => {
                key={filter.id}
             
              className="focus:text-blue-500 text-muted-foreground">{filter.id}</DropdownMenuCheckboxItem>
-            // <DropdownMenuItem
-            // className="w-full flex items-center gap-2 hover:text-blue-500"
-            //   onClick={() => {
-              
-            //     handleSetParamsSortFilters(filter.name, filter.value);
-            //   }}
-            //   key={filter.id}
-            // >
-            //   <div className="size-5 flex justify-center items-center">
-            //     {" "}
-            //       {searchParams.has(filter.name,filter.value) ?  (<Check />) : null } 
-            //   </div>
-
-            //   {/* {searchParams.has(filter.name,filter.value) ?  (<Check />) : null } */}
-
-            //   {filter.id}
-            // </DropdownMenuItem>
+           
           );
         })}
         {/* <DropdownMenuSeparator /> */}

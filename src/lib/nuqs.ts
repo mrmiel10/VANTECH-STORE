@@ -7,4 +7,5 @@ export const searchParamsCache = createSearchParamsCache({
     search:parseAsString.withDefault(""),
     status:parseAsString.withDefault(""),
     deliveryStatus:parseAsString.withDefault(""),
+    paymentStatus:parseAsString.withDefault(""),
   })

@@ -13,6 +13,7 @@ import { ListFilter } from "lucide-react";
 import clsx from "clsx";
 import { CheckedState } from "@radix-ui/react-checkbox";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useQueryState } from 'nuqs'
 export const MapDeliveryStatusOrder = [
   "Delivered",
   "Pending",
@@ -23,19 +24,24 @@ export const FilterDeliveryStatusOrder = () => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
-  const handleFilterChange = useCallback(
+  const [deliveryStatus,setDeliveryStatus] = useQueryState("deliveryStatus",{
+    defaultValue:"",
+    shallow:false,  
+})
+  const handleFilterChange = 
     (deliveryStatus: string, checked: CheckedState) => {
       const params = new URLSearchParams(searchParams.toString());
 
       if (checked) {
-        params.set("deliveryStatus", deliveryStatus);
+        setDeliveryStatus(deliveryStatus)
+     
       } else {
-        params.delete("deliveryStatus", deliveryStatus);
+        setDeliveryStatus("")
+      //  
       }
-      replace(`${pathname}?${params.toString()}`);
-    },
-    [searchParams, pathname, replace]
-  );
+   
+    }
+  
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     Table,
     TableBody,
@@ -15,19 +15,32 @@ import { formatPrice } from '@/lib/formatPrice';
 import { useOrderStore } from '@/lib/order.store';
 import { setOrder } from '@/lib/order.store';
 import { formatDateToLocal } from '@/lib/formatDate';
+import clsx from 'clsx';
+import { useShallow } from 'zustand/react/shallow';
 const RowOrder = ({order,lastOrder}:{
  
   order:typeOrder & {user:User},
   lastOrder:typeOrder & ({user:User}) | null
 }) => {
+  const { order:orderDetail} = useOrderStore(
+    useShallow((s) => ({
+    order:s.order
+     
+    })))
+  
   // const [orderDetail, setOrderDetail] = React.useState<typeOrder & ({user:User}) | null>(lastOrder)
   useEffect(()=>{
 setOrder(lastOrder)
+
   },[lastOrder])
   return (
     <TableRow onClick={()=>{
       setOrder(order)
-    }} key={order.id} className="bg-accent text-muted-foreground">
+    }} key={order.id}
+     className={clsx(
+      " text-muted-foreground",
+      {"bg-accent": order === orderDetail }
+    )}>
     <TableCell className='text-muted-foreground flex flex-wrap'>
       <div className="font-semibold text-blue-500">{order.user.firstName} {order.user.lastName}</div>
       <div className="hidden text-sm text-muted-foreground md:inline">
@@ -41,9 +54,9 @@ setOrder(lastOrder)
       <DeliveryStatusOrder status={order.deliveryStatus} />
     
     </TableCell>
-    <TableCell className="hidden md:table-cell">
+    {/* <TableCell className="hidden md:table-cell">
       {formatDateToLocal(order.createdDate.toDateString())}
-    </TableCell>
+    </TableCell> */}
     <TableCell className="text-right">{formatPrice(order.amount)}</TableCell>
   </TableRow>
   )

@@ -182,7 +182,7 @@ const PayOrderButton = ({ user }: { user: User }) => {
           totalPrice: totalPrice,
         });
         if (data) {
-          toast.success("create order successfully!");
+          toast.success("order created successfully!");
            deleteAllProductsInCart()
         }
         console.log(data);
@@ -192,7 +192,7 @@ const PayOrderButton = ({ user }: { user: User }) => {
       <Button disabled={isPending} variant={"defaultBtn"} className="w-full">
         {isPending ? (<Loader2 className="animate-spin size-5" />)
         
-      :"  Proceed to Checkout"
+      :"Proceed to Checkout"
       }
       
         </Button>

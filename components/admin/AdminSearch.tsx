@@ -23,23 +23,22 @@ const handleSearch = (term:string) => {
   // console.log(term);
   console.log(`Searching... ${term}`);
    const params = new URLSearchParams(searchParams);
-   params.set('page', '1');
-  
+   params.set('page', '1');  
    setsearch(term)
 
 };
 
   return (
-    <Card className="px-12 py-8 flex">
-            <div className="relative  w-full">
+    <Card className="w-full bg-muted px-8 md:px-12 py-8 flex">
+            <div className="relative  w-full">              
               <Search className={clsx(
-                "absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground",
+                "absolute left-2.5 top-4 h-4 w-4 text-muted-foreground",
                 { "hidden":search !== ""}
               )} />
               <Input
                 type="search"
                 placeholder={placeholder}
-                className="text-muted-foreground w-full rounded-lg bg-background pl-8 ring-blue-500 focus:ring-blue-500"
+                className="py-6 border-input text-muted-foreground w-full rounded-lg bg-background pl-8 ring-blue-500 focus:ring-blue-500"
                 value={search}
                 // defaultValue={searchParams.get("query")?.toString() || ""}
                 onChange={(e)=>{
@@ -48,6 +47,7 @@ const handleSearch = (term:string) => {
               />
             </div>
           </Card>
+
   )
 }
 

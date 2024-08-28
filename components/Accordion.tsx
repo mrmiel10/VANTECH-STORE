@@ -1,3 +1,4 @@
+"use client"
 import { motion, Variants } from 'framer-motion'
 import { ChevronDown } from 'lucide-react'
 import React, { useState } from 'react'

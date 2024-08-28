@@ -90,17 +90,7 @@ model Order {
   address         Json?
   user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
-// enum statusPaymentOrder{
-//   pending
-//   paid
-// }
-// enum deliveryStatus{
-//   delivered
-//   pending
-//   paid
-//   dispatched
-//   cancelled
-// }
+
 
 model Product {
   id          String   @id @default(uuid())

@@ -18,6 +18,7 @@ import { put, type PutBlobResult } from "@vercel/blob";
 import { del } from "@vercel/blob";
 import * as z from "zod";
 import { useEdgeStore } from "./edgestore";
+import { authedAdminAction } from "./zsa";
 type product = {
   images: uploadImageType[];
   name: string;
@@ -28,7 +29,7 @@ type product = {
   price: number;
 };
 const ITEMS_PER_PAGE = 3;
-export const addProductAction = authedAction
+export const addProductAction = authedAdminAction
   .input(formValidateProducts)
 
   .handler(async ({ input }) => {
@@ -275,8 +276,16 @@ export const getFilteredOrders = async (
     const orders= await prisma.order.findMany({
       take: ITEMS_PER_PAGE,
       skip: offset,
+      orderBy:{
+        createdDate:"asc"
+      },
       where: {
         OR: [
+          {
+            id:{
+              equals:searchOrder
+            }
+          },
           {
             status: {
               contains: searchOrder,
@@ -326,7 +335,7 @@ export const getFilteredOrders = async (
         ],
         deliveryStatus: deliveryStatus
           ? {
-           equals:deliveryStatus,
+           contains:deliveryStatus,
               mode: "insensitive",
             }
           : undefined,
@@ -340,7 +349,7 @@ export const getFilteredOrders = async (
     throw error;
   }
 };
-export const handleSetStatusProductAction = action
+export const handleSetStatusProductAction = authedAdminAction
   .input(
     z.object({
       productStatus: z.string(),
@@ -353,7 +362,7 @@ export const handleSetStatusProductAction = action
   .handler(async ({ input }) => {
     const newStatus = input.productStatus;
     const productId = input.productId;
-
+console.log(input)
     const update = await prisma.product.update({
       where: {
         id: productId,
@@ -362,8 +371,8 @@ export const handleSetStatusProductAction = action
         status: newStatus,
       },
     });
-    return update
-    // revalidatePath("/admin/manage-products");
+  // return update
+    revalidatePath("/admin/manage-products");
   });
 
 export const getCurrentUser = async () => {
@@ -384,7 +393,26 @@ export const getCurrentUser = async () => {
     throw error;
   }
 };
-export const editProductAction = authedAction
+export const isAdmin = async() =>{
+  try {
+    const { getUser } = getKindeServerSession();
+    const sessionUser = await getUser();
+    if (!sessionUser) return null;
+    const isAdmin = await prisma.user.findUnique({
+      where: {
+        kindeId: sessionUser.id,
+        role: "ADMIN"
+      },
+     
+    });
+    return isAdmin
+  } catch (error) {
+    throw error
+  }
+  
+
+}
+export const editProductAction = authedAdminAction
   .input(
     z.intersection(
       formValidateProducts,
@@ -410,7 +438,7 @@ export const editProductAction = authedAction
     });
     revalidatePath("/admin/manage-products");
   });
-export const deleteImagesProductAction = authedAction
+export const deleteImagesProductAction = authedAdminAction
   .input(
     z.array(
       z.object({
@@ -428,7 +456,7 @@ export const deleteImagesProductAction = authedAction
     });
   });
 
-export const deleteProductAction = authedAction
+export const deleteProductAction =authedAction
   .input(
     z.object({
       id: z.string(),
@@ -527,7 +555,7 @@ export const commentProductAction = authedAction
       },
     });
   });
-export const handleSetDeliveryOrderStatusAction = authedAction
+export const handleSetDeliveryOrderStatusAction =authedAdminAction
   .input(
     z.object({
       status: z.string(),
@@ -542,6 +570,7 @@ export const handleSetDeliveryOrderStatusAction = authedAction
     await prisma.order.update({
       data:{
         deliveryStatus:input.status
+        
         },
       where:{
         id:input.orderId
@@ -581,62 +610,17 @@ export const createOrderAction = authedAction
     console.log(input.userId);
     return input;
   });
-export const getAmountOrdersInWeek = async()=>{
-  const today = new Date()
-  const startOfWeek =  new Date(today.getFullYear(),today.getMonth(),today.getDate() - today.getDay() + 1)
-  const endOfWeek = new Date(startOfWeek.getFullYear(),startOfWeek.getMonth(), startOfWeek.getDate() + 6)
-  console.log(startOfWeek,endOfWeek)
- const totalAmount =  await prisma.order.aggregate({
 
-  //la semaine en cours, je recupere le montant total des commandes passées
-    where:{
-      createdDate:{
-        gte:startOfWeek,
-        lte:endOfWeek
-      }
-    },
-    _sum:{
-      amount:true
-    },
-   
-  }) 
-  console.log("total amount",totalAmount._sum.amount)
-  return totalAmount._sum.amount
-}
-export const getPaidOrUnpaidOrdersInWeek= async(status:string)=>{
-  const today = new Date()
-  const startOfWeek =  new Date(today.getFullYear(),today.getMonth(),today.getDate() - today.getDay() + 1)
-  const endOfWeek = new Date(startOfWeek.getFullYear(),startOfWeek.getMonth(), startOfWeek.getDate() + 6)
-  const orders =  await prisma.order.aggregate({
-    //En fonction du status de paiment, je recupere le montal total de commandes et le nombre de commandes
-
-    where:{
-      createdDate:{
-        gte:startOfWeek,
-        lte:endOfWeek
-      },
-status
-    },
-    _sum:{
-      amount:true
-    },
- _count:true
-  }) 
- 
-return orders
-}
-export const getAmountOrdersInMonth = async()=>{
+export const getAmountOrdersOfPeriod = async(start?:Date,end?:Date)=>{
  // noStore()
-  const today = new Date()
-  const startOfMonth =  new Date(today.getFullYear(),today.getMonth() ,1)
-  const endOfMonth = new Date(startOfMonth.getFullYear(),startOfMonth.getMonth() + 1, 0)
+ 
  const totalAmount =  await prisma.order.aggregate({
   //la semaine en cours, je recupere le montant total des commandes passées
     where:{
-      createdDate:{
-        gte:startOfMonth,
-        lte:endOfMonth
-      }
+      createdDate:start && end ? {
+        gte:start,
+        lte:end
+      } : undefined
     },
     _sum:{
       amount:true
@@ -645,19 +629,30 @@ export const getAmountOrdersInMonth = async()=>{
   }) 
   return totalAmount._sum.amount
 }
-export const getPaidOrUnpaidOrdersInMonth= async(status:string)=>{
-  //noStore()
-  const today = new Date()
-  const startOfMonth =  new Date(today.getFullYear(),today.getMonth() ,1)
-  const endOfMonth = new Date(startOfMonth.getFullYear(),startOfMonth.getMonth() + 1, 0)
+
+// export const getAllPaidOrUnpaidOrders = async(status:string) =>{
+//   //Je recupère le montal total de commandes et le nombre total de commandes passées en fonction du status de paiement
+//   const orders =  await prisma.order.aggregate({
+//       where:{
+//         status
+//       },
+//       _sum:{
+//         amount:true
+//       },
+//       _count:true
+
+//     })
+//     return orders
+// }
+export const getPaidOrUnpaidOrdersOfPeriod = async(start:Date,end:Date,status:string) =>{
   const orders =  await prisma.order.aggregate({
     //En fonction du status de paiment, je recupere le montal total de commandes et le nombre de commandes
 
     where:{
-      createdDate:{
-        gte:startOfMonth,
-        lte:endOfMonth
-      },
+      createdDate:start && end ? {
+        gte:start,
+        lte:end
+      } : undefined,
 status
     },
     _sum:{
@@ -665,20 +660,10 @@ status
     },
  _count:true
   }) 
- return orders
-
-}
-export const getAllPaidOrUnpaidOrders = async(status:string) =>{
-  //Je recupère le montal total de commandes et le nombre total de commandes passées en fonction du status de paiement
-  const orders =  await prisma.order.aggregate({
-      where:{
-        status
-      },
-      _sum:{
-        amount:true
-      },
-      _count:true
-
-    })
-    return orders
+  const amountOrders = orders._sum.amount
+  const totalOrders = orders._count
+ return{
+  amountOrders,
+  totalOrders
+ }
 }

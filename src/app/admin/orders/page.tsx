@@ -40,9 +40,9 @@ import {
 
 import { DeliveryStatusOrder } from "../../../../components/admin/orders/DeliveryStatusOrder";
 import {
-  CardAllOrders,
-  CardMonthOrders,
-  CardWeekOrders,
+  // CardAllOrders,
+
+  CardWeekOrMonthOrders,
 } from "../../../../components/admin/orders/CardOrders";
 import { FilterDeliveryStatusOrder } from "../../../../components/admin/orders/FilterDeliveryStatusOrder";
 import { OrdersTableAdmin } from "../../../../components/admin/orders/OrdersTableAdmin";
@@ -55,6 +55,7 @@ import { Suspense } from "react";
 import { searchParamsCache } from "@/lib/nuqs";
 import {OrderDetails} from "./OrderDetails";
 import { SkeletonLoadingCardOrder, SkeletonLoadingOrdersTable } from "../../../../components/Skeletons";
+import { getOrdersPages } from "@/lib/actions";
 export default function OrdersPage({
   searchParams,
 }: {
@@ -67,18 +68,19 @@ export default function OrdersPage({
       <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
         <div className="text-blue-500 grid gap-4 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2">
           <Suspense fallback={<SkeletonLoadingCardOrder description={"All"} />}>
-          <CardAllOrders />
+          <CardWeekOrMonthOrders name="all" description="All" />
           </Suspense>
           <Suspense fallback={<SkeletonLoadingCardOrder description={"This Week"} />}>
-          <CardWeekOrders />
+          <CardWeekOrMonthOrders name="week" description="This week" />
           </Suspense>
           <Suspense fallback={<SkeletonLoadingCardOrder description={"This Month"} />}>
-          <CardMonthOrders />
+          <CardWeekOrMonthOrders name="month" description="This month" />
           </Suspense>
-         
-        
-        
-         
+       
+          <Suspense fallback={<SkeletonLoadingCardOrder description={"This Month"} />}>
+          <CardWeekOrMonthOrders name="all" description="All" />
+          </Suspense>     
+                 
         </div>
         <AdminSearch placeholder="search order..." />
         <Tabs defaultValue="all">
@@ -117,9 +119,7 @@ export default function OrdersPage({
               
               </CardContent>
               <CardFooter>
-                <div className="text-xs text-muted-foreground">
-                  Showing <strong>1-10</strong> of <strong>32</strong> orders
-                </div>
+               <ShowingNumberOrders />
               </CardFooter>
             </Card>
           </TabsContent>
@@ -131,3 +131,30 @@ export default function OrdersPage({
     </main>
   );
 }
+const ShowingNumberOrders = async () => {
+  const searchProduct = searchParamsCache.get("search");
+  const productStatus = searchParamsCache.get("status");
+  const currentPage = searchParamsCache.get("page");
+  const ITEMS_PER_PAGE = 3;
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+  const { count } = await getOrdersPages(searchProduct, productStatus);
+  const totalProducts = count;
+  const lastProduct = count > (offset + ITEMS_PER_PAGE) ? (offset + ITEMS_PER_PAGE) : count
+  if (totalProducts === 0) return null;
+  return (
+    <div className="text-xs text-muted-foreground">
+      {(offset + 1) === totalProducts ? (
+        <div>Showing one order</div>
+      ) : (
+        <div>
+          {" "}
+          Showing{" "}
+          <strong>
+            {offset + 1} - {lastProduct}
+          </strong>{" "}
+          of <strong>{totalProducts}</strong>orders
+        </div>
+      )}
+    </div>
+  );
+};

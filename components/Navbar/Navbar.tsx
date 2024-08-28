@@ -51,7 +51,7 @@ if(pathname.startsWith("/admin")) return null
         <SearchComponent placeholder="rechercher votre article..." />
       </div>
       <div className="bg-muted/40 container mx-auto px-4 flex items-center justify-center gap-4 ">
-        <nav className=" py-3 text-muted-foreground flex items-center gap-2 overflow-x-auto overflow-scroll scrollbar-none">
+        <nav className=" py-3 text-muted-foreground flex items-center gap-2">
          
             <DropdownMenu>
               <DropdownMenuTrigger asChild className="max-sm:hidden">

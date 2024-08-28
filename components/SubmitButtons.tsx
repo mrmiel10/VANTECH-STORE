@@ -21,7 +21,7 @@ export const EditProductButton = ({ productId }: { productId: string }) => {
       onClick={() => {
         router.push(`/admin/${productId}/editproduct`);
       }}
-      className="text-muted-foreground hover:bg-blue-500 hover:text-white rounded-full p-2"
+      className="text-muted-foreground hover:text-blue-500 p-2"
       variant={"outline"}
     >
       <Pencil className="size-5" />
@@ -29,7 +29,7 @@ export const EditProductButton = ({ productId }: { productId: string }) => {
   );
 };
 
-export const DeleteProductBtn = ({
+export const  DeleteProductBtn = ({
   id,
   images,
 }: {
@@ -65,7 +65,7 @@ export const DeleteProductBtn = ({
          deleteImagesProduct.execute(images),
         ]);
       }}
-      className="text-muted-foreground hover:bg-blue-500 hover:text-white rounded-full p-2"
+      className="text-muted-foreground  hover:text-blue-500  p-2"
       variant={"outline"}
     >
       {" "}

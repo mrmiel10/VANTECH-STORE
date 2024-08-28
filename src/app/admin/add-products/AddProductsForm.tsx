@@ -387,6 +387,7 @@ export const AddProductsForm = () => {
                               Status
                             </Label>
                             <Select
+                          
                               onValueChange={field.onChange}
                               defaultValue={field.value}
                             >

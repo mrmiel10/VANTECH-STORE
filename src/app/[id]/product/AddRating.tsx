@@ -27,12 +27,12 @@ import { useRouter } from "next/navigation";
 export const ParseProductsOrder = (items:any)=>{
 return SchemaSafeProductsOrder.parse(JSON.parse(JSON.stringify(items)))
 }
-export const AddRating =({user,product}:{user:User & {orders:Order[]} , product:Product & {reviews:Review[]}}) => {
+export const AddRating =({user,product}:{user:User & {orders:Order[]} | null , product:Product & {reviews:Review[]}}) => {
   const router= useRouter()
- 
+
   const deliveredOrder = user?.orders.some(order =>ParseProductsOrder(order.products).find(item => item.id === product.id) && order.deliveryStatus === "delivered")
     const userReview = product?.reviews.find((review:Review)=>{
-        return review.userId === user.id 
+        return review.userId === user?.id 
     })
   
 const commentProduct = useServerAction(commentProductAction,{
@@ -66,7 +66,8 @@ const commentProduct = useServerAction(commentProductAction,{
       return toast.error("Rating haven't selected");
      
     }
-    await commentProduct.execute({...values,userId:user.id,productId:product.id})
+    if(!user) return null
+    await commentProduct.execute({...values,userId:user?.id,productId:product.id})
   }
   if(userReview || !deliveredOrder){
     return null

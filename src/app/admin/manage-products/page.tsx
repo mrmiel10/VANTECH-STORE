@@ -30,9 +30,11 @@ import { AdminSearch } from "../../../../components/admin/AdminSearch";
 import { ProductsTable } from "../../../../components/admin/ProductsTable";
 import { Suspense } from "react";
 import { searchParamsCache } from "@/lib/nuqs";
-import { getProductsPages } from "@/lib/actions";
+import { getProductsPages,} from "@/lib/actions";
 import PaginationTable from "../../../../components/Pagination";
 import { SkeletonLoadingManageProducts } from "../../../../components/Skeletons";
+import { Alert,AlertTitle,AlertDescription } from "@/components/ui/alert";
+import searchInTable from "../../../../public/search.png";
 export default function ManageProducts({
   searchParams,
 }: {
@@ -81,15 +83,15 @@ export default function ManageProducts({
             </div>
           </div>
           <TabsContent value="all">
-            <Card >
+            <Card>
               <CardHeader>
-                <CardTitle className="text-blue-500">Products</CardTitle>
+                <CardTitle className="text-blue-500 ">Products</CardTitle>
                 <CardDescription>
                   Manage your products and view their sales performance.
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <Suspense fallback={<SkeletonLoadingManageProducts/>}>
+                <Suspense fallback={<SkeletonLoadingManageProducts />}>
                   <DisplayProductsAndPagination currentPage={currentPage} />
                 </Suspense>
               </CardContent>
@@ -103,41 +105,79 @@ export default function ManageProducts({
     </div>
   );
 }
- const DisplayProductsAndPagination = async ({
+const DisplayProductsAndPagination = async ({
   currentPage,
 }: {
   currentPage: number;
 }) => {
- //await new Promise((resolve) => setTimeout(resolve, 20000));
+  //await new Promise((resolve) => setTimeout(resolve, 20000));
   const searchProduct = searchParamsCache.get("search");
   const productStatus = searchParamsCache.get("status");
   const { totalPages } = await getProductsPages(searchProduct, productStatus);
   console.log(`totalsPages:${totalPages}`);
+  if(totalPages === 0 ) return <NoProducts />
   return (
-    <>
-  
-    <ProductsTable />
-    <PaginationTable totalPages={totalPages} />
-  
-     
-    </>
+    <div className="grid grid-cols-1 auto-rows-max gap-4">
+      <ProductsTable />
+      <PaginationTable totalPages={totalPages} />
+    </div>
   );
 };
- const ShowingNumberProducts = async () => {
+const ShowingNumberProducts = async () => {
+
   const searchProduct = searchParamsCache.get("search");
   const productStatus = searchParamsCache.get("status");
   const currentPage = searchParamsCache.get("page");
   const ITEMS_PER_PAGE = 3;
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
   const { count } = await getProductsPages(searchProduct, productStatus);
   const totalProducts = count;
+  const lastProduct = count > (offset + ITEMS_PER_PAGE) ? (offset + ITEMS_PER_PAGE) : count
+  if (totalProducts === 0) return null;
   return (
     <div className="text-xs text-muted-foreground">
-      Showing{" "}
-      <strong>
-        {offset + 1}-{offset + ITEMS_PER_PAGE}
-      </strong>{" "}
-      of <strong>{totalProducts}</strong> products
+      {(offset + 1)  === totalProducts ? (
+        <div>Showing one product</div>
+      ) : (
+        <div>
+          {" "}
+          Showing{" "}
+          <strong>
+            {offset + 1} - {lastProduct}
+          </strong>{" "}
+          of <strong>{totalProducts}</strong> products
+        </div>
+      )}
     </div>
   );
 };
+const NoProducts = () =>{
+  return (
+    <div className="container flex flex-col gap-8 justify-center items-center px-5 md:px-10  max-w-5xl">
+          <Alert className="p-6">
+    <div className="flex sm:items-stretch max-sm:flex-col items-center">
+      <div className="relative w-64 aspect-square">
+        <Image src={searchInTable} alt={"cartImage"} className=" object-contain" />
+      </div>
+      <div className="max-sm:self-stretch">
+        <div className="h-full flex flex-col mt-8 max-sm:space-y-2 gap-4">
+          <div className="text-lg space-y-2">
+            <AlertTitle className="font-bold text-blue-500">
+        No products match your filter!
+            </AlertTitle>
+            <AlertDescription className="text-muted-foreground">
+        Please try another filter
+            </AlertDescription>
+          </div>
+        
+        
+        </div>
+      </div>
+    </div>
+  </Alert>
+    </div>
+
+  )
+
+}

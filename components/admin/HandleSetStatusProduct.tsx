@@ -1,4 +1,4 @@
-// "use client"
+
 import React, { useEffect } from "react";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { MapStatus } from "./ProductsTable";
@@ -15,50 +15,50 @@ export const HandleSetStatusProduct = ({
   productId: string;
   status: string;
 }) => {
-  const {execute,} = useServerAction(handleSetStatusProductAction)
-   const router = useRouter();
+  const { execute } = useServerAction(handleSetStatusProductAction);
 
 
   return (
-    <>
+    <div className="flex flex-col gap-1">
       {MapStatus.map((productStatus, _) => (
-        <div className="w-full space-y-4" key={productStatus}>
+        <div className="w-full" key={productStatus}>
           <DropdownMenuItem
-            className={clsx("focus:text-blue-500 cursor-pointer mt-2 h-10", {
+            className={clsx("focus:text-blue-500 cursor-pointer h-10", {
               "bg-muted text-blue-500 pointer-events-none":
-         
-              productStatus === status,
+                productStatus === status,
             })}
           >
-         
             <form
               className="w-full"
               // action={handleSetStatusProduct.executeFormAction}
-              onSubmit={async(event)=>{
+              onSubmit={async (event) => {
+             
                 // "use server"
-                event.preventDefault()
-                const formData = new FormData(event.currentTarget)
-                const [data,err] = await execute(formData,{
-                  productId:productId,
-
-                })
-                router.refresh()
-                if(err)  toast.error(err.message)
-                  else{
-              
-                    toast.success("the status of the product has been updated successfully")
-                }  
+                event.preventDefault();
+                const formData = new FormData(event.currentTarget);
+                console.log(formData)
+                const [data, err] = await execute(formData, {
+                  productId: productId,
+                });
+             
+             
               }}
             >
               <input type="hidden" name="productStatus" value={productStatus} />
-              {/* <input type="hidden" name="productId" value={productId} /> */}
+
               <Button variant={"pStatus"} className="p-0" type="submit">
-                {productStatus[0].toUpperCase() + productStatus.slice(1)}
+                <span>
+                  {" "}
+                  {productStatus[0].toUpperCase() + productStatus.slice(1)}
+                </span>
+                {productStatus === status && (
+                  <div className="ml-auto size-2 bg-blue-500 rounded-full" />
+                )}
               </Button>
             </form>
           </DropdownMenuItem>
         </div>
       ))}
-    </>
+    </div>
   );
 };

@@ -1,4 +1,3 @@
-"use client";
 import React from "react";
 import {
   DropdownMenu,
@@ -21,13 +20,19 @@ import { formatPrice } from "@/lib/formatPrice";
 import { EditProductButton } from "../SubmitButtons";
 import { DeleteProductBtn } from "../SubmitButtons";
 import { HandleSetStatusProduct } from "./HandleSetStatusProduct";
-export const MobileProductsAdmin = ({
+import prisma from "../../db";
+import { SchemaSafeProductsOrder } from "../../schemas/schema";
+import { JsonValue } from "@prisma/client/runtime/library";
+import { Badge } from "@/components/ui/badge";
+
+export const MobileProductsAdmin = async({
   products,
 }: {
   products: (Product & { reviews: Review[] })[];
 }) => {
+
   return (
-    <Card className=" py-2 sm:py-4  text-muted-foreground  md:hidden flex flex-col gap-8">
+    <Card className=" py-2 sm:py-4  text-muted-foreground  md:hidden flex flex-col gap-4">
       {products.map((product, _) => (
         <div key={product.id}>
           <DropdownMenu>
@@ -57,57 +62,77 @@ export const MobileProductsAdmin = ({
             </DropdownMenuContent>
           </DropdownMenu>
           <div className="flex flex-col w-full px-3">
-            <div className="grid grid-cols-3 max-xs:grid-cols-1 max-sm:gap-y-2">
-              <div className=" flex gap-4  items-center justify-center">
+            <div className="grid sm:grid-cols-3 grid-cols-1 gap-1 max-sm:gap-2">
+              <div className="flex items-center justify-center">
                 <div className="size-24  relative shrink-0 aspect-square">
                   <Image
                     alt="Product image"
-                    className="aspect-square rounded-md object-cover"
+                    className="aspect-square object-cover"
                     fill
                     src={ParseImages(product.images)[0].image}
                   />
                 </div>
               </div>
               <div className="col-span-2  flex flex-col gap-2 ">
-              <div>
+                <div>
                   <Status status={product.status} />
                 </div>
                 <div>
-                <div className="">Category:{product.category}</div>
-                <div className="">Brand: {product.brand}</div> 
-                            
-                </div>             
-                        
+                  <div className="">Category:{product.category}</div>
+                  <div className="">Brand: {product.brand}</div>
+                </div>
+
                 <div>
-                  <div className="flex flex-col gap-1">
-                    <p className="font-medium text-sm"> {product.name}</p>
-                    <p className="text-2xl text-blue-500 mt-auto">
-                      {formatPrice(product.price)}
-                    </p>
-                  </div>
+                  <p className="font-medium text-sm"> {product.name}</p>
+                  <p className="text-2xl text-blue-500 mt-auto"></p>
+                </div>
+                <div className="text-blue-500 font-semibold">{formatPrice(product.price)}</div>
+              </div>
+            </div>
+
+            <div className="flex flex-col mt-4">
+              <div className="w-full flex flex-row items-center justify-between">
+                <TotalSales productId={product.id} />
+             
+                <div className="flex gap-2 ml-auto">
+                  {" "}
+                  <EditProductButton productId={product.id} />
+                  <DeleteProductBtn
+                    images={ParseImages(product.images)}
+                    id={product.id}
+                  />
                 </div>
               </div>
-            </div>
-           
-            <div className="flex flex-col" >
-             <div className="w-full flex flex-row items-center justify-between  self-end">
-             <div>Sales:25444</div>
-              <div className="flex gap-2 ml-auto">
-                {" "}
-                <EditProductButton productId={product.id} />
-                <DeleteProductBtn
-                  images={ParseImages(product.images)}
-                  id={product.id}
-                />
-              </div>
-             </div>
-             
+
               <Separator className="my-4 w-full" />
             </div>
-          
           </div>
         </div>
       ))}
     </Card>
+  );
+};
+export const TotalSales = async({productId}:{productId:string}) =>{
+  const totalSales =  (await prisma.order.findMany()).reduce((acc,cmd)=>{
+    const products = ParseProducts(cmd.products)
+    return acc + products.filter((p) =>p.id === productId).length
+  },0)
+  return (
+  
+<div>
+{totalSales === 0  ? (
+<div>There are no sales yet</div>
+):(
+<Badge variant={"defaultBtn"} className="text-sm px-4 py-2">
+  
+  {totalSales < 10 ? "0" + totalSales : totalSales}{" "}sales</Badge>
+)}
+</div>
+  )
+}
+export const ParseProducts = (products: JsonValue) => {
+  const stringProducts = products as string;
+  return SchemaSafeProductsOrder.parse(
+    JSON.parse(JSON.stringify(stringProducts))
   );
 };
