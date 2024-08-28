@@ -86,7 +86,7 @@ export default function PageOrderDetail({ params }: { params: IParams }) {
               <div className="col-span-2">
                 <div className="">
                   <span>
-                    Ordinateur de bureau Lenovo M81 SFF d'occasion avec
+                    Ordinateur de bureau Lenovo M81 SFF d&apos;occasion avec
                     processeur Intel Core i3, mémoire 4Go, disque dur 250G et
                     Windows10 (moniteur non inclus), noir, 3GHZ
                   </span>
@@ -117,7 +117,7 @@ export default function PageOrderDetail({ params }: { params: IParams }) {
               <div className="col-span-2">
                 <div className="">
                   <span>
-                    Ordinateur de bureau Lenovo M81 SFF d'occasion avec
+                    Ordinateur de bureau Lenovo M81 SFF d&apos;occasion avec
                     processeur Intel Core i3, mémoire 4Go, disque dur 250G et
                     Windows10 (moniteur non inclus), noir, 3GHZ
                   </span>
