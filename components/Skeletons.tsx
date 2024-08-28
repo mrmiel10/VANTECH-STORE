@@ -15,6 +15,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { EllipsisIcon } from "lucide-react";
 export const ProductFeaturesLoading = () => {
   return (
     <div className="container mx-auto grid grid-cols-1 gap-8 px-4 py-8 sm:grid-cols-2 sm:gap-10 md:px-6 lg:max-w-7xl">
@@ -222,34 +223,78 @@ export const SkeletonLoadingManageProducts = () => {
     <div>
       <div className="md:hidden block">{SkeletonsManageMobileProducts} </div>
       <Table className=" hidden md:table">
-      <TableHeader className="">
-        <TableRow>
-          <TableHead className=" w-[100px]">
-            <span className="sr-only">Image</span>
-          </TableHead>
-          <TableHead className="text-blue-500 font-semibold ">Name</TableHead>
-          <TableHead className="text-blue-500 font-semibold ">Status</TableHead>
-          <TableHead className="text-blue-500 font-semibold ">Price</TableHead>
-          <TableHead className="text-blue-500 font-semibold ">
-            Total Sales
-          </TableHead>
+        <TableHeader className="">
+          <TableRow>
+            <TableHead className=" w-[100px]">
+              <span className="sr-only">Image</span>
+            </TableHead>
+            <TableHead className="text-blue-500 font-semibold ">Name</TableHead>
+            <TableHead className="text-blue-500 font-semibold ">
+              Status
+            </TableHead>
+            <TableHead className="text-blue-500 font-semibold ">
+              Price
+            </TableHead>
+            <TableHead className="text-blue-500 font-semibold ">
+              Total Sales
+            </TableHead>
 
-          <TableHead>
-            <span className="sr-only w-7">others features</span>
-          </TableHead>
-          <TableHead>
-            <span className="sr-only">Actions</span>
-          </TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>{SkeletonManageProductTable}</TableBody>
-    </Table>
+            <TableHead>
+              <span className="sr-only w-7">others features</span>
+            </TableHead>
+            <TableHead>
+              <span className="sr-only">Actions</span>
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>{SkeletonManageProductTable}</TableBody>
+      </Table>
     </div>
-  
   );
 };
 export const RowSkeletonManageMobileProducts = () => {
-  return <div>Loading</div>;
+  return (
+    <div>
+      <div className="flex">
+        <EllipsisIcon className="size-5 ml-auto" />
+      </div>
+
+      <div className="flex flex-col w-full px-3">
+        <div className="grid sm:grid-cols-3 grid-cols-1 gap-1 max-sm:gap-2">
+          <div className="flex items-center justify-center">
+            <Skeleton className="size-24 shrink-0" />
+          </div>
+          <div className="col-span-2  flex flex-col gap-2 ">
+            <div>
+              <Skeleton className="w-20 h-5 rounded-full" />
+            </div>
+            <div className="grid gap-2">
+              <Skeleton className="h-5 w-36" />
+              <Skeleton className="h-5 w-20" />
+            </div>
+
+            <div>
+              <Skeleton className="w-full h-20" />
+            </div>
+            <Skeleton className="h-6 w-32" />
+          </div>
+        </div>
+
+        <div className="flex flex-col mt-4">
+          <div className="w-full flex flex-row items-center justify-between">
+            <Skeleton className="w-24 h-9 rounded-full" />
+
+            <div className="flex gap-2 ml-auto">
+              <Skeleton className="w-9 h-10" />
+              <Skeleton className="w-9 h-10" />
+            </div>
+          </div>
+
+          <Separator className="my-4 w-full" />
+        </div>
+      </div>
+    </div>
+  );
 };
 export const RowSkeletonLoadingProductTable = () => {
   return (
@@ -271,10 +316,6 @@ export const RowSkeletonLoadingProductTable = () => {
       <TableCell>
         {" "}
         <Skeleton className=" h-7 w-28" />
-      </TableCell>
-      <TableCell>
-        {" "}
-        <Skeleton className=" h-4 w-6" />
       </TableCell>
 
       <TableCell>
