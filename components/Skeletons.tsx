@@ -17,7 +17,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { EllipsisIcon } from "lucide-react";
-
+import { Button } from "@/components/ui/button";
+import { MoreHorizontal } from "lucide-react";
 export const ProductFeaturesLoading = () => {
   return (
     <div className="container mx-auto grid grid-cols-1 gap-8 px-4 py-8 sm:grid-cols-2 sm:gap-10 md:px-6 lg:max-w-7xl">
@@ -273,7 +274,10 @@ export const RowSkeletonLoadingOrderTableUser = () =>{
 
       <TableCell className="flex justify-end">
      
-      <ActionsOrderUser />
+      <Button aria-haspopup="true" size="icon" variant="ghost">
+          <MoreHorizontal className="size-4" />
+          <span className="sr-only">Toggle menu</span>
+        </Button>
       
       </TableCell>
     </TableRow>
