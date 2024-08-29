@@ -186,7 +186,7 @@ if(files.length !=0) return
       }),
      // console.log(uploadedImages),
    
-       deleteImagesProduct.execute(ParseImages(product.images)),    
+       deleteImagesProduct.execute(ParseProductImages(product.images)),    
     ]);
  
   }

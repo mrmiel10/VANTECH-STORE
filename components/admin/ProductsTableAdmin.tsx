@@ -32,7 +32,7 @@ import { HandleSetStatusProduct } from "./HandleSetStatusProduct";
 import { DeleteProductBtn } from "../SubmitButtons";
 import { ParseProducts } from "@/lib/parseData";
 import prisma from "../../db";
-import { TotalSalesRowOrderTable } from "./orders/TotalSalesRowOrderTable";
+
 export const ProductsTableAdmin = ({
   products,
 }: {
