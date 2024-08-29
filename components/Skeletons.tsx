@@ -19,6 +19,7 @@ import {
 import { EllipsisIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
+import CopyPasteButton from "./CopyPasteButton";
 export const ProductFeaturesLoading = () => {
   return (
     <div className="container mx-auto grid grid-cols-1 gap-8 px-4 py-8 sm:grid-cols-2 sm:gap-10 md:px-6 lg:max-w-7xl">
@@ -217,7 +218,41 @@ export const RowSkeletonOrderTable = () => {
 };
 export const RowSkeletonOrderMobileUser = () =>{
   return (
-    <p>ddddd</p>
+    <Card className="grid grid-col-1 gap-2 text-muted-foreground sm:hidden">
+    <div className="flex pl-4 py-2  w-full items-center">
+      <div className="mr-auto flex gap-2">
+     <Skeleton className="w-36 h-5" />
+       
+        <CopyPasteButton className="bg-muted flex items-center justify-center size-6 rounded-md  text-muted-foreground hover:text-blue-500 " />
+      
+      </div>
+   <MoreHorizontal className="mr-2" />
+    </div>
+  
+    <div className="grid gap-3 px-8  py-4 sm:text-blue-500">
+      <div className="flex">
+        <div className="mr-auto text-blue-500 font-semibold">Order Date</div>
+      <Skeleton className="w-24 h-6 " />
+      </div>
+      <div className="flex ">
+        <div className="mr-auto text-blue-500 font-semibold">  Items order </div>
+        <Skeleton className="w-9 h-6 " />
+      </div>
+      <div className="flex ">
+        <div className="mr-auto text-blue-500 font-semibold">  Amount </div>
+        <Skeleton className="w-28 h-6 " />
+      </div>
+      <div className="flex ">
+        <div className="mr-auto text-blue-500 font-semibold"> Paymentstatus</div>
+        <Skeleton className="w-24 h-6 rounded-full " />
+      </div>
+      <div className="flex ">
+      <div className="mr-auto text-blue-500 font-semibold"> Deliverystatus</div> 
+      <Skeleton className="w-24 h-6 rounded-full" />
+  
+    </div>
+    </div>
+  </Card>
   )
 }
 export const SkeletonLoadingOrdersUser = () =>{
@@ -229,7 +264,7 @@ export const SkeletonLoadingOrdersUser = () =>{
   ));
   return (
     <div>
-    <div className="md:hidden block">{SkeletonsOrdersMobileUser} </div>
+    <div className="grid grid-cols-1 gap-4 md:hidden">{SkeletonsOrdersMobileUser} </div>
     <Table className=" hidden md:table">
     <TableHeader className="">
       <TableRow>

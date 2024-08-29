@@ -58,9 +58,9 @@ export const ShowOrdersUser = async ({
 
     return (
       <div className="grid grid-cols-1 auto-rows-max gap-8">
-      <div className="grid grid-cols-1 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:hidden">
         {orders.map((order,_)=>(
-  <Card key={order.id} className="grid grid-col-1 gap-2 text-muted-foreground sm:hidden">
+  <Card key={order.id} className="grid grid-col-1 gap-2 text-muted-foreground">
   <div className="flex pl-4 py-2  w-full items-center">
     <div className="mr-auto flex gap-2">
       <span>Order <span className="text-blue-500">{order.id.length > 20 ? order.id.substring(0,15) + "..." : order.id}</span></span> 

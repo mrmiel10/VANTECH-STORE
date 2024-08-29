@@ -44,7 +44,7 @@ const PageOrderUser = async(
     }
   }
 ) => {
- // await new Promise((resolve) => setTimeout(resolve, 20000));
+  await new Promise((resolve) => setTimeout(resolve, 20000));
    const paramSearch = searchParamsCache.parse(searchParams);
   const user = await getCurrentUser()
   if(!user) redirect("/")
@@ -60,7 +60,7 @@ where:{
   )
   return (
     <div className="container flex flex-col gap-8 justify-center items-center px-5 md:px-10 py-10 md:py-20 max-w-5xl">
-      <div className="text-4xl max-md:text-3xl font-bold text-blue-500">View yours orders and track your shipments</div>
+      <div className="text-4xl max-md:text-3xl font-bold text-blue-500 text-center">View yours orders and track your shipments</div>
       <AdminSearch placeholder="search your order..." />
     
       <div className="w-full grid gap-2">
