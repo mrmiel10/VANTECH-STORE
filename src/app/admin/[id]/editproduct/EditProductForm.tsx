@@ -178,14 +178,14 @@ if(files.length !=0) return
             ...values.images[index],
             image: res.url,
           });
-          editProduct.execute({ ...values, images: uploadedImages,id:product.id})
+         
         } catch (err) {
           updateFileProgress("ERROR",setFileStates,fileState.key);
           setUploadImage(false);
         }
       }),
      // console.log(uploadedImages),
-   
+     editProduct.execute({ ...values, images: uploadedImages,id:product.id}),
        deleteImagesProduct.execute(ParseProductImages(product.images)),    
     ]);
  
