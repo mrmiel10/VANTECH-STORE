@@ -20,11 +20,11 @@ import { Rating } from "@mui/material";
 import { toast } from "sonner";
 import { Product } from "@prisma/client";
 import { Review } from "@prisma/client";
-import { ParseImages } from "../../../../components/admin/ProductsTable";
+import { ParseProductImages } from "@/lib/parseData";
 import clsx from "clsx";
 const ProductsFeatures = ({ product }: { product: Product & {reviews:Review[]} }) => {
 // const ProductsFeatures = ({ product }: { product: productsType }) => {
-const productImages = ParseImages(product.images)
+const productImages = ParseProductImages(product.images)
 const [selectProductImage,setSelectProductImage] = useState<{
   image:string
 }>(productImages[0])
