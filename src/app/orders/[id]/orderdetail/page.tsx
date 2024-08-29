@@ -59,7 +59,7 @@ const productsOrders = ParseProducts(orderById.products)
           </p>
           <p>
             Order date :{" "}
-            <span className="text-muted-foreground">{formatDateToLocal(orderById.createdDate.toISOString())}</span>
+            <span className="text-muted-foreground">{formatDateToLocal(orderById.createdDate.toDateString())}</span>
           </p>
         </CardContent>
       </Card>
