@@ -14,11 +14,21 @@ import { useQueryState } from "nuqs";
 import clsx from "clsx";
 import { TitleFilterOrder } from "./SelectFilterPaymentStatusOrderUser";
 export const SelectFilterDateOrderUser = () => {
-  const [dorderDate, setOrderDate] = useQueryState("orderDate", {
+  const [orderDate, setOrderDate] = useQueryState("orderDate", {
     defaultValue: "",
     shallow: false,
   });
   const searchParams = useSearchParams();
+  const orderByDate = [
+    {
+      oldest:"oldest last",
+      value:"asc"
+    },
+    {
+      oldest:"oldest first",
+      value:"desc"
+    }
+  ]
   const handleFilterChange = (value: string) => {
     console.log(value);
    
@@ -34,13 +44,13 @@ export const SelectFilterDateOrderUser = () => {
         </SelectTrigger>
         <SelectContent id="paymentStatus">
      
-          {["oldest first","oldest last"].map((status, _) => (
+          {orderByDate.map((old, _) => (
             <SelectItem 
-            key={status}
+            key={old.oldest}
             className={clsx(
-                {"bg-muted": searchParams.has("paymentStatus",status)}
+                {"bg-muted": searchParams.has("order",old.value)}
             )}
-              value={status}>{status}</SelectItem>
+              value={old.value}>{old.oldest}</SelectItem>
           ))}
         </SelectContent>
       </Select>

@@ -6,7 +6,7 @@ import clsx from "clsx"
 import { Heart, ShoppingCart } from "lucide-react"
 import { useState } from "react"
 import { useShallow } from "zustand/react/shallow"
-import { ParseImages } from "./admin/ProductsTable"
+import { ParseProductImages } from "@/lib/parseData"
 export const ToggleCartButton = ({ product }: { product:CartProductType }) => {
     const [cartProduct, setCartProduct] = useState({
       id: product.id,
@@ -16,7 +16,7 @@ export const ToggleCartButton = ({ product }: { product:CartProductType }) => {
       status:product.status,
       brand: product.brand,
       quantity: 1,
-      images: ParseImages(product.images),
+      images: ParseProductImages(product.images),
       price: product.price,
     });
   

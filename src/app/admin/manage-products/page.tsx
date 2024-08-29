@@ -35,6 +35,7 @@ import PaginationTable from "../../../../components/Pagination";
 import { SkeletonLoadingManageProducts } from "../../../../components/Skeletons";
 import { Alert,AlertTitle,AlertDescription } from "@/components/ui/alert";
 import searchInTable from "../../../../public/search.png";
+import { countReset } from "console";
 export default function ManageProducts({
   searchParams,
 }: {
@@ -132,11 +133,13 @@ const ShowingNumberProducts = async () => {
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
   const { count } = await getProductsPages(searchProduct, productStatus);
+  console.log("count",count)
   const totalProducts = count;
   const lastProduct = count > (offset + ITEMS_PER_PAGE) ? (offset + ITEMS_PER_PAGE) : count
   if (totalProducts === 0) return null;
   return (
     <div className="text-xs text-muted-foreground">
+    
       {(offset + 1)  === totalProducts ? (
         <div>Showing one product</div>
       ) : (

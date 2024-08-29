@@ -16,6 +16,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { EllipsisIcon } from "lucide-react";
+import { ActionsOrderUser } from "./orderUser/OrdersTableUser";
 export const ProductFeaturesLoading = () => {
   return (
     <div className="container mx-auto grid grid-cols-1 gap-8 px-4 py-8 sm:grid-cols-2 sm:gap-10 md:px-6 lg:max-w-7xl">
@@ -212,6 +213,71 @@ export const RowSkeletonOrderTable = () => {
     </TableRow>
   );
 };
+export const RowSkeletonOrderMobileUser = () =>{
+  return (
+    <p>ddddd</p>
+  )
+}
+export const SkeletonLoadingOrdersUser = () =>{
+  const SkeletonsOrdersMobileUser = Array.from({ length: 3 }, (_, i) => (
+    <RowSkeletonOrderMobileUser key={i} />
+  ));
+  const SkeletonOrdersTable = Array.from({ length: 3 }, (_, i) => (
+    <RowSkeletonLoadingOrderTableUser key={i} />
+  ));
+  return (
+    <div>
+    <div className="md:hidden block">{SkeletonsOrdersMobileUser} </div>
+    <Table className=" hidden md:table">
+    <TableHeader className="">
+      <TableRow>
+        <TableHead className="">Date</TableHead>
+        <TableHead className="hidden sm:table-cell">Payment status</TableHead>
+        <TableHead className="hidden sm:table-cell">
+          Delivery Status
+        </TableHead>
+    
+        <TableHead className="text-right">Amount</TableHead>
+        <TableHead className=""></TableHead>
+       
+      </TableRow>
+    </TableHeader>
+      <TableBody>{SkeletonOrdersTable}</TableBody>
+    </Table>
+  </div>
+  )
+}
+export const RowSkeletonLoadingOrderTableUser = () =>{
+  
+  return (
+    <TableRow>
+      {/* <div className="flex flex-row items-center justify-between border-b border-muted py-4"> */}
+      <TableCell>
+        {" "}
+        <Skeleton className="w-16 h-6" />
+      </TableCell>
+
+      <TableCell>
+        {" "}
+        <Skeleton className=" w-24 h-6 rounded-full" />
+      </TableCell>
+      <TableCell>
+        {" "}
+        <Skeleton className=" w-24 h-6 rounded-full" />
+      </TableCell>
+      <TableCell className="text-left">
+        {" "}
+        <Skeleton className=" w-24 h-6" />
+      </TableCell>
+
+      <TableCell className="flex justify-end">
+     
+      <ActionsOrderUser />
+      
+      </TableCell>
+    </TableRow>
+  );
+}
 export const SkeletonLoadingManageProducts = () => {
   const SkeletonsManageMobileProducts = Array.from({ length: 3 }, (_, i) => (
     <RowSkeletonManageMobileProducts key={i} />
@@ -360,3 +426,33 @@ export const SkeletonLoadingCardOrder = ({
     </Card>
   );
 };
+export const SkeletonRowOrderDetail = () =>{
+  
+  return (
+    <div className="grid auto-rows-max auto-cols-max gap-4 md:gap-8 grid-cols-1 md:grid-cols-[150px_1fr_150px] text-center place-content-center">
+    <div className="flex justify-center relative h-32 w-full md:h-full  aspect-square">
+        <Skeleton className="size-36" />
+      </div>
+      <div className="mt-4   flex flex-col gap-2 max-md:items-center">
+      
+       <Skeleton className=" self-center w-full h-12 md:h-16" />
+   
+      <Skeleton className="self-center w-[300px] sm:w-[400px] md:w-[500px] h-5  " />
+      {/* <Skeleton className="flex-shrink-1 self-center w-[500px] h-5  " /> */}
+      
+     
+ 
+      <Skeleton className="px-16 self-center w-[200px] sm:w-[300px] md:w-[400px] h-5 " />    
+   
+
+     <Skeleton className="self-center h-5 w-20" /></div>
+       
+    
+
+      <div className="col-span-1 flex  justify-center">
+       <Skeleton className=" h-5 w-28" />
+      </div>
+    </div>
+
+  )
+}

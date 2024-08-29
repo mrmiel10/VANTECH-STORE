@@ -30,7 +30,7 @@ return SchemaSafeProductsOrder.parse(JSON.parse(JSON.stringify(items)))
 export const AddRating =({user,product}:{user:User & {orders:Order[]} | null , product:Product & {reviews:Review[]}}) => {
   const router= useRouter()
 
-  const deliveredOrder = user?.orders.some(order =>ParseProductsOrder(order.products).find(item => item.id === product.id) && order.deliveryStatus === "delivered")
+  const deliveredOrder = user?.orders.some(order =>ParseProductsOrder(order.products).find(item => item.id === product.id) && order.deliveryStatus.toLowerCase() === "delivered")
     const userReview = product?.reviews.find((review:Review)=>{
         return review.userId === user?.id 
     })

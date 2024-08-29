@@ -9,8 +9,8 @@ import { getCurrentUser } from "@/lib/actions";
 import { Circle } from "lucide-react";
 import { redirect } from "next/navigation";
 export const AsideNav = async () => {
-  // const user = await getCurrentUser()
-  // if(!user) redirect("/animations")
+  const user = await getCurrentUser()
+  if(!user) redirect("/animations")
   return (
     <aside className="fixed inset-y-0 left-0 z-10 hidden w-52 flex-col border-r bg-background lg:flex">
       <div>
@@ -26,23 +26,23 @@ export const AsideNav = async () => {
       <div className="mt-auto flex flex-col items-center justify-center pb-2 px-4 gap-2">
         <Avatar  className="size-32">
           <AvatarFallback>
-            {/* {getInitials(user?.firstName ,user?.lastName,user?.email)} */}
-            {getInitials("D", "B","E")}
+            {getInitials(user?.firstName ,user?.lastName,user?.email)}
+            {/* {getInitials("D", "B","E")} */}
           </AvatarFallback>
           <AvatarImage
           className="object-cover"
             alt="profile user"
-            // src={
-            //   (user.picture as string) ??
-            //   `https://api.dicebear.com/9.x/adventurer/svg?seed=Buster`
-            // }
+            src={
+              (user.picture as string) ??
+              `https://api.dicebear.com/9.x/adventurer/svg?seed=Buster`
+            }
           />
         </Avatar>
         <div className="text-sm text-blue-500  flex flex-col justify-center items-center">
         <div className=" font-semibold">Admin</div>
         <div className="">
-          {/* {user?.email}   */}
-          mbakopngako@gmail.com
+          {user?.email}  
+          {/* mbakopngako@gmail.com */}
           </div>
         </div>
       <div className="text-xs flex gap-2 mt-4">

@@ -39,6 +39,7 @@ import {
 } from "@/components/ui/tooltip";
 
 import { DeliveryStatusOrder } from "../../../../components/admin/orders/DeliveryStatusOrder";
+import { User,Order } from "@prisma/client";
 import {
   // CardAllOrders,
 
@@ -56,6 +57,7 @@ import { searchParamsCache } from "@/lib/nuqs";
 import {OrderDetails} from "./OrderDetails";
 import { SkeletonLoadingCardOrder, SkeletonLoadingOrdersTable } from "../../../../components/Skeletons";
 import { getOrdersPages } from "@/lib/actions";
+import { ShowingNumberOrders } from "../../../../components/admin/orders/ShowingNumberOrders";
 export default function OrdersPage({
   searchParams,
 }: {
@@ -119,7 +121,7 @@ export default function OrdersPage({
               
               </CardContent>
               <CardFooter>
-               <ShowingNumberOrders />
+               <ShowingNumberOrders  />
               </CardFooter>
             </Card>
           </TabsContent>
@@ -131,30 +133,3 @@ export default function OrdersPage({
     </main>
   );
 }
-const ShowingNumberOrders = async () => {
-  const searchProduct = searchParamsCache.get("search");
-  const productStatus = searchParamsCache.get("status");
-  const currentPage = searchParamsCache.get("page");
-  const ITEMS_PER_PAGE = 3;
-  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
-  const { count } = await getOrdersPages(searchProduct, productStatus);
-  const totalProducts = count;
-  const lastProduct = count > (offset + ITEMS_PER_PAGE) ? (offset + ITEMS_PER_PAGE) : count
-  if (totalProducts === 0) return null;
-  return (
-    <div className="text-xs text-muted-foreground">
-      {(offset + 1) === totalProducts ? (
-        <div>Showing one order</div>
-      ) : (
-        <div>
-          {" "}
-          Showing{" "}
-          <strong>
-            {offset + 1} - {lastProduct}
-          </strong>{" "}
-          of <strong>{totalProducts}</strong>orders
-        </div>
-      )}
-    </div>
-  );
-};

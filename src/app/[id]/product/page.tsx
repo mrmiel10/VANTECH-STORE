@@ -8,7 +8,7 @@ import { getCurrentUser } from "@/lib/actions";
 import leaveReview from "../../../../public/add review.png";
 import Image from "next/image";
 import { Review } from "@prisma/client";
-import { ParseProductsOrder } from "@/lib/ParseProductsOrder";
+import { ParseProducts } from "@/lib/parseData";
 interface IParams {
   id: string;
 }
@@ -42,9 +42,9 @@ const PageProduct = async ({
   if (!product) return <p>Pas de produit disponible</p>;
   const deliveredOrder = user?.orders.some(
     (order) =>
-      ParseProductsOrder(order.products).find(
+      ParseProducts(order.products).find(
         (item) => item.id === product.id
-      ) && order.deliveryStatus === "delivered"
+      ) && order.deliveryStatus.toLowerCase() === "delivered"
   );
   const userReview = product?.reviews.find((review: Review) => {
     return review.userId === user?.id;
@@ -56,7 +56,7 @@ const PageProduct = async ({
        <div>
        {product.reviews.length !== 0 ? (
           <ListRating productId={params.id} />
-        ) : !userReview && deliveredOrder ? (
+        ) :  deliveredOrder ? (
           <CanLeaveReview />
         ) : null}
        </div>

@@ -130,10 +130,13 @@ export const getProductsPages = async (
 };
 export const getOrdersPages = async (
   searchOrder: string,
-deliveryStatus: string
+deliveryStatus: string,
+paymentStatus?:string,
+userId?:string
 ) => {
   try {
     const count = await prisma.order.count({
+     
       where: {
         OR: [
           {
@@ -189,6 +192,12 @@ deliveryStatus: string
               mode: "insensitive",
             }
           : undefined,
+          status: paymentStatus
+          ? {
+           equals:paymentStatus,
+              mode: "insensitive",
+            }:undefined,
+          userId:userId ?? undefined
       },
     });
     const totalPages = Math.ceil(Number(count) / ITEMS_PER_PAGE);
@@ -208,6 +217,7 @@ export const getFilteredProducts = async (
 
   try {
     const products = await prisma.product.findMany({
+      
       take: ITEMS_PER_PAGE,
       skip: offset,
       where: {
@@ -264,21 +274,31 @@ export const getFilteredProducts = async (
     throw error;
   }
 };
+
 export const getFilteredOrders = async (
   searchOrder: string,
   currentPage: number,
-  deliveryStatus: string
+  deliveryStatus: string,
+  paymentStatus?:string,
+  orderByDate?:string,
+  userId?:string
+
 ) => {
   noStore();
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
-
+console.log("createdDate",orderByDate)
   try {
     const orders= await prisma.order.findMany({
       take: ITEMS_PER_PAGE,
       skip: offset,
       orderBy:{
-        createdDate:"asc"
+        createdDate:orderByDate
+        ? orderByDate.toLowerCase() === "asc"
+          ? "asc"
+          : "desc"
+       :undefined
       },
+   
       where: {
         OR: [
           {
@@ -339,6 +359,13 @@ export const getFilteredOrders = async (
               mode: "insensitive",
             }
           : undefined,
+        status: paymentStatus
+          ? {
+           contains:paymentStatus,
+              mode: "insensitive",
+            }
+          : undefined,
+          userId: userId ?? undefined,
       },
       include: {
         user: true,
@@ -630,20 +657,6 @@ export const getAmountOrdersOfPeriod = async(start?:Date,end?:Date)=>{
   return totalAmount._sum.amount
 }
 
-// export const getAllPaidOrUnpaidOrders = async(status:string) =>{
-//   //Je recupère le montal total de commandes et le nombre total de commandes passées en fonction du status de paiement
-//   const orders =  await prisma.order.aggregate({
-//       where:{
-//         status
-//       },
-//       _sum:{
-//         amount:true
-//       },
-//       _count:true
-
-//     })
-//     return orders
-// }
 export const getPaidOrUnpaidOrdersOfPeriod = async(start:Date,end:Date,status:string) =>{
   const orders =  await prisma.order.aggregate({
     //En fonction du status de paiment, je recupere le montal total de commandes et le nombre de commandes

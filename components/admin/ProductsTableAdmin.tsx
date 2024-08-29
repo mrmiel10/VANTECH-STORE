@@ -23,14 +23,14 @@ import {
 
 import Status from "./Status";
 import Image from "next/image";
-import { formatPrice } from "@/lib/formatPrice";
+import { formatPrice } from "@/lib/formatData";
 import * as z from "zod";
 import { Product, Review } from "@prisma/client";
-import { ParseImages } from "./ProductsTable";
+import { ParseProductImages } from "@/lib/parseData";
 import { EditProductButton } from "../SubmitButtons";
 import { HandleSetStatusProduct } from "./HandleSetStatusProduct";
 import { DeleteProductBtn } from "../SubmitButtons";
-import { ParseProducts } from "@/lib/ParseProducts";
+import { ParseProducts } from "@/lib/parseData";
 import prisma from "../../db";
 import { TotalSalesRowOrderTable } from "./orders/TotalSalesRowOrderTable";
 export const ProductsTableAdmin = ({
@@ -67,7 +67,7 @@ export const ProductsTableAdmin = ({
                 alt="Product image"
                 className="aspect-square rounded-md object-contain flex-shrink-0"
                 height="64"
-                src={ParseImages(product.images)[0].image}
+                src={ParseProductImages(product.images)[0].image}
                 width="64"
               />
             </TableCell>
@@ -133,7 +133,7 @@ export const ProductsTableAdmin = ({
                 {" "}
                 <EditProductButton productId={product.id} />
                 <DeleteProductBtn
-                  images={ParseImages(product.images)}
+                  images={ParseProductImages(product.images)}
                   id={product.id}
                 />
               </div>

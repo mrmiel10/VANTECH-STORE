@@ -14,8 +14,8 @@ import { searchParamsCache } from '@/lib/nuqs';
 import prisma from '../../../db';
 import PaginationTable from '../../Pagination';
 import { getFilteredOrders, getOrdersPages } from '@/lib/actions';
-import { formatDateToLocal } from '@/lib/formatDate';
-import { formatPrice } from '@/lib/formatPrice';
+import { formatDateToLocal } from '@/lib/formatData';
+import { formatPrice } from '@/lib/formatData';
 import RowOrder from './RowOrder';
 import { Alert,AlertTitle,AlertDescription } from "@/components/ui/alert"
 import searchInTable from "../../../public/search.png"

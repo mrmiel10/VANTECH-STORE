@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { formatPrice } from "@/lib/formatPrice";
+import { formatPrice } from "@/lib/formatData";
 import { Separator } from "@/components/ui/separator";
 import prisma from "../../../db";
 import {

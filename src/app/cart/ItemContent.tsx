@@ -18,8 +18,8 @@ import Image from "next/image";
 import { Separator } from '@/components/ui/separator';
 import { Button } from "@/components/ui/button";
 import { useRouter } from 'next/navigation';
-import { ParseImages } from '../../../components/admin/ProductsTable';
-import { formatPrice } from '@/lib/formatPrice';
+import { ParseProductImages } from '@/lib/parseData';
+import { formatPrice } from '@/lib/formatData';
  const ItemContent = ({item}:{item:CartProductType}) => {
   const router = useRouter()
   //await new Promise((resolve) => setTimeout(resolve, 10000));
@@ -32,7 +32,7 @@ import { formatPrice } from '@/lib/formatPrice';
                     <div onClick={()=>router.push(`/${item.id}/product`)} className="hover:cursor-pointer max-sm:h-32 col-span-2 sm:col-span-1 flex justify-center items-center">
                     <Image
                     
-                    src={ParseImages(item.images)[0].image}
+                    src={ParseProductImages(item.images)[0].image}
                     alt={"ddd"}
                     width={150}
                     height={150}

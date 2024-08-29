@@ -1,19 +1,13 @@
 
 import React from "react";
-import { AdminSearch } from "../../../components/admin/AdminSearch";
-import OrdersUser from "./OrdersUser";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { AdminSearch } from "../../../../components/admin/AdminSearch";
 
-import { SelectFilterDeliveryStatusOrderUser } from "../../../components/SelectFilterDeliveryStatusOrderUser";
-import { MapDeliveryStatusOrder } from "../../../components/admin/orders/FilterDeliveryStatusOrder";
-import { SelectFilterPaymentStatusUser } from "../../../components/orderUser/SelectFilterPaymentStatusOrderUser";
-import { SelectFilterDateOrderUser } from "../../../components/orderUser/SelectFilterDateOrderUser";
+
+
+import { SelectFilterDeliveryStatusOrderUser } from "../../../../components/SelectFilterDeliveryStatusOrderUser";
+import { MapDeliveryStatusOrder } from "../../../../components/admin/orders/FilterDeliveryStatusOrder";
+import { SelectFilterPaymentStatusUser } from "../../../../components/orderUser/SelectFilterPaymentStatusOrderUser";
+import { SelectFilterDateOrderUser } from "../../../../components/orderUser/SelectFilterDateOrderUser";
 
 import {
   Card,
@@ -24,17 +18,20 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { searchParamsCache } from "@/lib/nuqs";
-import prisma from "../../../db";
+import prisma from "../../../../db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { redirect } from "next/navigation";
-import { getCurrentUser } from "@/lib/actions";
+import { getCurrentUser, getOrdersPages } from "@/lib/actions";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import orderempty from "../../../public/order.png"
+import orderempty from "../../../../public/order.png"
 import { MoveLeft } from "lucide-react";
-
+import { User,Order } from "@prisma/client";
+import PaginationTable from "../../../../components/Pagination";
+import { ShowingNumberOrders } from "../../../../components/admin/orders/ShowingNumberOrders";
+import { ShowOrdersUser } from "../ShowOrdersUser";
 const PageOrderUser = async(
   {
     searchParams,
@@ -47,7 +44,8 @@ const PageOrderUser = async(
     }
   }
 ) => {
-  const paramSearch = searchParamsCache.parse(searchParams);
+ // await new Promise((resolve) => setTimeout(resolve, 20000));
+   const paramSearch = searchParamsCache.parse(searchParams);
   const user = await getCurrentUser()
   if(!user) redirect("/")
   const orders = await prisma.order.count({
@@ -56,7 +54,7 @@ where:{
 }
   })
   if(!orders || orders === 0) return (
-  <div className="container flex flex-col gap-8 justify-center items-center px-5 md:px-10 py-10 md:py-20 max-w-5xl">
+  <div className="container w-full  px-5 md:px-10 py-10 md:py-20 max-w-5xl">
     <NoOrders />
   </div>
   )
@@ -81,9 +79,12 @@ where:{
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <OrdersUser />
+          <ShowOrdersUser
+           user={user}    
+          />
+       
         </CardContent>
-        <CardFooter>{/* <ShowingNumberProducts /> */}</CardFooter>
+        <CardFooter><ShowingNumberOrders userId={user.id} /> </CardFooter>
       </Card>
       </div>
    

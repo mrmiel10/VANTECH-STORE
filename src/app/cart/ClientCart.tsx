@@ -17,7 +17,7 @@ import { Suspense } from "react";
 import { SkeletonCartLoading } from "../../../components/Skeletons";
 import cart from "../../../public/cart.png";
 import { Skeleton } from "@/components/ui/skeleton";
-import { formatPrice } from "@/lib/formatPrice";
+import { formatPrice } from "@/lib/formatData";
 import { PropsWithChildren } from "react";
 import { createOrderAction } from "@/lib/actions";
 import { useServerAction } from "zsa-react";
@@ -118,7 +118,8 @@ export const ClientCart = ({
 
 const NoItems = () => {
   return (
-    <Alert className="p-6">
+    <div className="containe px-5 w-full md:px-10  max-w-5xl">
+       <Alert className="p-6">
       <div className="flex sm:items-stretch max-sm:flex-col items-center">
         <div className="relative w-64 aspect-squar">
           <Image src={cart} alt={"cartImage"} className="e object-contain" />
@@ -142,6 +143,8 @@ const NoItems = () => {
         </div>
       </div>
     </Alert>
+    </div>
+   
   );
 };
 const ShowItemsCart = () => {

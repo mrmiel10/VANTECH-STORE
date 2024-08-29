@@ -22,9 +22,9 @@ import { ChevronLeft, ChevronRight, Copy, CreditCard } from "lucide-react";
 import CopyPasteButton from "../../../../components/CopyPasteButton";
 import { useShallow } from "zustand/react/shallow";
 import { useOrderStore } from "@/lib/order.store";
-import { formatPrice } from "@/lib/formatPrice";
-import { formatDateToLocal } from "@/lib/formatDate";
-import { ParseProducts } from "@/lib/ParseProducts";
+import { formatPrice } from "@/lib/formatData";
+import { formatDateToLocal } from "@/lib/formatData";
+import { ParseProducts } from "@/lib/parseData";
 import clsx from "clsx";
 import {
   Tooltip,
@@ -74,7 +74,7 @@ export const OrderDetails = () => {
             <span className="sr-only">Copy Order ID</span>
           </CardTitle>
           <div className="grid grid-cols-1 gap-2">
-            {/* <CardDescription>Date:  {formatDateToLocal(order.createdDate.toISOString())}</CardDescription>  */}
+          <CardDescription>Date:  {formatDateToLocal(order.createdDate.toISOString())}</CardDescription>
             {/* <CardDescription>Date: November 23, 2023</CardDescription> */}
             <div className="flex items-center text-sm text-muted-foreground">
               <span>Payment: </span>

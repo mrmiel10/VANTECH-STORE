@@ -10,20 +10,20 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { EllipsisIcon, Pencil, TrashIcon } from "lucide-react";
+import { EllipsisIcon} from "lucide-react";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import Status from "./Status";
-import { MapStatus, ParseImages } from "./ProductsTable";
+import { ParseProductImages } from "@/lib/parseData";
 import { Product, Review } from "@prisma/client";
-import { formatPrice } from "@/lib/formatPrice";
+import { formatPrice } from "@/lib/formatData";
 import { EditProductButton } from "../SubmitButtons";
 import { DeleteProductBtn } from "../SubmitButtons";
 import { HandleSetStatusProduct } from "./HandleSetStatusProduct";
 import prisma from "../../db";
-import { SchemaSafeProductsOrder } from "../../schemas/schema";
-import { JsonValue } from "@prisma/client/runtime/library";
+
 import { Badge } from "@/components/ui/badge";
+import { ParseProducts } from "@/lib/parseData";
 
 export const MobileProductsAdmin = async({
   products,
@@ -69,7 +69,7 @@ export const MobileProductsAdmin = async({
                     alt="Product image"
                     className="aspect-square object-cover"
                     fill
-                    src={ParseImages(product.images)[0].image}
+                    src={ParseProductImages(product.images)[0].image}
                   />
                 </div>
               </div>
@@ -98,7 +98,7 @@ export const MobileProductsAdmin = async({
                   {" "}
                   <EditProductButton productId={product.id} />
                   <DeleteProductBtn
-                    images={ParseImages(product.images)}
+                    images={ParseProductImages(product.images)}
                     id={product.id}
                   />
                 </div>
@@ -130,9 +130,3 @@ export const TotalSales = async({productId}:{productId:string}) =>{
 </div>
   )
 }
-export const ParseProducts = (products: JsonValue) => {
-  const stringProducts = products as string;
-  return SchemaSafeProductsOrder.parse(
-    JSON.parse(JSON.stringify(stringProducts))
-  );
-};

@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/tooltip";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { formatPrice } from "@/lib/formatPrice";
+import { formatPrice } from "@/lib/formatData";
 const ButtonCartNav = () => {
   const cart = useCartStore((s) => s.cart);
 

@@ -11,14 +11,14 @@ import { useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 import clsx from "clsx";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Prisma, Product } from "@prisma/client";
+import {Product } from "@prisma/client";
 import { Review } from "@prisma/client";
 import { Rating } from "@mui/material";
-import { formatPrice } from "@/lib/formatPrice";
+import { formatPrice } from "@/lib/formatData";
 import { filtersByCategories } from "@/lib/listFiltersProducts";
 import { sortFilters } from "@/lib/listFiltersProducts";
 import { Card } from "@/components/ui/card";
-import { ParseImages } from "./admin/ProductsTable";
+import { ParseProductImages } from "@/lib/parseData";
 // import { products } from "@/lib/products";
 export const CardProduct = (
   product: PropsWithChildren< Product & { reviews: Review[] }>
@@ -35,7 +35,7 @@ export const CardProduct = (
         { product && product.images && (
           <Image
             fill
-            src={ParseImages(product.images)[0].image}
+            src={ParseProductImages(product.images)[0].image}
             alt={product?.description!}
             className="object-contain"
           />
@@ -43,8 +43,7 @@ export const CardProduct = (
       </div>
       <div className="border-t grid grid-cols-1 flex-grow gap-y-4 min-h-5  bg-white text-sm p-4  ">
         <p className="font-semibold text-blue-500">{product.name}</p>
-        {/* <p className="font-semibold">{truncateText(product.name)}</p> */}
-        {/* <p>{product.description}</p> */}
+     
         <div className="flex  items-center w-full flex-col justify-end">
           <div className="flex flex-col w-full gap-2">
             <div className="flex items-center gap-1">
@@ -72,7 +71,7 @@ export const ToggleCartButton = ({
     category: product.category,
     status:product.status,
     quantity: 1,
-    images: ParseImages(product.images),
+    images: ParseProductImages(product.images),
     price: product.price,
   });
 
@@ -112,7 +111,7 @@ export const ToggleLikeButton = ({
     status:product.status,
     category: product.category,
     quantity: 1,
-    images: ParseImages(product.images),
+    images: ParseProductImages(product.images),
     price: product.price,
   });
   const { isFavorite, toggleFavorite } = useCartStore(

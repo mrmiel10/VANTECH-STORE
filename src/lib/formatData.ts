@@ -11,4 +11,12 @@ export const formatDateToLocal = (
     const formatter = new Intl.DateTimeFormat(locale, options);
     return formatter.format(date);
   };
-  
+  export const formatPrice = (amount:number) => {
+    
+    return new Intl.NumberFormat
+    ('en-FR',{
+        style:'currency',
+        currency:'XAF'
+    }).format(amount)
+
+}

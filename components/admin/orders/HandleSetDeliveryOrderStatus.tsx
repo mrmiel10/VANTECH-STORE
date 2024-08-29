@@ -54,14 +54,14 @@ export const HandleSetDeliveryOrderStatus = ({
             Set delivery Status
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-1">
             {MapDeliveryStatusOrder.map((status, _) => (
               <div className="w-full space-y-2" key={status}>
                 <DropdownMenuItem
                   key={status}
                   className={clsx(" h-10", {
                     "bg-muted text-blue-500 pointer-events-none":
-                      deliveryStatus === status,
+                      deliveryStatus.toLowerCase() === status.toLowerCase(),
                   })}
                 >
                   <form
@@ -72,7 +72,7 @@ export const HandleSetDeliveryOrderStatus = ({
                     <input type="hidden" name="orderId" value={orderId} />
                     <Button variant={"pStatus"} className="p-0" type="submit">
                       <span>{status[0].toUpperCase() + status.slice(1)}</span>
-                      {deliveryStatus === status && (
+                      { deliveryStatus.toLowerCase() === status.toLowerCase() && (
                         <div className="ml-auto size-2 bg-blue-500 rounded-full" />
                       )}
                     </Button>

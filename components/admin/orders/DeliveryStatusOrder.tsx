@@ -24,7 +24,7 @@ export const DeliveryStatusOrder = ({status,className}:{
         {status.toLowerCase() === "cancelled" && <LucideCircleX className='size-4 mr-1'/>}
         {status.toLowerCase() === "dispatched" && <TruckIcon className='size-4 mr-1'/>}
         
-        {status}</Badge>
+        {status[0].toLowerCase() + status.slice(1)}</Badge>
   )
 }
 

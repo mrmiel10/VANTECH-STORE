@@ -24,8 +24,3 @@ export const ProductsTable = async () => {
 };
 
 export const MapStatus = ["published", "draft", "archive"];
-export const ParseImages = (images: JsonValue) => {
-  
-  const stringImages = images as string;
-  return SchemaSafeImages.parse(JSON.parse(JSON.stringify(stringImages)));
-};

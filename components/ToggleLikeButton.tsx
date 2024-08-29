@@ -4,7 +4,7 @@ import { productsType } from "@/lib/typeProducts"
 import { Heart } from "lucide-react"
 import { useState } from "react"
 import { useShallow } from "zustand/react/shallow"
-import { ParseImages } from "./admin/ProductsTable"
+import { ParseProductImages } from "@/lib/parseData"
 export const ToggleLikeButton = ({product}:{product:CartProductType}) =>{
     // const favorites = useCartStore((s) => s.favorites)
     // const toggleFavorite = useCartStore((s) => s.toggleFavorite)
@@ -16,7 +16,7 @@ export const ToggleLikeButton = ({product}:{product:CartProductType}) =>{
       brand: product.brand,
       status:product.status,
       quantity:1,
-      images:ParseImages(product.images),
+      images:ParseProductImages(product.images),
       price: product.price,
     })
     const {isFavorite,toggleFavorite} = useCartStore(useShallow((s)=>({
