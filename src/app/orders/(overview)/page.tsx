@@ -44,7 +44,7 @@ const PageOrderUser = async(
     }
   }
 ) => {
-  await new Promise((resolve) => setTimeout(resolve, 20000));
+  //await new Promise((resolve) => setTimeout(resolve, 20000));
    const paramSearch = searchParamsCache.parse(searchParams);
   const user = await getCurrentUser()
   if(!user) redirect("/")
