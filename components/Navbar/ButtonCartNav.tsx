@@ -89,7 +89,7 @@ const ButtonCartNav = () => {
               </div>
             </li>
           ))}
-        </ul>0
+        </ul>
       </PopoverContent>
     </Popover>
   );

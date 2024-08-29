@@ -35,7 +35,7 @@ import PaginationTable from "../../../../components/Pagination";
 import { SkeletonLoadingManageProducts } from "../../../../components/Skeletons";
 import { Alert,AlertTitle,AlertDescription } from "@/components/ui/alert";
 import searchInTable from "../../../../public/search.png";
-import { countReset } from "console";
+
 export default function ManageProducts({
   searchParams,
 }: {

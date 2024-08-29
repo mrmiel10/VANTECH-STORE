@@ -10,7 +10,7 @@ import { Circle } from "lucide-react";
 import { redirect } from "next/navigation";
 export const AsideNav = async () => {
   const user = await getCurrentUser()
-  if(!user) redirect("/animations")
+  if(!user) redirect("/")
   return (
     <aside className="fixed inset-y-0 left-0 z-10 hidden w-52 flex-col border-r bg-background lg:flex">
       <div>

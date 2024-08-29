@@ -1,4 +1,4 @@
-
+"use client"
 import React, { useEffect } from "react";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { MapStatus } from "./ProductsTable";
