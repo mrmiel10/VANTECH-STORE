@@ -47,11 +47,11 @@ export const CardProduct = (
         <div className="flex  items-center w-full flex-col justify-end">
           <div className="flex flex-col w-full gap-2">
             <div className="flex items-center gap-1">
-              <p className="font-semibold"> {formatPrice(product?.price)}</p>
-              <Rating value={4.5} precision={0.5} readOnly size="small" />
+              <p className="font-semibold text-blue-500 antialiased"> {formatPrice(product.price)}</p>
+              <Rating className="ml-auto" value={4.5} precision={0.5} readOnly size="small" />
             </div>
 
-            <div className="flex gap-2 ml-auto">{product?.children}</div>
+            <div className="flex gap-2 ml-auto">{product.children}</div>
           </div>
         </div>
       </div>
@@ -146,16 +146,21 @@ export const SkeletonCard = () => {
   return (
     <Card className="border-muted flex flex-col w-full rounded-md overflow-hidden bg-white">
       <Skeleton className="h-52   rounded-none" />
-      <div className=" flex flex-col flex-grow gap-y-3 text-sm p-8 sm:p-4  ">
-        <Skeleton className="h-5 w-full " />
-        <Skeleton className="h-8 w-full " />
-        <div className=" flex justify-between items-center">
-          <Skeleton className="h-5 w-12  " />
-          <div className="flex gap-2 ">
+      <div className=" border-t grid grid-cols-1 flex-grow gap-y-4 min-h-5 text-sm p-4  ">
+        <Skeleton className="h-14 w-full " />
+        <div className="flex  items-center w-full flex-col justify-end">
+          <div className="flex flex-col w-full gap-2">
+            <div className="flex items-center gap-1">
+            <Skeleton className="h-5 w-24 " />
+            <Skeleton className="w-20 h-4 ml-auto" />
+            </div>
+            <div className="flex gap-2 justify-end ">
             <Skeleton className=" w-12 h-10 " />
             <Skeleton className="  w-12 h-10 " />
           </div>
+          </div>
         </div>
+    
       </div>
     </Card>
   );

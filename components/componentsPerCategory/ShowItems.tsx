@@ -93,7 +93,7 @@ export const ShowItems = async ({
   searchParams?: { [key: string]: string };
   category?: string;
 }) => {
-  //await new Promise((resolve) => setTimeout(resolve, 10000));
+  //await new Promise((resolve) => setTimeout(resolve, 20000));
   console.log(searchParams);
   console.log(category);
 
