@@ -111,9 +111,9 @@ export const AddProductsForm = () => {
     console.log(values);
     let uploadedImages: uploadImageType[] = [];
     console.log(uploadedImages);
-
+    fileStates.map(async (fileState, index) => {
     try {
-      fileStates.map(async (fileState, index) => {
+     
         if (
           fileState.progress !== "PENDING" ||
           typeof fileState.file === "string"
@@ -140,14 +140,15 @@ export const AddProductsForm = () => {
           ...values.images[index],
           image: res.url,
         });
-      });
-      await addProduct.execute({ ...values, images: uploadedImages });
+    
+  
     } catch (err) {
       updateFileProgress("ERROR", setFileStates, fileState.key);
     } finally {
       setUploadImage(false);
     }
-
+  });
+  await addProduct.execute({ ...values, images: uploadedImages });
     // console.log('uploadedImages:',uploadedImages),
   }
 
