@@ -7,7 +7,7 @@ import {
   deleteProductInCart,
   useCartStore,
 } from "@/lib/cart.store";
-import { formatPrice } from "@/lib/formatPrice";
+import { formatPrice } from "@/lib/formatData";
 
 import SetQuantity from "../../../../components/product/setQuantity";
 import Image from "next/image";
