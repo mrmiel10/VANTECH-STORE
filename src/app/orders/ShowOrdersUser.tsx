@@ -34,7 +34,7 @@ import { DeliveryStatusOrder } from "../../../components/admin/orders/DeliverySt
 import MobileCopyIdOrder from "./MobileCopyIdOrder";
 import Link from "next/link";
 import { formatDateToLocal } from "@/lib/formatData";
-export const ShowOrdersUser = async (   {
+export const ShowOrdersUser = async ({
   user,
 }: {
   user: User & { orders: Order[] };
