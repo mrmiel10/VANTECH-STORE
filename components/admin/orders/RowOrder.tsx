@@ -55,7 +55,7 @@ setOrder(lastOrder)
     
     </TableCell>
     {/* <TableCell className="hidden md:table-cell">
-      {formatDateToLocal(order.createdDate.toDateString())}
+      {formatDateToLocal(order.createdDate.toDateString())
     </TableCell> */}
     <TableCell className="text-right">{formatPrice(order.amount)}</TableCell>
   </TableRow>
