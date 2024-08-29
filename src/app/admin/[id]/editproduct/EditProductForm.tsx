@@ -51,7 +51,7 @@ import {
   imageType,
   uploadImageType,
 } from "@/app/admin/add-products/AddProductsForme";
-import { ParseImages } from "../../../../../components/admin/ProductsTable";
+import { ParseProductImages } from "@/lib/parseData";
 import { revalidatePath } from "next/cache";
 import { useServerAction } from "zsa-react";
 import { updateFileProgress } from "../../add-products/AddProductsForm";
@@ -66,8 +66,8 @@ export const EditProductForm = ({
   const router = useRouter();
    console.log(product);
   console.log("yessssss")
-  console.log(ParseImages(product.images));
-const safeImages = ParseImages(product.images)
+  console.log(ParseProductImages(product.images));
+const safeImages = ParseProductImages(product.images)
   const images:{
     file: File | string;
     //file: File | string;
@@ -120,7 +120,7 @@ if(files.length !=0) return
       brand: product.brand,
       category: product.category,
       status: product.status,
-      images: ParseImages(product.images),
+      images: ParseProductImages(product.images),
        price: product.price,
       quantity: product.quantity,
     },
