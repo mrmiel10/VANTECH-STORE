@@ -74,7 +74,7 @@ export const OrderDetails = () => {
             <span className="sr-only">Copy Order ID</span>
           </CardTitle>
           <div className="grid grid-cols-1 gap-2">
-          <CardDescription>Date:  {formatDateToLocal(order.createdDate.toLocaleString())}</CardDescription>
+          <CardDescription>Date:  {formatDateToLocal(order.createdDate.toDateString())}</CardDescription>
             {/* <CardDescription>Date: November 23, 2023</CardDescription> */}
             <div className="flex items-center text-sm text-muted-foreground">
               <span>Payment: </span>
