@@ -90,7 +90,7 @@ export const AddProductsForm = () => {
       price: undefined,
       quantity: undefined,
     },
-  });ordf
+  });
 
   const setCustomValue = (id: any, value: any) => {
     form.setValue(id, value, {
