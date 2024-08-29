@@ -15,12 +15,12 @@ export default function Home({
     <div className="container mx-auto max-w-screen-2xl py-5 lg:py-10 px-4 lg:px-6 ">
 
     <div className=" grid lg:grid-cols-[270px_1fr] gap-10 items-start">
-      <FiltersSheet />
+      {/* <FiltersSheet /> */}
       <Filters />
       <div className="grid gap-6 md:gap-8 h-ful auto-rows-max">
         <TitleProductsByCategories
-          title=" Nos produits"
-          description=" Découvrez notre collection de produits !"
+          title="Explore our product categories"
+          description=" Find the best computer equipment for your personnal or professionnal needs"
         />
 
         <Suspense fallback={<SkeletonProductsCards />}>

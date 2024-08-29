@@ -42,7 +42,7 @@ export const CardProduct = (
         )}
       </div>
       <div className="border-t grid grid-cols-1 flex-grow gap-y-4 min-h-5  bg-white text-sm p-4  ">
-        <p className="font-semibold text-blue-500">{product.name}</p>
+        <p className=" text-muted-foreground line-clamp-3 leading-5">{product.name}</p>
      
         <div className="flex  items-center w-full flex-col justify-end">
           <div className="flex flex-col w-full gap-2">

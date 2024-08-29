@@ -1,7 +1,7 @@
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
-import { ArrowDownAZ, ArrowUpAZ, Check, ChevronDownIcon } from "lucide-react";
 
+import { ChevronDown } from "lucide-react";
 import { filtersByCategories } from "@/lib/listFiltersProducts";
 import {
   DropdownMenuTrigger,
@@ -59,8 +59,8 @@ const ButtonFiltersCategories = () => {
               variant="outline"
               size="sm"
             >
-              Trier par catégorie
-              {/* <ChevronDownIcon className="size-4 ml-2" /> */}
+            Filter by category
+            <ChevronDown className="size-3 mt-1" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">

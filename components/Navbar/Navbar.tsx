@@ -38,7 +38,7 @@ if(pathname.startsWith("/admin")) return null
         </div>
         <div className="flex max-sm:hidden items-center w-full max-w-md mx-auto">
           <div className="relative flex-1">
-            <SearchComponent placeholder="rechercher votre article..." />
+            <SearchComponent placeholder="Find your item..." />
           </div>
         </div>
         <div className="flex items-center gap-4">

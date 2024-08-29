@@ -1,6 +1,6 @@
 "use client"
 import React, { useCallback, useEffect, useState } from "react";
-
+import { ChevronDown } from 'lucide-react'
 import { ArrowUp,ArrowDown } from "lucide-react";
 import {
   DropdownMenuTrigger,
@@ -42,14 +42,13 @@ const ButtonSortProducts = () => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild className="focus:outline-none">
         <Button
-          className="focus-visible:ring-offset-0 focus-visible:ring-0 hover:text-blue-500 transition active:outline-none focus-visible:outline-none"
+          className=" focus-visible:ring-offset-0 focus-visible:ring-0 hover:text-blue-500 transition active:outline-none focus-visible:outline-none"
           variant="outline"
           size="sm"
         >
-          <ArrowUp className="size-4" />
-          <ArrowDown className="size-4" />
-          Trier
-      
+          
+      Sort By
+      <ChevronDown className="size-3 mt-1" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="">

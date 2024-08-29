@@ -64,17 +64,17 @@ export const filtersAllCategories = [
   ];
   export const  sortFilters = [
     {
-      id:"nouveautés",
+      id:"news",
       name:"new",
       value:"new"
     },
     {
-      id:"prix croissant",
+      id:"price low to high",
       name:"price",
       value:"asc"
     },
     {
-      id:"prix décroissant",
+      id:"price high to low",
       name:"price",
       value:"desc"
     },
@@ -92,19 +92,19 @@ export const filtersAllCategories = [
   ]
   export const filtersByCategories = [
     {
-      id:"Ordinateurs de bureaux",
+      id:"Desktops computers",
       name:"category",
       value:"desktops"
     },
     {
-      id:"Ordinateurs portables",
+      id:"Laptops computers",
       name:"category",
       value:"laptops"
     },
     {
       id:"Souris",
       name:"category",
-      value:"mouse"
+      value:"COmputer mouse"
     },
    
   ]

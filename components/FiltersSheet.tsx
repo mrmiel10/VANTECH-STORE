@@ -78,11 +78,11 @@ const FiltersSheet = () => {
     <div className="block lg:hidden">
       <Sheet  >
         <SheetTrigger asChild>
-          <Button className="rounded-full px-6 py-5" variant={"outline"} size={"sm"}>
-            <SlidersHorizontal className="size-4 mr-2" /> Filtres
+          <Button className="text-muted-foreground" variant={"outline"} size={"sm"}>
+            <SlidersHorizontal className="size-4 mr-2" /> Filters
           </Button>
         </SheetTrigger>
-        <SheetContent side={"right"} className=" overflow-y-auto space-y-4 w-3/4 bg-white p-7">
+        <SheetContent side={"left"} className=" overflow-y-auto space-y-4 w-3/4 bg-white p-7">
           <SheetHeader className="">
             {/* <SheetTitle>Edit profile</SheetTitle> */}
             <div className="flex items-center max-sm:items-start gap-1">
