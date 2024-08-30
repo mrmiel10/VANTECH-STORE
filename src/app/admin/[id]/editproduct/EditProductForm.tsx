@@ -64,7 +64,7 @@ export const EditProductForm = ({
   product: Product
 }) => {
   const router = useRouter();
-   console.log(product);
+  //  console.log(product);
   console.log("yessssss")
   console.log(ParseProductImages(product.images));
 const safeImages = ParseProductImages(product.images)
@@ -82,6 +82,7 @@ const safeImages = ParseProductImages(product.images)
   const [fileStates, setFileStates] = useState<FileState[]>(images);
   const [isProductCreated, setIsProductCreated] = useState(false);
   const { edgestore } = useEdgeStore(); 
+  //console.log("filestates:",fileStates)
   const editProduct = useServerAction(editProductAction, {
     onSuccess: () => {
       setIsProductCreated(true);
@@ -89,7 +90,7 @@ const safeImages = ParseProductImages(product.images)
       toast.success("the product has been updated sucessfully!");
    
       router.push("/admin/manage-products");
-      // Router.refresh();
+       Router.refresh();
     },
     onError: () => {
       toast.error("error updating product!");
@@ -104,7 +105,8 @@ const safeImages = ParseProductImages(product.images)
     },
   });
   const createImageFile = (files: FileState[]) => {
-if(files.length !=0) return
+    console.log('files:',files)
+if(files.length ===0) return
     const imagesFile = files.map((i) => {
       if(typeof i.file ==='string') return {image:i.file}
       return { image: i.file.name };
@@ -115,7 +117,7 @@ if(files.length !=0) return
   const form = useForm<z.infer<typeof formValidateProducts>>({
     resolver: zodResolver(formValidateProducts),
     defaultValues: {
-      name: product.name,
+     name: product.name ,
       description: product.description ?? undefined,
       brand: product.brand,
       category: product.category,
@@ -126,13 +128,13 @@ if(files.length !=0) return
     },
   });
 
-  useEffect(() => {
-    if (isProductCreated) {
-      form.reset();
-      setFileStates([]);
-      setIsProductCreated(false);
-    }
-  }, [form, isProductCreated]);
+  // useEffect(() => {
+  //   if (isProductCreated) {
+  //     form.reset();
+  //     setFileStates([]);
+  //     setIsProductCreated(false);
+  //   }
+  // }, [form, isProductCreated]);
 
   const setCustomValue = (id: any, value: any) => {
     form.setValue(id, value, {
@@ -143,9 +145,10 @@ if(files.length !=0) return
   };
 
   async function onSubmit(values: z.infer<typeof formValidateProducts>) {
+ console.log(values)    
  setUploadImage(true)
     console.log(values);
-
+console.log(fileStates)
     let uploadedImages: uploadImageType[] = [];
     console.log(uploadedImages);
     await Promise.all([
@@ -158,35 +161,44 @@ if(files.length !=0) return
             uploadedImages.push({
               ...values.images[index]
             })
-            return;
+          ///  return;
+          }else{
+            const res = await edgestore.publicFiles.upload({
+              file: fileState.file,
+              input:{type:"product"},
+              options: {},
+              onProgressChange: async (progress) => {
+                updateFileProgress(progress,setFileStates,fileState.key);
+                  if (progress === 100) {
+                    // wait 1 second to set it to complete
+                    // so that the user can see the progress bar
+                    await new Promise((resolve) => setTimeout(resolve, 1000));
+                    updateFileProgress("COMPLETE",setFileStates,fileState.key);
+                  }
+              },
+            });
+            console.log("url:",res.url)
+            uploadedImages.push({
+              ...values.images[index],
+              image: res.url,
+            });
           }
-          const res = await edgestore.publicFiles.upload({
-            file: fileState.file,
-            input:{type:"product"},
-            options: {},
-            onProgressChange: async (progress) => {
-              updateFileProgress(progress,setFileStates,fileState.key);
-                if (progress === 100) {
-                  // wait 1 second to set it to complete
-                  // so that the user can see the progress bar
-                  await new Promise((resolve) => setTimeout(resolve, 1000));
-                  updateFileProgress("COMPLETE",setFileStates,fileState.key);
-                }
-            },
-          });
-          uploadedImages.push({
-            ...values.images[index],
-            image: res.url,
-          });
+       
+          if(index === fileStates.length - 1){
+            console.log("uploadImages:",uploadedImages),
+            editProduct.execute({ ...values, images: uploadedImages,id:product.id})
+              deleteImagesProduct.execute(ParseProductImages(product.images))    
+          }
          
         } catch (err) {
           updateFileProgress("ERROR",setFileStates,fileState.key);
           setUploadImage(false);
         }
+        finally {
+          setUploadImage(false);
+        }
       }),
-     // console.log(uploadedImages),
-     editProduct.execute({ ...values, images: uploadedImages,id:product.id}),
-       deleteImagesProduct.execute(ParseProductImages(product.images)),    
+    
     ]);
  
   }
@@ -235,8 +247,11 @@ if(files.length !=0) return
               <CardContent>
                 <div className="grid gap-6">
                   <FormField
+                  
                     control={form.control}
                     name="name"
+                    
+               
                     render={({ field }) => (
                       <FormItem>
                         <div className="grid gap-3">
@@ -244,7 +259,7 @@ if(files.length !=0) return
                             Name
                           </Label>
                           <Input
-                         
+                         defaultValue={product.name}
                             {...field}
                             id="name"
                             className="text-muted-foreground"
@@ -370,7 +385,7 @@ if(files.length !=0) return
                 <FormField
                   control={form.control}
                   name="category"
-                  defaultValue={product.category}
+                  // defaultValue={product.category}
                   render={({ field }) => (
                     <FormItem>
                       <div className="grid gap-3">
@@ -480,7 +495,7 @@ if(files.length !=0) return
           <div className="flex justify-center ml:auto md:hidden">
            
             <Button variant={"defaultBtn"} size="sm">
-              Add Product
+              Edit Product
             </Button>
           </div>
         </div>

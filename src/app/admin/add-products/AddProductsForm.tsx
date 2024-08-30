@@ -52,6 +52,7 @@ export const AddProductsForm = () => {
   const [isProductCreated, setIsProductCreated] = useState(false);
   const [isUploadImage, setUploadImage] = React.useState(false);
   const [fileStates, setFileStates] = useState<FileState[]>([]);
+  console.log(fileStates)
   const { edgestore } = useEdgeStore();
   console.log(fileStates);
 
@@ -99,56 +100,61 @@ export const AddProductsForm = () => {
   };
 
   const createImageFile = (files: FileState[]) => {
+    
     if (!files) return;
     const imagesFile = files.map((img) => {
-      if (typeof img.file === "string") return { image: img.file };
-      return { image: img.file.name };
+      if (typeof img.file !=="string" ) return { image: img.file.name };
     });
     setCustomValue("images", imagesFile);
+    console.log("images:",imagesFile)
   };
   async function onSubmit(values: z.infer<typeof formValidateProducts>) {
+    console.log(values)
     setUploadImage(true);
     console.log(values);
     let uploadedImages: uploadImageType[] = [];
     console.log(uploadedImages);
-    fileStates.map(async (fileState, index) => {
-    try {
-     
-        if (
-          fileState.progress !== "PENDING" ||
-          typeof fileState.file === "string"
-          // typeof values.images[index].image === "string"
-        ) {
-          return;
-        }
-        const res = await edgestore.publicFiles.upload({
-          file: fileState.file,
-          input: { type: "product" },
-
-          onProgressChange: async (progress) => {
-            updateFileProgress(progress, setFileStates, fileState.key);
-            if (progress === 100) {
-              // wait 1 second to set it to complete
-              // so that the user can see the progress bar
-              await new Promise((resolve) => setTimeout(resolve, 1000));
-              updateFileProgress("COMPLETE", setFileStates, fileState.key);
-            }
-          },
-        });
-        console.log("resUrl:", res.url);
-        uploadedImages.push({
-          ...values.images[index],
-          image: res.url,
-        });
-    
+    await Promise.all([
+      fileStates.map(async (fileState, index) => {
+        try {
+          if (
+            fileState.progress !== "PENDING" ||
+            typeof fileState.file === "string"
+            // typeof values.images[index].image === "string"
+          ) {
+            return;
+          }
+          const res = await edgestore.publicFiles.upload({
+            file: fileState.file,
+            input: { type: "product" },
   
-    } catch (err) {
-      updateFileProgress("ERROR", setFileStates, fileState.key);
-    } finally {
-      setUploadImage(false);
-    }
-  });
-  await addProduct.execute({ ...values, images: uploadedImages });
+            onProgressChange: async (progress) => {
+              updateFileProgress(progress, setFileStates, fileState.key);
+              if (progress === 100) {
+                // wait 1 second to set it to complete
+                // so that the user can see the progress bar
+                await new Promise((resolve) => setTimeout(resolve, 1000));
+                updateFileProgress("COMPLETE", setFileStates, fileState.key);
+              }
+            },
+          });
+          console.log("resUrl:", res.url)
+          uploadedImages.push({
+            ...values.images[index],
+            image: res.url,
+          });
+          console.log("uploadimages:",uploadedImages)
+         if(index === fileStates.length - 1)  await addProduct.execute({ ...values, images: uploadedImages })
+        } catch (err) {
+          updateFileProgress("ERROR", setFileStates, fileState.key);
+        } 
+        finally {
+           setUploadImage(false);
+         }
+      }),
+     // await addProduct.execute({ ...values, images: uploadedImages })
+    ])
+   
     // console.log('uploadedImages:',uploadedImages),
   }
 

@@ -118,6 +118,7 @@ const MultiImageDropzone = React.forwardRef<HTMLInputElement, InputProps>(
           className
         ).trim(),
       [
+
         isFocused,
         fileRejections,
         isDragAccept,
@@ -163,6 +164,7 @@ const MultiImageDropzone = React.forwardRef<HTMLInputElement, InputProps>(
                 </div>
               )}
               {/* Remove Image Icon */}
+              
               {imageUrls[index] && !disabled && (progress === "PENDING" || progress === "COMPLETE") && (
                 <div
                   className="group absolute right-0 top-0 -translate-y-1/4 translate-x-1/4 transform"

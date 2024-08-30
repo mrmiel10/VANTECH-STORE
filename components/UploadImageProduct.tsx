@@ -19,6 +19,7 @@ export const UploadImageProduct = ({fileStates,createImageFile,setFileStates}:Up
       setFileStates(files);
     }}
     onFilesAdded={async (addedFiles) => {
+      createImageFile([...fileStates, ...addedFiles]);
       setFileStates([...fileStates, ...addedFiles]);
     }}
   />                                                                                                                       

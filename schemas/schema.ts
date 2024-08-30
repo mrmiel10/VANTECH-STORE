@@ -4,6 +4,9 @@ export const formValidateProducts = z.object({
     .string({
       required_error: "please enter the name of the product",
     })
+    .min(1,{message:"At least 1 character"})
+    
+    .regex(/^\S+$/,{message:"This field can't contain spaces"})
 
     .trim(),
   // .min(1, { message: "entrer un nom d'article valide" }),
@@ -21,13 +24,17 @@ export const formValidateProducts = z.object({
     .string({
       required_error: "Please enter the brand of the product",
     })
+    .min(1,{message:"At least 1 character"})
     .trim(),
   category: z
     .string({ required_error: "please enter the category of the product" })
+    .min(1,{message:"At least 1 character"})
     .trim(),
   status: z.string({
     required_error: "please enter the status of the product",
-  }),
+  })
+  
+  ,
 
   images:
   z
@@ -38,19 +45,19 @@ export const formValidateProducts = z.object({
      // image: z.union([z.string().min(1),z.instanceof(File)])
       }),
     )
-    .min(1),
+    .min(1,{message:"select at least one image"}),
    
   price: z.coerce.number({
     required_error: "Please enter a price of the product",
     invalid_type_error: "Please enter a price of the product",
-  }),
-  quantity: 
-  
-  
+  })
+  .min(1,{message:"Please enter a pprice of the product"}),
+  quantity:   
   z.coerce.number({
     required_error: "Please enter a quantity of the product",
     invalid_type_error: "Please enter a quantity of the product",
-  }),
+  })
+  .min(1,{message:"Please enter a pprice of the product"}),
 });
 export const SchemaSafeImages = z.array(
   z.object({
