@@ -90,7 +90,7 @@ const safeImages = ParseProductImages(product.images)
       toast.success("the product has been updated sucessfully!");
    
       router.push("/admin/manage-products");
-       Router.refresh();
+       router.refresh();
     },
     onError: () => {
       toast.error("error updating product!");

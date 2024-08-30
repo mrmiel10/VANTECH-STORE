@@ -101,7 +101,7 @@ export const AddProductsForm = () => {
 
   const createImageFile = (files: FileState[]) => {
     
-    if (!files) return;
+   /// if (!files || files.length === 0) return;
     const imagesFile = files.map((img) => {
       if (typeof img.file !=="string" ) return { image: img.file.name };
     });
