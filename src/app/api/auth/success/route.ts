@@ -8,7 +8,8 @@ const prisma = new PrismaClient();
 export async function GET() {
     noStore()
     const apiUrl = process.env.NODE_ENV === "production" ? "https://v-storehardware.vercel.app/" : "http://localhost:3000"
-  const {getUser} = getKindeServerSession();
+  const apiUrlAdmin = process.env.NODE_ENV === "production" ? "https://v-storehardware.vercel.app/admin/dashboard" : "http://localhost:3000/admin/dashboard"
+    const {getUser} = getKindeServerSession();
     const user = await getUser();
 
     if (!user || user == null || !user.id)
@@ -33,6 +34,6 @@ export async function GET() {
             }
         });
     }
-
-  return NextResponse.redirect(apiUrl);
+if(dbUser.role ==='USER') return NextResponse.redirect(apiUrl);
+else return NextResponse.redirect(apiUrlAdmin);
 }
