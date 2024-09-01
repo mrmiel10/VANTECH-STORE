@@ -650,7 +650,7 @@ export const getAmountOrdersOfPeriod = async(start?:Date,end?:Date)=>{
       } : undefined
     },
     _sum:{
-      amount:true
+      amount:true,
     },
    
   }) 

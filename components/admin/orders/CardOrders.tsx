@@ -30,7 +30,7 @@ export const CardWeekOrMonthOrders = async({name,description}:{
     <Card>
       <CardHeader className="pb-2">
         <CardDescription>{description}</CardDescription>
-        <CardTitle className=" text-3xl md:text-4xl text-blue-500">
+        <CardTitle className=" text-2xl text-blue-500">
       
           {formatPrice(totalAmountOrders ?? 0)}
         </CardTitle>
