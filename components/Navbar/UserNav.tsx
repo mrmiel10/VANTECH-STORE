@@ -41,7 +41,7 @@ export const getInitials = (
 };
 export const UserNav = async () => {
   const user = await getCurrentUser();
-  if(user && user.role ==="ADMIN") redirect("/admin")
+
 
   console.log(user);
 
