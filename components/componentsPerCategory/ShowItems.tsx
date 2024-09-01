@@ -55,6 +55,9 @@ const getData = async ({
             mode: "insensitive",
           }
         : undefined,
+        status:{
+          equals:"published"
+        }
     },
 
     include: {
