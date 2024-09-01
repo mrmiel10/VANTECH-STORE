@@ -55,9 +55,7 @@ export default function OrdersPage({
           <CardWeekOrMonthOrders name="month" description="This month" />
           </Suspense>
        
-          <Suspense fallback={<SkeletonLoadingCardOrder description={"This Month"} />}>
-          <CardWeekOrMonthOrders name="all" description="All" />
-          </Suspense>     
+       
                  
         </div>
         <AdminSearch placeholder="search order..." />
