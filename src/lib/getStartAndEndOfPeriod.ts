@@ -13,7 +13,7 @@ return {
 
 
 }
-else{
+else if(name ==="month"){
     const start =  new Date(today.getFullYear(),today.getMonth() ,1)
     const end = new Date(start.getFullYear(),start.getMonth() + 1, 0)
     return {
