@@ -9,8 +9,8 @@ import { getCurrentUser } from "@/lib/actions";
 import { Circle } from "lucide-react";
 import { redirect } from "next/navigation";
 export const AsideNav = async () => {
-  // const user = await getCurrentUser()
-  // if(!user) redirect("/")
+  const user = await getCurrentUser()
+  if(!user) redirect("/")
   return (
     <aside className="fixed inset-y-0 left-0 z-10 hidden w-52 flex-col border-r bg-background lg:flex">
       <div>
@@ -24,7 +24,7 @@ export const AsideNav = async () => {
         <MenuNavigationAdmin />
       </div>
       <div className="mt-auto flex flex-col items-center justify-center pb-2 px-4 gap-2">
-        {/* <Avatar  className="size-32">
+        <Avatar  className="size-32">
           <AvatarFallback>
             {getInitials(user?.firstName ,user?.lastName,user?.email)}
         
@@ -37,11 +37,11 @@ export const AsideNav = async () => {
               `https://api.dicebear.com/9.x/adventurer/svg?seed=Buster`
             }
           />
-        </Avatar> */}
+        </Avatar>
         <div className="text-sm text-blue-500  flex flex-col justify-center items-center">
         <div className=" font-semibold">Admin</div>
         <div className="">
-          {/* {user?.email}   */}
+          {user?.email}  
           {/* mbakopngako@gmail.com */}
           </div>
         </div>
