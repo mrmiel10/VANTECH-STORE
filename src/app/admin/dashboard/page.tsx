@@ -1,9 +1,363 @@
-import React from 'react'
+import React, { PropsWithChildren } from "react";
 
-const PAGE = () => {
+import Image from "next/image";
+import Link from "next/link";
+import {
+  ArrowUpRight,
+  ChevronLeft,
+  ChevronRight,
+  Copy,
+  CreditCard,
+  DollarSign,
+  File,
+  Home,
+  MoreVertical,
+  Users,
+  Wallet,
+} from "lucide-react";
+
+import { Badge } from "@/components/ui/badge";
+
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
+// import { Progress } from "@/components/ui/progress";
+import { Separator } from "@/components/ui/separator";
+
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
+import { DeliveryStatusOrder } from "../../../../components/admin/orders/DeliveryStatusOrder";
+import { User, Order } from "@prisma/client";
+import {
+  // CardAllOrders,
+
+  CardWeekOrMonthOrders,
+} from "../../../../components/admin/orders/CardOrders";
+import { FilterDeliveryStatusOrder } from "../../../../components/admin/orders/FilterDeliveryStatusOrder";
+import { OrdersTableAdmin } from "../../../../components/admin/orders/OrdersTableAdmin";
+import { AdminSearch } from "../../../../components/admin/AdminSearch";
+import PaymentStatus from "../../../../components/admin/orders/PaymentStatus";
+import { HandleSetDeliveryOrderStatus } from "../../../../components/admin/orders/HandleSetDeliveryOrderStatus";
+
+import { useEffect } from "react";
+import { Suspense } from "react";
+
+import {
+  SkeletonLoadingCardOrder,
+  SkeletonLoadingOrdersTable,
+} from "../../../../components/Skeletons";
+import { getOrdersPages } from "@/lib/actions";
+import { ShowingNumberOrders } from "../../../../components/admin/orders/ShowingNumberOrders";
+
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Activity } from "lucide-react";
+
+import { LucideIcon } from "lucide-react";
+import { Package } from "lucide-react";
+import {
+  CardRevenue,
+  CardSales,
+  CardProducts,
+  CardCustomers,
+} from "../../../../components/admin/dashboard/TopCardDashboard";
+import prisma from "../../../../db";
+import { getInitials } from "../../../../components/Navbar/UserNav";
+import { formatPrice } from "@/lib/formatData";
+import { formatNumber } from "@/lib/formatData";
+
+import { SkeletonCardDashboardProductDetails, SkeletonCardDashboardRecentSales, SkeletonDashboardSalesDetails, SkeletonTopCardDashboard } from "./Skeletons";
+const DashboardPage = async() => {
+ // await new Promise((resolve) => setTimeout(resolve, 20000));
+ // console.log(searchParams);
   return (
-    <div>PAGE</div>
-  )
-}
+    <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
+      <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
+        <Suspense fallback={<SkeletonTopCardDashboard title="Total Revenue" Icon={Wallet} />}>
+        <CardRevenue title="Total Revenue" Icon={Wallet} />
+        </Suspense>
+        <Suspense fallback={<SkeletonTopCardDashboard title="Customers" Icon={Users}/>}>
+        <CardCustomers title="Customers" Icon={Users} />
+        </Suspense>
+        <Suspense fallback={<SkeletonTopCardDashboard title="Total Sales" Icon={CreditCard} />}>
+        <CardSales title="Total Sales" Icon={CreditCard} />
+        </Suspense>
+        <Suspense fallback={<SkeletonTopCardDashboard title="Products" Icon={Package} />}>
+        <CardProducts title="Products" Icon={Package} />
+        </Suspense>
+      
 
-export default PAGE
+        
+
+       
+      </div>
+      <div className="grid gap-4 md:gap-8 lg:grid-cols-2">
+        <div className="grid grd-cols-1 gap-8">
+          <Suspense fallback={<SkeletonDashboardSalesDetails />}>
+          <CardDetailsSales />
+          </Suspense>
+          <Suspense fallback={<SkeletonCardDashboardProductDetails/>}>
+        <CardDetailsProducts /> 
+        </Suspense>
+       
+        
+        </div>
+      <div>
+      <Suspense fallback={<SkeletonCardDashboardRecentSales />}>
+          <CardRecentSales />
+          </Suspense>
+      </div>
+        
+     
+      </div>
+    </main>
+  );
+};
+
+export default DashboardPage;
+const CardRecentSales = async () => {
+  //await new Promise((resolve) => setTimeout(resolve, 20000));
+  const recentSales = await prisma.order.findMany({
+    orderBy: {
+      createdDate: "desc",
+    },
+    take: 5,
+    select: {
+      amount: true,
+      user: {
+        select: {
+         id:true,
+          firstName: true,
+          lastName: true,
+          email: true,
+          picture: true,
+        },
+      },
+    },
+  });
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-blue-500">Recent Sales</CardTitle>
+      </CardHeader>
+      <CardContent className="grid gap-8">
+        {recentSales.map((sale, _) => (
+          <div key={sale.user.id} className="flex items-center gap-4">
+            <Avatar className="hidden h-9 w-9 sm:flex">
+              <AvatarImage
+                src={sale.user.picture}
+                alt="Avatar"
+                className="obj-ect-cover"
+              />
+              <AvatarFallback className="text-blue-500">
+                {getInitials(
+                  sale.user.firstName,
+                  sale.user.lastName,
+                  sale.user.email
+                )}
+              </AvatarFallback>
+            </Avatar>
+            <div className="grid gap-1">
+              <p className="text-sm font-medium leading-none">
+                {sale.user.firstName} {sale.user.lastName}
+              </p>
+              <p className="text-sm text-muted-foreground">{sale.user.email}</p>
+            </div>
+            <div className="ml-auto font-medium text-blue-500">
+              {formatPrice(sale.amount)}
+            </div>
+          </div>
+        ))}
+      </CardContent>
+    </Card>
+  );
+};
+const CardDetailsSales = async () => {
+  //await new Promise((resolve) => setTimeout(resolve, 20000));
+  const dp = await prisma.product.groupBy({
+    by: ["status", "price", "quantity"],
+    _count: true,
+  });
+  console.log("dp,", dp);
+  const { _count: totalPaidOrders, _sum: totalAmountPaidOrders } =
+    await prisma.order.aggregate({
+      where: {
+        status: {
+          equals: "paid",
+          mode: "insensitive",
+        },
+      },
+      _count: true,
+      _sum: {
+        amount: true,
+      },
+    });
+  const { _count: totalUnpaidOrders, _sum: totalAmountUnpaidOrders } =
+    await prisma.order.aggregate({
+      where: {
+        status: {
+          equals: "pending",
+          mode: "insensitive",
+        },
+      },
+      _count: true,
+      _sum: {
+        amount: true,
+      },
+    });
+  return (
+    <Card>
+      <CardHeader className="flex flex-row items-center">
+        <div className="grid gap-2">
+          <CardTitle className="text-blue-500">More sales details</CardTitle>
+          <CardDescription>
+            See paid and unpaid orders of the sales
+          </CardDescription>
+        </div>
+        <Button
+          variant={"defaultBtn"}
+          asChild
+          size="sm"
+          className="ml-auto gap-1 hover:translate-x-1 hover:-translate-y-1 transition-all ease duration-100"
+        >
+          <Link href="/admin/orders">
+            View All
+            <ArrowUpRight className="h-4 w-4" />
+          </Link>
+        </Button>
+      </CardHeader>
+      <CardContent className="">
+        <div className="grid gap-2">
+          <div className="flex justify-between">
+            {totalPaidOrders === 0 ? (
+              <div>No paid orders yet</div>
+            ) : (
+              <>
+                <div>{formatNumber(totalPaidOrders)} paid orders</div>
+                <div>{formatPrice(totalAmountPaidOrders.amount ?? 0)}</div>
+              </>
+            )}
+          </div>
+          <div className="flex justify-between">
+            {totalUnpaidOrders === 0 ? (
+              <div>No unpaid orders yet</div>
+            ) : (
+              <>
+                <div>{formatNumber(totalUnpaidOrders)} unpaid orders</div>
+                <div>{formatPrice(totalAmountUnpaidOrders.amount ?? 0)}</div>
+              </>
+            )}
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+const CardDetailsProducts = async () => {
+ // await new Promise((resolve) => setTimeout(resolve, 20000));
+  const dp = await prisma.product.groupBy({
+    by: ["status", "price", "quantity","id"],
+    _count: true,
+  });
+  // console.log("dp,", dpd);
+  const draftProduct = dp
+    .filter((p, _) => p.status.toLowerCase() === "draft").reduce(
+      (acc, item) => {
+        const product = item;
+        acc.count ++
+        acc.totalAmount += product.price * product.quantity;
+        return acc;
+      },
+      { count: 0, totalAmount: 0 }
+    );
+  const publishedProduct = dp
+    ?.filter((p, _) => p.status.toLowerCase() === "published")
+    .reduce(
+      (acc, item) => {
+        const product = item;
+        acc.count ++;
+        acc.totalAmount += product.price * product.quantity;
+        return acc;
+      },
+      { count: 0, totalAmount: 0 }
+    );
+  const archiveProduct = dp
+    ?.filter((p, _) => p.status.toLowerCase() === "archive")
+    .reduce(
+      (acc, item) => {
+        const product = item;
+        acc.count ++;
+        acc.totalAmount += product.price * product.quantity;
+        return acc;
+      },
+      { count: 0, totalAmount: 0 }
+    );
+  return (
+    <Card>
+      <CardHeader className="flex flex-row items-center">
+        <div className="grid gap-2">
+          <CardTitle className="text-blue-500">More product details</CardTitle>
+          <CardDescription>
+            See published,archive and draft products
+          </CardDescription>
+        </div>
+        <Button
+          variant={"defaultBtn"}
+          asChild
+          size="sm"
+          className="ml-auto gap-1 hover:translate-x-1 hover:-translate-y-1 transition-all ease duration-100"
+        >
+          <Link href="/admin/manage-products">
+            View All
+            <ArrowUpRight className="h-4 w-4" />
+          </Link>
+        </Button>
+      </CardHeader>
+      <CardContent>
+        <div className="w-full flex gap-4 flex-wrap">
+          <div className="grid gap-2 flex-1">
+            <div className="text-green-500">Published</div>
+            <div className="grid gap-1">
+              <div>{publishedProduct.count}{" "}p</div>
+              <div>{formatPrice(publishedProduct.totalAmount)}</div>
+            </div>
+          </div>
+          <div className="grid gap-2 flex-1">
+            <div className="text-red-500">Archive</div>
+            <div className="grid gap-1">
+              <div>{archiveProduct.count}{" "}p</div>
+              <div>{formatPrice(archiveProduct.totalAmount)}</div>
+            </div>
+          </div>
+          <div className="grid gap-2 flex-1">
+            <div className="text-blue-500">Draft</div>
+            <div className="grid gap-1">
+              <div>{draftProduct.count}{" "}p</div>
+              <div>{formatPrice(draftProduct.totalAmount)}</div>
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};

@@ -20,3 +20,6 @@ export const formatDateToLocal = (
     }).format(amount)
 
 }
+export const formatNumber = (nbr:number) =>{
+  return nbr < 10 ? "0" + nbr : nbr
+}

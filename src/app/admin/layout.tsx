@@ -10,7 +10,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <AsideNav />
       <div className="flex flex-col lg:gap-4 lg:py-4 lg:pr-8 lg:pl-52">
         <HeaderAdmin>
-          <AdminBtn />
+          {/* <AdminBtn /> */}
         </HeaderAdmin>
         {children}
       </div>

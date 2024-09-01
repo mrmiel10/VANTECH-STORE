@@ -6,7 +6,7 @@ export const formValidateProducts = z.object({
     })
     .min(1,{message:"At least 1 character"})
     
-    .regex(/^\S+$/,{message:"This field can't contain spaces"})
+    // .regex(/^\S+$/,{message:"This field can't contain spaces"})
 
     .trim(),
   // .min(1, { message: "entrer un nom d'article valide" }),

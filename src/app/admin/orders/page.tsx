@@ -2,17 +2,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import {
-  ChevronLeft,
-  ChevronRight,
-  Copy,
-  CreditCard,
   File,
-  Home,
-  MoreVertical,
 } from "lucide-react";
-
 import { Badge } from "@/components/ui/badge";
-
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -22,24 +14,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-} from "@/components/ui/pagination";
 // import { Progress } from "@/components/ui/progress";
-import { Separator } from "@/components/ui/separator";
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-
-import { DeliveryStatusOrder } from "../../../../components/admin/orders/DeliveryStatusOrder";
-import { User,Order } from "@prisma/client";
 import {
   // CardAllOrders,
 
