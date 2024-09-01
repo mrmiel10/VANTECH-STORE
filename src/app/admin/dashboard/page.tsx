@@ -29,51 +29,11 @@ import {
 } from "@/components/ui/card";
 
 // import { Progress } from "@/components/ui/progress";
-import { Separator } from "@/components/ui/separator";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-
-import { DeliveryStatusOrder } from "../../../../components/admin/orders/DeliveryStatusOrder";
-import { User, Order } from "@prisma/client";
-import {
-  // CardAllOrders,
-
-  CardWeekOrMonthOrders,
-} from "../../../../components/admin/orders/CardOrders";
-import { FilterDeliveryStatusOrder } from "../../../../components/admin/orders/FilterDeliveryStatusOrder";
-import { OrdersTableAdmin } from "../../../../components/admin/orders/OrdersTableAdmin";
-import { AdminSearch } from "../../../../components/admin/AdminSearch";
-import PaymentStatus from "../../../../components/admin/orders/PaymentStatus";
-import { HandleSetDeliveryOrderStatus } from "../../../../components/admin/orders/HandleSetDeliveryOrderStatus";
-
-import { useEffect } from "react";
 import { Suspense } from "react";
 
-import {
-  SkeletonLoadingCardOrder,
-  SkeletonLoadingOrdersTable,
-} from "../../../../components/Skeletons";
-import { getOrdersPages } from "@/lib/actions";
-import { ShowingNumberOrders } from "../../../../components/admin/orders/ShowingNumberOrders";
-
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Activity } from "lucide-react";
 
-import { LucideIcon } from "lucide-react";
 import { Package } from "lucide-react";
 import {
   CardRevenue,
@@ -86,49 +46,57 @@ import { getInitials } from "../../../../components/Navbar/UserNav";
 import { formatPrice } from "@/lib/formatData";
 import { formatNumber } from "@/lib/formatData";
 
-import { SkeletonCardDashboardProductDetails, SkeletonCardDashboardRecentSales, SkeletonDashboardSalesDetails, SkeletonTopCardDashboard } from "./Skeletons";
-const DashboardPage = async() => {
- // await new Promise((resolve) => setTimeout(resolve, 20000));
- // console.log(searchParams);
+import {
+  SkeletonCardDashboardProductDetails,
+  SkeletonCardDashboardRecentSales,
+  SkeletonDashboardSalesDetails,
+  SkeletonTopCardDashboard,
+} from "./Skeletons";
+const DashboardPage = () => {
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
       <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
-        <Suspense fallback={<SkeletonTopCardDashboard title="Total Revenue" Icon={Wallet} />}>
-        <CardRevenue title="Total Revenue" Icon={Wallet} />
+        <Suspense
+          fallback={
+            <SkeletonTopCardDashboard title="Total Revenue" Icon={Wallet} />
+          }
+        >
+          <CardRevenue title="Total Revenue" Icon={Wallet} />
         </Suspense>
-        <Suspense fallback={<SkeletonTopCardDashboard title="Customers" Icon={Users}/>}>
-        <CardCustomers title="Customers" Icon={Users} />
+        <Suspense
+          fallback={<SkeletonTopCardDashboard title="Customers" Icon={Users} />}
+        >
+          <CardCustomers title="Customers" Icon={Users} />
         </Suspense>
-        <Suspense fallback={<SkeletonTopCardDashboard title="Total Sales" Icon={CreditCard} />}>
-        <CardSales title="Total Sales" Icon={CreditCard} />
+        <Suspense
+          fallback={
+            <SkeletonTopCardDashboard title="Total Sales" Icon={CreditCard} />
+          }
+        >
+          <CardSales title="Total Sales" Icon={CreditCard} />
         </Suspense>
-        <Suspense fallback={<SkeletonTopCardDashboard title="Products" Icon={Package} />}>
-        <CardProducts title="Products" Icon={Package} />
+        <Suspense
+          fallback={
+            <SkeletonTopCardDashboard title="Products" Icon={Package} />
+          }
+        >
+          <CardProducts title="Products" Icon={Package} />
         </Suspense>
-      
-
-        
-
-       
       </div>
       <div className="grid gap-4 md:gap-8 lg:grid-cols-2">
         <div className="grid grd-cols-1 gap-8">
           <Suspense fallback={<SkeletonDashboardSalesDetails />}>
-          <CardDetailsSales />
+            <CardDetailsSales />
           </Suspense>
-          <Suspense fallback={<SkeletonCardDashboardProductDetails/>}>
-        <CardDetailsProducts /> 
-        </Suspense>
-       
-        
+          <Suspense fallback={<SkeletonCardDashboardProductDetails />}>
+            <CardDetailsProducts />
+          </Suspense>
         </div>
-      <div>
-      <Suspense fallback={<SkeletonCardDashboardRecentSales />}>
-          <CardRecentSales />
+        <div>
+          <Suspense fallback={<SkeletonCardDashboardRecentSales />}>
+            <CardRecentSales />
           </Suspense>
-      </div>
-        
-     
+        </div>
       </div>
     </main>
   );
@@ -146,7 +114,7 @@ const CardRecentSales = async () => {
       amount: true,
       user: {
         select: {
-         id:true,
+          id: true,
           firstName: true,
           lastName: true,
           email: true,
@@ -274,17 +242,18 @@ const CardDetailsSales = async () => {
   );
 };
 const CardDetailsProducts = async () => {
- // await new Promise((resolve) => setTimeout(resolve, 20000));
+  // await new Promise((resolve) => setTimeout(resolve, 20000));
   const dp = await prisma.product.groupBy({
-    by: ["status", "price", "quantity","id"],
+    by: ["status", "price", "quantity", "id"],
     _count: true,
   });
   // console.log("dp,", dpd);
   const draftProduct = dp
-    .filter((p, _) => p.status.toLowerCase() === "draft").reduce(
+    .filter((p, _) => p.status.toLowerCase() === "draft")
+    .reduce(
       (acc, item) => {
         const product = item;
-        acc.count ++
+        acc.count++;
         acc.totalAmount += product.price * product.quantity;
         return acc;
       },
@@ -295,7 +264,7 @@ const CardDetailsProducts = async () => {
     .reduce(
       (acc, item) => {
         const product = item;
-        acc.count ++;
+        acc.count++;
         acc.totalAmount += product.price * product.quantity;
         return acc;
       },
@@ -306,7 +275,7 @@ const CardDetailsProducts = async () => {
     .reduce(
       (acc, item) => {
         const product = item;
-        acc.count ++;
+        acc.count++;
         acc.totalAmount += product.price * product.quantity;
         return acc;
       },
@@ -338,21 +307,21 @@ const CardDetailsProducts = async () => {
           <div className="grid gap-2 flex-1">
             <div className="text-green-500">Published</div>
             <div className="grid gap-1">
-              <div>{publishedProduct.count}{" "}p</div>
+              <div>{publishedProduct.count} p</div>
               <div>{formatPrice(publishedProduct.totalAmount)}</div>
             </div>
           </div>
           <div className="grid gap-2 flex-1">
             <div className="text-red-500">Archive</div>
             <div className="grid gap-1">
-              <div>{archiveProduct.count}{" "}p</div>
+              <div>{archiveProduct.count} p</div>
               <div>{formatPrice(archiveProduct.totalAmount)}</div>
             </div>
           </div>
           <div className="grid gap-2 flex-1">
             <div className="text-blue-500">Draft</div>
             <div className="grid gap-1">
-              <div>{draftProduct.count}{" "}p</div>
+              <div>{draftProduct.count} p</div>
               <div>{formatPrice(draftProduct.totalAmount)}</div>
             </div>
           </div>

@@ -34,6 +34,7 @@ export async function GET() {
             }
         });
     }
+    //Redirige la personne connecté en fonction s'il est connecté ou pas
 if(dbUser.role ==='USER') return NextResponse.redirect(apiUrl);
 else return NextResponse.redirect(apiUrlAdmin);
 }
