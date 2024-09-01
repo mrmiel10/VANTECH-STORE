@@ -23,8 +23,8 @@ export const CardWeekOrMonthOrders = async({name,description}:{
   description:string
 }) =>{
   const {start,end} = getStartAndEndOfPeriod(name)
-  const {amountOrders:amountPaidOrders,totalOrders:totalPaidOrders} = await getPaidOrUnpaidOrdersOfPeriod(start,end,"paid");
-  const {amountOrders:amountUnpaidOrders,totalOrders:totalUnpaidOrders} = await getPaidOrUnpaidOrdersOfPeriod(start,end,"pending");
+  const {amountOrders:amountPaidOrders,totalOrders:totalPaidOrders} = await getPaidOrUnpaidOrdersOfPeriod("paid",start,end);
+  const {amountOrders:amountUnpaidOrders,totalOrders:totalUnpaidOrders} = await getPaidOrUnpaidOrdersOfPeriod("pending",start,end);
   const totalAmountOrders = await getAmountOrdersOfPeriod(start,end);
   return (
     <Card>

@@ -657,7 +657,7 @@ export const getAmountOrdersOfPeriod = async(start?:Date,end?:Date)=>{
   return totalAmount._sum.amount
 }
 
-export const getPaidOrUnpaidOrdersOfPeriod = async(start:Date,end:Date,status:string) =>{
+export const getPaidOrUnpaidOrdersOfPeriod = async(status:string,start?:Date,end?:Date) =>{
   const orders =  await prisma.order.aggregate({
     //En fonction du status de paiment, je recupere le montal total de commandes et le nombre de commandes
 
