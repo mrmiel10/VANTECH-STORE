@@ -258,12 +258,11 @@ console.log(fileStates)
                           <Label htmlFor="name" className="text-blue-500">
                             Name
                           </Label>
-                          <Input
-                         defaultValue={product.name}
-                            {...field}
-                            id="name"
-                            className="text-muted-foreground"
-                          />
+                          <Textarea
+                              {...field}
+                              id="name"
+                              className="min-h-20 text-muted-foreground"
+                            />
                         </div>
                         <FormMessage />
                       </FormItem>

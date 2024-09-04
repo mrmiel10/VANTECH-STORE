@@ -22,6 +22,8 @@ import clsx from "clsx";
 import { MenuNavigation } from "../MenuNavigationUser";
 import { PropsWithChildren } from "react";
 import { usePathname } from "next/navigation";
+import vsMobile from "../../public/vs-mobile.png"
+import vsDesktop from "../../public/vs-desktop.png"
 export function Navbar(props:PropsWithChildren) {
 
 const navigationAllTabs = allTabs;
@@ -33,7 +35,9 @@ if(pathname.startsWith("/admin")) return null
       <div className="container mx-auto px-8 py-3 gap-4 flex items-center justify-between">
         <div className="flex items-center gap-4 text-muted-foreground">
           <Link href="#" className="flex items-center" prefetch={false}>
-            <p>Vantech V-store</p>
+
+          <Image alt="logo vs-store" className="w-32" src={vsMobile} />
+          {/* <Image alt="logo vs-store" className="w-16 hidden sm:block " src={vsDesktop} /> */}
           </Link>
         </div>
         <div className="flex max-sm:hidden items-center w-full max-w-md mx-auto">

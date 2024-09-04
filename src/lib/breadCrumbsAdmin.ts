@@ -27,10 +27,11 @@ export const tabManageProductActive = [
   ]
   
 export const tabOrdersActive = [
-    { label: "dashboard", href: "admin" },
+    { label: "dashboard", href: "/" },
     {
       label: "orders",
       href: "orders",
+      active: true,
     }
  
   ]

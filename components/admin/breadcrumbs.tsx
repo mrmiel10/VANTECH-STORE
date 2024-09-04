@@ -17,7 +17,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { tabAddProductActive } from "@/lib/breadCrumbsAdmin";
+import { tabAddProductActive, tabOrdersActive } from "@/lib/breadCrumbsAdmin";
 import { tabManageProductActive } from "@/lib/breadCrumbsAdmin";
 
 import { usePathname } from "next/navigation";
@@ -27,6 +27,8 @@ export default function Breadcrumbs() {
   const pathname = usePathname()
   if(pathname === "/admin/add-products") breadcrumbs = [...tabAddProductActive]
   if(pathname === "/admin/manage-products") breadcrumbs = [...tabManageProductActive]
+  if(pathname === "/admin/orders") breadcrumbs = [...tabOrdersActive]
+  
   return (
     <Breadcrumb className="">
       <BreadcrumbList className="text-sm">

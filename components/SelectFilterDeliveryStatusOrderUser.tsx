@@ -39,7 +39,7 @@ export const SelectFilterDeliveryStatusOrderUser = () => {
         </SelectTrigger>
         <SelectContent id="category">
           <SelectItem  value="all">
-            All products
+            All orders
           </SelectItem>
           {MapDeliveryStatusOrder.map((status, _) => (
             <SelectItem 

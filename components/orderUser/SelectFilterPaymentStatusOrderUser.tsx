@@ -38,7 +38,7 @@ export const SelectFilterPaymentStatusUser = () => {
         </SelectTrigger>
         <SelectContent id="paymentStatus">
           <SelectItem  value="all">
-            All products
+            All orders
           </SelectItem>
           {["Pending","Paid"].map((status, _) => (
             <SelectItem

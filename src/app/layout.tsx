@@ -6,10 +6,11 @@ import { CircleX } from "lucide-react";
 import { CircleCheckIcon } from "lucide-react";
 import { Navbar } from "../../components/Navbar/Navbar";
 import FirstHeader from "../../components/FirstHeader";
-import Footer from "../../components/Footer";
+
 import { Footer2 } from "../../components/Footer2";
 import { UserNav } from "../../components/Navbar/UserNav";
 import { EdgeStoreProvider } from "../lib/edgestore";
+import Footer from "../../components/Footer";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -37,7 +38,8 @@ export default function RootLayout({
             <EdgeStoreProvider>{children}</EdgeStoreProvider>
           </main>
           <div>
-            <Footer2 />
+            <Footer />
+            {/* <Footer2 /> */}
           </div>
 
           <Sonner

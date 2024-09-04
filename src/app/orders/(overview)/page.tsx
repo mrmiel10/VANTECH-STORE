@@ -84,7 +84,7 @@ where:{
           />
        
         </CardContent>
-        <CardFooter><ShowingNumberOrders userId={user.id} /> </CardFooter>
+        <CardFooter><ShowingNumberOrders userId={user.id} /></CardFooter>
       </Card>
       </div>
    
