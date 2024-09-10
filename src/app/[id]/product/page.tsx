@@ -2,13 +2,13 @@ import React, { useCallback, useEffect, useState } from "react";
 import prisma from "../../../../db";
 import { ListRating } from "./ListRating";
 import { AddRating, } from "./AddRating";
-import { searchParamsCache } from "@/lib/nuqs";
+import { searchParamsCache } from "@/lib/utils";
 import ProductsFeatures from "./ProductsFeatures";
 import { getCurrentUser } from "@/lib/actions";
 import leaveReview from "../../../../public/add review.png";
 import Image from "next/image";
 import { Review } from "@prisma/client";
-import { ParseProducts } from "@/lib/parseData";
+import { ParseProducts } from "@/lib/utils";
 interface IParams {
   id: string;
 }
