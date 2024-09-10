@@ -1,7 +1,6 @@
 
 import React, { Suspense } from "react";
-// import { ProductCard } from "../ProductCard";
-// import { products } from "@/lib/products";
+
 import { handleFilterSearchParams } from "@/lib/handleFilterSearchParams";
 import prisma from "../../db";
 import * as z from "zod";
@@ -93,7 +92,7 @@ export const ShowItems = async ({
   searchParams,
   category,
 }: {
-  searchParams?: { [key: string]: string };
+  searchParams?: { [key: string]: string}
   category?: string;
 }) => {
   //await new Promise((resolve) => setTimeout(resolve, 20000));

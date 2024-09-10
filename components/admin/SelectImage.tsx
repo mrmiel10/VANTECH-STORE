@@ -1,8 +1,5 @@
 import React from "react";
 import clsx from "clsx";
-import { Upload } from "lucide-react";
-import Shoe from "../../public/blackShoe.jpg";
-import Image from "next/image";
 import { imageType } from "@/app/admin/add-products/AddProductsForme";
 import { useCallback, useEffect, useState } from "react";
 import { DropImage } from "./DropImage";

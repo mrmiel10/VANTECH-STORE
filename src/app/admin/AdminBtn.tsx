@@ -16,14 +16,12 @@ import Image from "next/image";
 import { User2 } from "lucide-react";
 import { LogOut } from "lucide-react";
 import { Settings } from "lucide-react";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import prisma from "../../db";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/actions";
 import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { getInitials } from "../Navbar/UserNav";
-import DefaultUser from "../../public/defaultUser.png";
+import { getInitials } from "../UserNav";
+import DefaultUser from "../../../public/defaultUser.png";
 export const AdminBtn = async () => {
   const user = await getCurrentUser();
   if (!user) redirect("/");
@@ -32,42 +30,28 @@ export const AdminBtn = async () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-      <div>
-            {user ? (
-              <Avatar>
-                <AvatarFallback>
-                  {getInitials(user.firstName, user.lastName,user.email)}
-                </AvatarFallback>
-                <AvatarImage
-                  alt="profile user"
-                  src={
-                    (user.picture as string) ??
-                    `https://api.dicebear.com/9.x/adventurer/svg?seed=Buster`
-                  }
-                />
-              </Avatar>
-            ) : (
-              
-              <Image
-                src={DefaultUser}
-                alt="defaultImageUser"
-                className="object-contain rounded-full size-10 border border-muted"
+        <div>
+          {user ? (
+            <Avatar>
+              <AvatarFallback>
+                {getInitials(user.firstName, user.lastName, user.email)}
+              </AvatarFallback>
+              <AvatarImage
+                alt="profile user"
+                src={
+                  (user.picture as string) ??
+                  `https://api.dicebear.com/9.x/adventurer/svg?seed=Buster`
+                }
               />
-            )}
-          </div>
-        {/* <Button
-          variant="outline"
-          size="icon"
-          className="overflow-hidden rounded-full ml-auto"
-        >
-          <Image
-            src="/placeholder-user.jpg"
-            width={36}
-            height={36}
-            alt="Avatar"
-            className="overflow-hidden rounded-full"
-          />
-        </Button> */}
+            </Avatar>
+          ) : (
+            <Image
+              src={DefaultUser}
+              alt="defaultImageUser"
+              className="object-contain rounded-full size-10 border border-muted"
+            />
+          )}
+        </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="text-muted-foreground w-44">
         <DropdownMenuItem className="flex flex-col gap-2 focus:bg-transparent items-start">

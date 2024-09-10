@@ -1,22 +1,12 @@
 import React, { PropsWithChildren } from "react";
-
 import Image from "next/image";
 import Link from "next/link";
 import {
-  ArrowUpRight,
-  ChevronLeft,
-  ChevronRight,
-  Copy,
+  ArrowUpRight, 
   CreditCard,
-  DollarSign,
-  File,
-  Home,
-  MoreVertical,
   Users,
   Wallet,
 } from "lucide-react";
-
-import { Badge } from "@/components/ui/badge";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -28,24 +18,20 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-// import { Progress } from "@/components/ui/progress";
-
 import { Suspense } from "react";
 
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-
 import { Package } from "lucide-react";
 import {
   CardRevenue,
   CardSales,
   CardProducts,
   CardCustomers,
-} from "../../../../components/admin/dashboard/TopCardDashboard";
+} from "./TopCardDashboard";
 import prisma from "../../../../db";
-import { getInitials } from "../../../../components/Navbar/UserNav";
-import { formatPrice } from "@/lib/formatData";
-import { formatNumber } from "@/lib/formatData";
-
+import { getInitials } from "../../UserNav";
+import { formatPrice } from "@/lib/utils";
+import { formatNumber } from "@/lib/utils";
 import {
   SkeletonCardDashboardProductDetails,
   SkeletonCardDashboardRecentSales,

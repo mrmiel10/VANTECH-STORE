@@ -1,6 +1,6 @@
 "use client";
-import { Product, Review } from "@prisma/client";
-import React, { useState, useEffect, useCallback } from "react";
+import { Product} from "@prisma/client";
+import React, { useState,} from "react";
 import {
   Card,
   CardContent,
@@ -34,25 +34,18 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import SelectImage from "../../../../../components/admin/SelectImage";
+
 import { formValidateProducts } from "../../../../../schemas/schema";
 import { toast } from "sonner";
-import firebaseApp from "@/lib/firebase";
-import {
-  deleteObject,
-  getDownloadURL,
-  getStorage,
-  ref,
-  uploadBytesResumable,
-} from "firebase/storage";
-import { redirect, useRouter } from "next/navigation";
+
+import {useRouter } from "next/navigation";
 import { deleteImagesProductAction, editProductAction } from "@/lib/actions";
 import {
   imageType,
   uploadImageType,
 } from "@/app/admin/add-products/AddProductsForme";
-import { ParseProductImages } from "@/lib/parseData";
-import { revalidatePath } from "next/cache";
+import { ParseProductImages } from "@/lib/utils";
+
 import { useServerAction } from "zsa-react";
 import { updateFileProgress } from "../../add-products/AddProductsForm";
 import { FileState } from "../../../../../components/MultiImageDropzone";
@@ -64,8 +57,7 @@ export const EditProductForm = ({
   product: Product
 }) => {
   const router = useRouter();
-  //  console.log(product);
-  console.log("yessssss")
+
   console.log(ParseProductImages(product.images));
 const safeImages = ParseProductImages(product.images)
   const images:{

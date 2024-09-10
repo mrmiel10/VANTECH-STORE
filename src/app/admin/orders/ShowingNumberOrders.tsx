@@ -1,5 +1,5 @@
 import { getOrdersPages } from '@/lib/actions';
-import { searchParamsCache } from '@/lib/nuqs';
+import { searchParamsCache } from '@/lib/utils';
 import { User,Order } from '@prisma/client';
 import { error } from 'console';
 import React from 'react'

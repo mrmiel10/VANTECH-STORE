@@ -3,7 +3,7 @@ import { sortFilters } from "@/lib/listFiltersProducts";
 import {
   typeFilterByCategory,
   typeFiltersSort,
-} from "../../components/componentsPerCategory/ShowItems";
+} from "../../components/GenericComponentsPage/ShowItems";
 export const handleFilterSearchParams = (searchParams?: { [key: string]: string}
 ) => {
   let filtersByFeatures: string[]  = [];

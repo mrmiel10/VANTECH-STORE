@@ -10,7 +10,7 @@ import { ShoppingCart, ShoppingCartIcon } from "lucide-react";
 
 import { deleteProductInCart, useCartStore } from "@/lib/cart.store";
 import { Trash2Icon } from "lucide-react";
-import { truncateText } from "@/lib/truncate";
+import { truncateText } from "@/lib/utils";
 import {
   Tooltip,
   TooltipContent,
@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/tooltip";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { formatPrice } from "@/lib/formatData";
+import { formatPrice } from "@/lib/utils";
 const ButtonCartNav = () => {
   const cart = useCartStore((s) => s.cart);
 

@@ -14,17 +14,15 @@ import { EllipsisIcon} from "lucide-react";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import Status from "./Status";
-import { ParseProductImages } from "@/lib/parseData";
+import { ParseProductImages } from "@/lib/utils";
 import { Product, Review } from "@prisma/client";
-import { formatPrice } from "@/lib/formatData";
+import { formatPrice } from "@/lib/utils";
 import { EditProductButton } from "../SubmitButtons";
 import { DeleteProductBtn } from "../SubmitButtons";
 import { HandleSetStatusProduct } from "./HandleSetStatusProduct";
 import prisma from "../../db";
-
 import { Badge } from "@/components/ui/badge";
-import { ParseProducts } from "@/lib/parseData";
-
+import { ParseProducts } from "@/lib/utils";
 export const MobileProductsAdmin = async({
   products,
 }: {

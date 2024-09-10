@@ -2,23 +2,21 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getPrice, useCartStore } from "@/lib/cart.store";
-import React, { useCallback, useEffect } from "react";
+import React from "react";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useShallow } from "zustand/react/shallow";
 import { deleteAllProductsInCart } from "@/lib/cart.store";
 import Link from "next/link";
 import ItemContent from "./ItemContent";
 import { PaginationProductCart } from "../../../components/cart/pagination";
-import { GetFilteredProductsCart } from "@/lib/GetFilteredProductsCart";
+import { GetFilteredProductsCart,formatPrice } from "@/lib/utils";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Suspense } from "react";
 import { SkeletonCartLoading } from "../../../components/Skeletons";
 import cart from "../../../public/cart.png";
 import { Skeleton } from "@/components/ui/skeleton";
-import { formatPrice } from "@/lib/formatData";
-import { PropsWithChildren } from "react";
 import { createOrderAction } from "@/lib/actions";
 import { useServerAction } from "zsa-react";
 import { toast } from "sonner";
@@ -26,7 +24,7 @@ import { User, Order } from "@prisma/client";
 import { SchemaSafeProductsOrder } from "../../../schemas/schema";
 import { RegisterLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import { Loader2 } from "lucide-react";
-import { z } from "zod";
+
 export const ClientCart = ({
   user,
 }: {
@@ -41,7 +39,7 @@ export const ClientCart = ({
   );
   
   const totalPages = Math.ceil(cart.length / 3);
-  useEffect(() => {
+  React.useEffect(() => {
     getTotalPrice();
   }, [getTotalPrice, cart]);
   console.log(cart);

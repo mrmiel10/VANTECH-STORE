@@ -1,13 +1,13 @@
 "use client";
 import React from "react";
-import vStore from "../public/vStore.png";
+
 import Link from "next/link";
-import Image from "next/image";
+
 import { allTabs } from "@/lib/navigation";
 import { Separator } from "@/components/ui/separator";
-import clsx from "clsx";
+
 import { Button } from "@/components/ui/button";
-import { fakePathname } from "./FirstHeader";
+
 import { usePathname } from "next/navigation";
 
 const WarrantyAndReturnInformation = [
@@ -17,10 +17,10 @@ const WarrantyAndReturnInformation = [
 export const Footer2 = () => {
   const pathname  = usePathname()
   if(pathname.startsWith("/admin")) return null
-  // if(fakePathname.includes("/admin/dashboard/add-products")) return null
+
   
   const categoriesProducts = [...allTabs];
-  //   const categoriesProducts = allTabs.filter((item, _) => item.isCategory);
+
   const customerService = [
     { id: "Privacy policy", href: "#" },
     { id: "Terms of sale", href: "#" },

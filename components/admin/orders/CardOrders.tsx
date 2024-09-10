@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { formatPrice } from "@/lib/formatData";
+import { formatPrice } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 import prisma from "../../../db";
 import {
@@ -15,7 +15,7 @@ import {
   getAmountOrdersOfPeriod,
   getPaidOrUnpaidOrdersOfPeriod,
 } from "@/lib/actions";
-import { getStartAndEndOfPeriod } from "@/lib/getStartAndEndOfPeriod";
+import { getStartAndEndOfPeriod } from "@/lib/utils";
 
 
 export const CardWeekOrMonthOrders = async({name,description}:{

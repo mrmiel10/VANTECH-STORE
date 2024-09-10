@@ -7,24 +7,23 @@ import {
     TableHeader,
     TableRow,
   } from "@/components/ui/table";
-  import { DeliveryStatusOrder } from './DeliveryStatusOrder';
-import { Badge } from '@/components/ui/badge';
-import PaymentStatus from './PaymentStatus';
-import { searchParamsCache } from '@/lib/nuqs';
-import prisma from '../../../db';
-import PaginationTable from '../../Pagination';
+ 
+import { searchParamsCache } from '@/lib/utils';
+import prisma from '../../../../db';
+import PaginationTable from '../../../../components/Pagination';
 import { getFilteredOrders, getOrdersPages } from '@/lib/actions';
-import { formatDateToLocal } from '@/lib/formatData';
-import { formatPrice } from '@/lib/formatData';
-import RowOrder from './RowOrder';
+import RowOrder from '../../../../components/admin/orders/RowOrder';
 import { Alert,AlertTitle,AlertDescription } from "@/components/ui/alert"
-import searchInTable from "../../../public/search.png"
+
+import searchInTable from "../../../../public/search.png"
 import Image from 'next/image';
 export const OrdersTableAdmin = async() => {
   const currentPage = searchParamsCache.get("page");
   const searchOrder = searchParamsCache.get("search")
   const deliveryStatus = searchParamsCache.get("deliveryStatus")
 ;
+console.log(searchOrder)
+console.log(deliveryStatus)
 const lastOrder = (await prisma.order.findFirst({
   orderBy:{
     createdDate:"asc"
@@ -38,7 +37,7 @@ const lastOrder = (await prisma.order.findFirst({
   const {totalPages} = await getOrdersPages(searchOrder,deliveryStatus)
   if (totalPages === 0) return <NoOrders />
    const orders= await getFilteredOrders(searchOrder,currentPage,deliveryStatus);
-    console.log(deliveryStatus)
+  
   return (
     <div className='grid grid-cos-1 gap-4'>
        <Table>

@@ -1,12 +1,11 @@
 import { Button } from "@/components/ui/button"
 import { useCartStore } from "@/lib/cart.store"
-import { productsType } from "@/lib/typeProducts"
 import { CartProductType } from "@/lib/cart.store"
 import clsx from "clsx"
-import { Heart, ShoppingCart } from "lucide-react"
+import {ShoppingCart } from "lucide-react"
 import { useState } from "react"
 import { useShallow } from "zustand/react/shallow"
-import { ParseProductImages } from "@/lib/parseData"
+import { ParseProductImages } from "@/lib/utils"
 export const ToggleCartButton = ({ product }: { product:CartProductType }) => {
     const [cartProduct, setCartProduct] = useState({
       id: product.id,

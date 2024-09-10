@@ -11,19 +11,16 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import Image from "next/image";
-import SearchComponent from "../SearchComponent";
-import logo from "../public/vStore.png";
-import { UserNav } from "./UserNav";
+import SearchComponent from "../../components/SearchComponent";
 
 import { allTabs } from "@/lib/navigation";
 import { ChevronDownIcon } from "lucide-react";
-import ButtonCartNav from "./ButtonCartNav";
+import ButtonCartNav from "../../components/Navbar/ButtonCartNav";
 import clsx from "clsx";
-import { MenuNavigation } from "../MenuNavigationUser";
+import { MenuNavigation } from "../../components/MenuNavigationUser";
 import { PropsWithChildren } from "react";
 import { usePathname } from "next/navigation";
 import vsMobile from "../../public/vs-mobile.png"
-import vsDesktop from "../../public/vs-desktop.png"
 export function Navbar(props:PropsWithChildren) {
 
 const navigationAllTabs = allTabs;
@@ -34,7 +31,7 @@ if(pathname.startsWith("/admin")) return null
     <header className="bg-background">
       <div className="container mx-auto px-8 py-3 gap-4 flex items-center justify-between">
         <div className="flex items-center gap-4 text-muted-foreground">
-          <Link href="#" className="flex items-center" prefetch={false}>
+          <Link href="/" className="flex items-center" prefetch={false}>
 
           <Image alt="logo vs-store" className="w-32" src={vsMobile} />
           {/* <Image alt="logo vs-store" className="w-16 hidden sm:block " src={vsDesktop} /> */}
@@ -52,7 +49,7 @@ if(pathname.startsWith("/admin")) return null
         </div>
       </div>
       <div className="sm:hidden px-8 py-3 flex items-center w-full max-w-md mx-auto">
-        <SearchComponent placeholder="rechercher votre article..." />
+        <SearchComponent placeholder="find your product..." />
       </div>
       <div className="bg-muted/40 container mx-auto px-4 flex items-center justify-center gap-4 ">
         <nav className=" py-3 text-muted-foreground flex items-center gap-2">

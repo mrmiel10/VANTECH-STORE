@@ -1,13 +1,13 @@
-"use client"
+"use client";
 import React, { useEffect } from "react";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
-import { MapStatus } from "./ProductsTable";
+import { mapStatus } from "@/lib/utils";
 import clsx from "clsx";
 import { useServerAction } from "zsa-react";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
+
 import { Button } from "@/components/ui/button";
 import { handleSetStatusProductAction } from "@/lib/actions";
+
 export const HandleSetStatusProduct = ({
   productId,
   status,
@@ -17,10 +17,9 @@ export const HandleSetStatusProduct = ({
 }) => {
   const { execute } = useServerAction(handleSetStatusProductAction);
 
-
   return (
     <div className="flex flex-col gap-1">
-      {MapStatus.map((productStatus, _) => (
+      {mapStatus.map((productStatus, _) => (
         <div className="w-full" key={productStatus}>
           <DropdownMenuItem
             className={clsx("focus:text-blue-500 cursor-pointer h-10", {
@@ -32,16 +31,13 @@ export const HandleSetStatusProduct = ({
               className="w-full"
               // action={handleSetStatusProduct.executeFormAction}
               onSubmit={async (event) => {
-             
                 // "use server"
                 event.preventDefault();
                 const formData = new FormData(event.currentTarget);
-                console.log(formData)
+                console.log(formData);
                 const [data, err] = await execute(formData, {
                   productId: productId,
                 });
-             
-             
               }}
             >
               <input type="hidden" name="productStatus" value={productStatus} />

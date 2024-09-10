@@ -12,9 +12,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import profilUser from "../../../public/profil.png";
 import { Textarea } from "@/components/ui/textarea";
-import { CameraIcon } from "lucide-react";
 import { ChangeEvent, useState } from "react";
 import * as z from "zod";
 import { cn } from "@/lib/utils";
@@ -37,7 +35,7 @@ import {
   deleteImageProfil,
 } from "@/lib/actions";
 import { User } from "@prisma/client";
-import { revalidatePath } from "next/cache";
+
 import { Loader2 } from "lucide-react";
 import { useServerAction } from "zsa-react";
 import { useRouter } from "next/navigation";

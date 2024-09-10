@@ -18,13 +18,11 @@ import {
 } from "@/components/ui/pagination";
 import { Separator } from "@/components/ui/separator";
 import PaymentStatus from "../../../../components/admin/orders/PaymentStatus";
-import { ChevronLeft, ChevronRight, Copy, CreditCard } from "lucide-react";
+import { ChevronLeft, ChevronRight,CreditCard } from "lucide-react";
 import CopyPasteButton from "../../../../components/CopyPasteButton";
 import { useShallow } from "zustand/react/shallow";
 import { useOrderStore } from "@/lib/order.store";
-import { formatPrice } from "@/lib/formatData";
-import { formatDateToLocal } from "@/lib/formatData";
-import { ParseProducts } from "@/lib/parseData";
+import { ParseProducts,formatPrice, formatDateToLocal  } from "@/lib/utils";
 import clsx from "clsx";
 import {
   Tooltip,

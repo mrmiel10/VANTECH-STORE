@@ -11,10 +11,10 @@ import {
   import { DeliveryStatusOrder } from './DeliveryStatusOrder';
   import {User,Order as typeOrder } from '@prisma/client';
 import PaymentStatus from './PaymentStatus';
-import { formatPrice } from '@/lib/formatData';
+import { formatPrice } from '@/lib/utils';
 import { useOrderStore } from '@/lib/order.store';
 import { setOrder } from '@/lib/order.store';
-import { formatDateToLocal } from '@/lib/formatData';
+import { formatDateToLocal } from '@/lib/utils';
 import clsx from 'clsx';
 import { useShallow } from 'zustand/react/shallow';
 const RowOrder = ({order,lastOrder}:{

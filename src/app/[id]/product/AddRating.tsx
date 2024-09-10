@@ -15,12 +15,11 @@ import {
 } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, Loader2Icon } from "lucide-react";
-import { useState } from "react";
+import { Loader2,} from "lucide-react";
 import { toast } from "sonner";
 import { formValidateReview, SchemaSafeProductsOrder } from "../../../../schemas/schema";
 import { User,Order,Product, Review } from "@prisma/client";
-import { commentProductAction, getCurrentUser } from "@/lib/actions";
+import { commentProductAction} from "@/lib/actions";
 import { useServerAction } from "zsa-react";
 import { useRouter } from "next/navigation";
 

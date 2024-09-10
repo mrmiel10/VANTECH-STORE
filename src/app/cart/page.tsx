@@ -1,4 +1,4 @@
-import { searchParamsCache } from "@/lib/nuqs";
+import { searchParamsCache } from "@/lib/utils";
 import { ClientCart } from "./ClientCart";
 import { Button } from "@/components/ui/button";
 import { RegisterLink } from "@kinde-oss/kinde-auth-nextjs/components";

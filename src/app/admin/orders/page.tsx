@@ -1,6 +1,3 @@
-
-import Image from "next/image";
-import Link from "next/link";
 import {
   File,
 } from "lucide-react";
@@ -17,28 +14,21 @@ import {
 // import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  // CardAllOrders,
-
   CardWeekOrMonthOrders,
 } from "../../../../components/admin/orders/CardOrders";
-import { FilterDeliveryStatusOrder } from "../../../../components/admin/orders/FilterDeliveryStatusOrder";
-import { OrdersTableAdmin } from "../../../../components/admin/orders/OrdersTableAdmin";
+import { FilterDeliveryStatusOrder } from "./FilterDeliveryStatusOrder";
+import { OrdersTableAdmin } from "./OrdersTableAdmin";
 import { AdminSearch } from "../../../../components/admin/AdminSearch";
-import PaymentStatus from "../../../../components/admin/orders/PaymentStatus";
-import { HandleSetDeliveryOrderStatus } from "../../../../components/admin/orders/HandleSetDeliveryOrderStatus";
-
-import { useEffect } from "react";
 import { Suspense } from "react";
-import { searchParamsCache } from "@/lib/nuqs";
+import { PageProps, searchParamsCache } from "@/lib/utils";
 import {OrderDetails} from "./OrderDetails";
 import { SkeletonLoadingCardOrder, SkeletonLoadingOrdersTable } from "../../../../components/Skeletons";
-import { getOrdersPages } from "@/lib/actions";
-import { ShowingNumberOrders } from "../../../../components/admin/orders/ShowingNumberOrders";
+
+import { ShowingNumberOrders } from "./ShowingNumberOrders";
 export default function OrdersPage({
+  params,
   searchParams,
-}: {
-  searchParams: Record<string, string | string[] | undefined>;
-}) {
+}: PageProps) {
    const paramSearch = searchParamsCache.parse(searchParams);
 
   return (

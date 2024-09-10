@@ -1,17 +1,14 @@
 "use client";
-import React, { useCallback, useEffect, useState } from "react";
-import { products } from "@/lib/products";
-import { productsType } from "@/lib/typeProducts";
+import React, { useCallback, useState } from "react";
 import {
   CartProductType,
   deleteProductInCart,
   useCartStore,
 } from "@/lib/cart.store";
-import { formatPrice } from "@/lib/formatData";
+import { formatPrice } from "@/lib/utils";
 
 import SetQuantity from "../../../../components/product/setQuantity";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { useShallow } from "zustand/react/shallow";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -20,7 +17,7 @@ import { Rating } from "@mui/material";
 import { toast } from "sonner";
 import { Product } from "@prisma/client";
 import { Review } from "@prisma/client";
-import { ParseProductImages } from "@/lib/parseData";
+import { ParseProductImages } from "@/lib/utils";
 import clsx from "clsx";
 const ProductsFeatures = ({ product }: { product: Product & {reviews:Review[]} }) => {
 // const ProductsFeatures = ({ product }: { product: productsType }) => {

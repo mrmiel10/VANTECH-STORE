@@ -8,8 +8,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { LucideIcon } from "lucide-react";
-import prisma from "../../../db";
-import { formatPrice } from "@/lib/formatData";
+import prisma from "../../../../db";
+import { formatPrice } from "@/lib/utils";
 export const CardRevenue = async ({
   title,
   Icon,

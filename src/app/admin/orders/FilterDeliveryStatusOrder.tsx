@@ -30,7 +30,7 @@ export const FilterDeliveryStatusOrder = () => {
 })
   const handleFilterChange = 
     (deliveryStatus: string, checked: CheckedState) => {
-      const params = new URLSearchParams(searchParams.toString());
+     
 
       if (checked) {
         setDeliveryStatus(deliveryStatus)

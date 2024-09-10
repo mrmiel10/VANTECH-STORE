@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback} from "react";
 
 import { ChevronDown } from "lucide-react";
 import { filtersByCategories } from "@/lib/listFiltersProducts";
@@ -7,8 +7,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenu,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
+ 
   DropdownMenuCheckboxItem
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";

@@ -3,23 +3,18 @@ import React, { PropsWithChildren } from "react";
 import Image from "next/image";
 import { Heart, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { truncateText } from "@/lib/truncate";
 import { useRouter } from "next/navigation";
-import { productsType } from "@/lib/typeProducts";
 import { useCartStore } from "@/lib/cart.store";
 import { useState } from "react";
 import { useShallow } from "zustand/react/shallow";
-import clsx from "clsx";
 import { Skeleton } from "@/components/ui/skeleton";
 import {Product } from "@prisma/client";
 import { Review } from "@prisma/client";
 import { Rating } from "@mui/material";
-import { formatPrice } from "@/lib/formatData";
-import { filtersByCategories } from "@/lib/listFiltersProducts";
-import { sortFilters } from "@/lib/listFiltersProducts";
+import { formatPrice } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
-import { ParseProductImages } from "@/lib/parseData";
-// import { products } from "@/lib/products";
+import { ParseProductImages } from "@/lib/utils";
+import clsx from "clsx";
 export const CardProduct = (
   product: PropsWithChildren< Product & { reviews: Review[] }>
 ) => {

@@ -25,7 +25,10 @@ const config = {
        },
       fontFamily: {
         heading: ['var(--font-heading)', ...fontFamily.sans],
-        body: ['var(--font-body)', ...fontFamily.sans]
+        body: ['var(--font-body)', ...fontFamily.sans],
+        sans: ['var(--font-geist-sans)'],
+        mono: ['var(--font-geist-mono)'],
+        caption:["var(--font-caption)"]
       },
       colors: {
         border: "hsl(var(--border))",

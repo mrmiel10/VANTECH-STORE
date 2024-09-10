@@ -1,4 +1,3 @@
-
 import Link from "next/link";
 import { MoreHorizontal, PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -23,15 +22,13 @@ import {
 
 import Status from "./Status";
 import Image from "next/image";
-import { formatPrice } from "@/lib/formatData";
+import { formatPrice } from "@/lib/utils";
 import * as z from "zod";
 import { Product, Review } from "@prisma/client";
-import { ParseProductImages } from "@/lib/parseData";
+import { ParseProductImages } from "@/lib/utils";
 import { EditProductButton } from "../SubmitButtons";
 import { HandleSetStatusProduct } from "./HandleSetStatusProduct";
 import { DeleteProductBtn } from "../SubmitButtons";
-import { ParseProducts } from "@/lib/parseData";
-import prisma from "../../db";
 
 export const ProductsTableAdmin = ({
   products,
@@ -49,7 +46,6 @@ export const ProductsTableAdmin = ({
           <TableHead className="text-blue-500 font-semibold ">Name</TableHead>
           <TableHead className="text-blue-500 font-semibold ">Status</TableHead>
           <TableHead className="text-blue-500 font-semibold ">Price</TableHead>
-  
 
           <TableHead>
             <span className="sr-only w-7">others features</span>
@@ -81,7 +77,7 @@ export const ProductsTableAdmin = ({
             <TableCell className="font-semibold">
               {formatPrice(product.price)}
             </TableCell>
-           
+
             <TableCell>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -95,12 +91,12 @@ export const ProductsTableAdmin = ({
                   className=" py-2 text-muted-foreground "
                 >
                   <DropdownMenuLabel className="text-blue-500">
-                  More details
+                    More details
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
 
                   <DropdownMenuItem className="focus:bg-transparent">
-                 no sales
+                    no sales
                   </DropdownMenuItem>
                   <DropdownMenuItem className="focus:bg-transparent">
                     Category: {product.category}
@@ -110,16 +106,16 @@ export const ProductsTableAdmin = ({
                   </DropdownMenuItem>
                   {/* <DropdownMenuSeparator /> */}
                   <DropdownMenuLabel className="text-blue-500">
-                  Status
+                    Status
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   {/* <DropdownMenuSeparator /> */}
                   <HandleSetStatusProduct
                     status={product.status}
                     productId={product.id}
-                  /> 
-                    <DropdownMenuSeparator />
-{/* 
+                  />
+                  <DropdownMenuSeparator />
+                  {/* 
                     <TotalSalesRowOrderTable productId={product.id} />
                   <DropdownMenuItem className="focus:bg-transparent">
                  no sales
@@ -144,4 +140,3 @@ export const ProductsTableAdmin = ({
     </Table>
   );
 };
-

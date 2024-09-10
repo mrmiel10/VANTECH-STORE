@@ -7,15 +7,15 @@ import {
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart } from "lucide-react";
-import { products } from "@/lib/products";
+
 import { Heart } from "lucide-react";
 import {
   deleteProductInCart,
   deleteProductInFavorite,
   useCartStore,
 } from "@/lib/cart.store";
-import { Trash2, Trash2Icon } from "lucide-react";
-import { truncateText } from "@/lib/truncate";
+import {Trash2Icon } from "lucide-react";
+import { truncateText } from "@/lib/utils";
 import {
   Tooltip,
   TooltipContent,

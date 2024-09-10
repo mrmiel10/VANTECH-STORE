@@ -2,15 +2,8 @@ import Link from "next/link";
 import {
   File,
   PlusCircle,
-  Search,
-  Settings,
-  ShoppingCart,
-  User,
-  Users2,
+
 } from "lucide-react";
-
-import { Badge } from "@/components/ui/badge";
-
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -22,14 +15,11 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Image from "next/image";
-import Status from "../../../../components/admin/Status";
-import FilterStatusProducts from "../../../../components/admin/FilterStatusProducts";
-// import MobileProducts from "../../../../../components/admin/MobileProductsAdmin";
+import FilterStatusProducts from "./FilterStatusProducts";
 import { AdminSearch } from "../../../../components/admin/AdminSearch";
-
-import { ProductsTable } from "../../../../components/admin/ProductsTable";
+import { ProductsTable } from "./ProductsTable";
 import { Suspense } from "react";
-import { searchParamsCache } from "@/lib/nuqs";
+import { PageProps, searchParamsCache } from "@/lib/utils";
 import { getProductsPages,} from "@/lib/actions";
 import PaginationTable from "../../../../components/Pagination";
 import { SkeletonLoadingManageProducts } from "../../../../components/Skeletons";
@@ -37,10 +27,9 @@ import { Alert,AlertTitle,AlertDescription } from "@/components/ui/alert";
 import searchInTable from "../../../../public/search.png";
 
 export default function ManageProducts({
+  params,
   searchParams,
-}: {
-  searchParams: Record<string, string | string[] | undefined>;
-}) {
+}: PageProps) {
   const paramSearch = searchParamsCache.parse(searchParams);
   const currentPage = paramSearch.page;
 

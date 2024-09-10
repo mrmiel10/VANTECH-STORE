@@ -13,7 +13,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Heart, LogOut, ShoppingBag } from "lucide-react";
 import { LayoutDashboard } from "lucide-react";
 import { User } from "lucide-react";
-import CountFavorites from "./CountFavorites";
+import CountFavorites from "../../components/Navbar/CountFavorites";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import {
   RegisterLink,

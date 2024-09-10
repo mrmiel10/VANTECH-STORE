@@ -3,10 +3,10 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Rating } from "@mui/material";
 import { unstable_noStore } from "next/cache";
 import { FiltersByRating } from "./FiltersByRating";
-import { searchParamsCache } from "@/lib/nuqs";
-import { User, Review, Product } from "@prisma/client";
+import { searchParamsCache } from "@/lib/utils";
+
 import prisma from "../../../../db";
-import { getInitials } from "../../../../components/Navbar/UserNav";
+import { getInitials } from "../../UserNav";
 import { getReviewsPages } from "@/lib/actions";
 import Image from "next/image";
 import filterReview from "../../../../public/filter review.png";

@@ -3,14 +3,9 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { Pencil } from "lucide-react";
-
 import { TrashIcon } from "lucide-react";
-
 import { deleteProductAction, deleteImagesProductAction } from "@/lib/actions";
-
 import { toast } from "sonner";
-import clsx from "clsx";
-
 import { useServerAction } from "zsa-react";
 
 export const EditProductButton = ({ productId }: { productId: string }) => {
@@ -29,7 +24,7 @@ export const EditProductButton = ({ productId }: { productId: string }) => {
   );
 };
 
-export const  DeleteProductBtn = ({
+export const DeleteProductBtn = ({
   id,
   images,
 }: {
@@ -62,7 +57,7 @@ export const  DeleteProductBtn = ({
       onClick={async () => {
         await Promise.all([
           deleteProduct.execute({ id }),
-         deleteImagesProduct.execute(images),
+          deleteImagesProduct.execute(images),
         ]);
       }}
       className="text-muted-foreground  hover:text-blue-500  p-2"

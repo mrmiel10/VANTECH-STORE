@@ -1,26 +1,37 @@
 import React, { Suspense } from "react";
 import { SkeletonProductsCards } from "../../../../components/ProductCard";
-import { TitleProductsByCategories } from "../../../../components/componentsPerCategory/TitleProductsByCategories";
-import { ShowItems } from "../../../../components/componentsPerCategory/ShowItems";
-
+import { HeaderProductsPage } from "../../../../components/GenericComponentsPage/HeaderProductsPage";
+import { ShowItems } from "../../../../components/GenericComponentsPage/ShowItems";
+import FiltersSheet from "../../../../components/GenericComponentsPage/FiltersSheet";
+import ButtonSortProducts from "../../../../components/GenericComponentsPage/ButtonSortProducts";
+import ButtonFiltersCategories from "../../../../components/GenericComponentsPage/ButtonFiltersCategories";
+import { Spacing } from "../../../../components/Spacing";
 const DesktopProductsPage = ({
   searchParams,
 }: {
   searchParams?: { [key: string]: string };
 }) => {
   return (
-    <div>
-      {/* <Suspense fallback={"loading"}> */}
-      <TitleProductsByCategories
-        title="Nos ordinateurs de bureau"
+    <section>
+      <HeaderProductsPage
+        title="Ours desktops computers"
         description="Découvrez notre collection d'ordinateurs de bureau"
       />
-      {/* </Suspense> */}
+    <Spacing size="md" />
+        <div className="flex w-full">
+          <div className="flex-1" />
+          <div className="flex gap-2 flex-wrap">
+            <FiltersSheet />
+            <ButtonSortProducts />
+            <ButtonFiltersCategories />
+            </div>
+        </div>
+<Spacing size="xs" />
+        <Suspense fallback={<SkeletonProductsCards />}>
+          <ShowItems searchParams={searchParams} category="desktops" />
+        </Suspense>
       
-      <Suspense fallback={<SkeletonProductsCards />}>
-        <ShowItems searchParams={searchParams} category="desktops" />
-      </Suspense>
-    </div>
+    </section>
   );
 };
 

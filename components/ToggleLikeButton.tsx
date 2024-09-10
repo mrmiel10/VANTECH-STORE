@@ -1,10 +1,9 @@
 import { Button } from "@/components/ui/button"
 import { CartProductType, useCartStore } from "@/lib/cart.store"
-import { productsType } from "@/lib/typeProducts"
 import { Heart } from "lucide-react"
 import { useState } from "react"
 import { useShallow } from "zustand/react/shallow"
-import { ParseProductImages } from "@/lib/parseData"
+import { ParseProductImages } from "@/lib/utils"
 export const ToggleLikeButton = ({product}:{product:CartProductType}) =>{
     // const favorites = useCartStore((s) => s.favorites)
     // const toggleFavorite = useCartStore((s) => s.toggleFavorite)
@@ -23,7 +22,7 @@ export const ToggleLikeButton = ({product}:{product:CartProductType}) =>{
       isFavorite:s.favorites.some((product) => product.id === cartProduct.id),
       toggleFavorite:s.toggleFavorite
     })))
-    // const isFavorite = favorites.includes(id)
+
     return (
       <Button variant={"outline"} onClick={()=> toggleFavorite(cartProduct)}>
         <Heart  className="text-muted-foreground" size={16} fill={isFavorite ? "blue" :"none"} />

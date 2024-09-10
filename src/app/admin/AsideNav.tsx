@@ -1,10 +1,10 @@
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import React from "react";
-import { MenuNavigationAdmin } from "./MenuNavigationAdmin";
+import { MenuNavigationAdmin } from "../../../components/admin/MenuNavigationAdmin";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import DefaultUser from "../../public/defaultUser.png";
-import { getInitials } from "../Navbar/UserNav";
+import { getInitials } from "../UserNav";
 import { getCurrentUser } from "@/lib/actions";
 import { Circle } from "lucide-react";
 import { redirect } from "next/navigation";

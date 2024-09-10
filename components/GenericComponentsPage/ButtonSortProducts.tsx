@@ -1,20 +1,18 @@
 "use client"
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback} from "react";
 import { ChevronDown } from 'lucide-react'
-import { ArrowUp,ArrowDown } from "lucide-react";
+
 import {
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenu,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuCheckboxItem
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { sortFilters } from "@/lib/listFiltersProducts";
 
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
-import clsx from "clsx";
+
 import { CheckedState } from "@radix-ui/react-checkbox";
 const ButtonSortProducts = () => {
   const searchParams = useSearchParams();

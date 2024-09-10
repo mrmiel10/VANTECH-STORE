@@ -4,14 +4,19 @@ import "./globals.css";
 import { Toaster as Sonner } from "sonner";
 import { CircleX } from "lucide-react";
 import { CircleCheckIcon } from "lucide-react";
-import { Navbar } from "../../components/Navbar/Navbar";
-import FirstHeader from "../../components/FirstHeader";
-
-import { Footer2 } from "../../components/Footer2";
-import { UserNav } from "../../components/Navbar/UserNav";
+import { Navbar } from "./Navbar";
+import FirstHeader from "./FirstHeader";
+import { UserNav } from "./UserNav";
 import { EdgeStoreProvider } from "../lib/edgestore";
-import Footer from "../../components/Footer";
-const inter = Inter({ subsets: ["latin"] });
+import Footer from "./Footer";
+import { GeistSans } from 'geist/font/sans';
+import { GeistMono } from 'geist/font/mono';
+import { Anek_Telugu } from "next/font/google";
+import { cn } from "@/lib/utils";
+const AnekTelugu = Anek_Telugu({ subsets: ["latin"],
+  variable:"--font-caption"
+ });
+// const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Vantech store",
@@ -25,8 +30,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <div className="flex flex-col min-h-screen w-full ">
+      <body
+      className={cn(
+        GeistSans.variable,
+        GeistMono.variable,
+        AnekTelugu.variable,
+        "font-sans flex flex-col min-h-screen "
+      )}
+       >
+        <div className=" ">
           <div>
             <Navbar>
               <UserNav />

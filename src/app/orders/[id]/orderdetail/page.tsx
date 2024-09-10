@@ -1,31 +1,12 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Package, CreditCard, Truck } from "lucide-react";
-import { formatDateToLocal } from "@/lib/formatData";
-import { formatPrice } from "@/lib/formatData";
-import AccordionExample from "../../../../../components/Accordion";
-import {
-  Accordion,
-  AccordionTrigger,
-  AccordionContent,
-  AccordionItem,
-} from "@/components/ui/accordion";
 import PaymentStatus from "../../../../../components/admin/orders/PaymentStatus";
 import { DeliveryStatusOrder } from "../../../../../components/admin/orders/DeliveryStatusOrder";
-import { Info } from "lucide-react";
+import { CreditCard, Info, Package, Truck } from "lucide-react";
 import prisma from "../../../../../db";
 import Image from "next/image";
-import laptop from "../../../../../public/PC3.jpeg"
-import { ParseProducts } from "@/lib/parseData";
-import { ParseProductImages } from "@/lib/parseData";
+import { ParseProducts } from "@/lib/utils";
+import { ParseProductImages } from "@/lib/utils";
+import { formatPrice } from "@/lib/utils";
 interface IParams {
   id: string;
 }

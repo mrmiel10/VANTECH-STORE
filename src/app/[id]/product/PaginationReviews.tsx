@@ -9,7 +9,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
-import { generatePagination } from "@/lib/generatePagination";
+import { generatePagination } from "@/lib/utils";
 import clsx from "clsx";
 import { usePathname, useSearchParams } from "next/navigation";
 export default  function PaginationReviews({totalPages}:

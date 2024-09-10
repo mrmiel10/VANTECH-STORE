@@ -1,0 +1,2 @@
+# Faire l'interface de la gestion de la partie admin
+# gerer les stocks et le paiement(pawapay et stripe)

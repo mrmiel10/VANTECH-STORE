@@ -1,13 +1,10 @@
-"use client"
-import { clsx } from "clsx";
+"use client";
 import Link from "next/link";
-
 interface typeBreadcrumb {
   label: string;
   href: string;
   active?: boolean;
 }
-
 import {
   Breadcrumb,
   BreadcrumbEllipsis,
@@ -19,16 +16,17 @@ import {
 } from "@/components/ui/breadcrumb";
 import { tabAddProductActive, tabOrdersActive } from "@/lib/breadCrumbsAdmin";
 import { tabManageProductActive } from "@/lib/breadCrumbsAdmin";
-
 import { usePathname } from "next/navigation";
 
 export default function Breadcrumbs() {
-  let breadcrumbs:{label:string,href:string,active?:boolean}[] = []
-  const pathname = usePathname()
-  if(pathname === "/admin/add-products") breadcrumbs = [...tabAddProductActive]
-  if(pathname === "/admin/manage-products") breadcrumbs = [...tabManageProductActive]
-  if(pathname === "/admin/orders") breadcrumbs = [...tabOrdersActive]
-  
+  let breadcrumbs: { label: string; href: string; active?: boolean }[] = [];
+  const pathname = usePathname();
+  if (pathname === "/admin/add-products")
+    breadcrumbs = [...tabAddProductActive];
+  if (pathname === "/admin/manage-products")
+    breadcrumbs = [...tabManageProductActive];
+  if (pathname === "/admin/orders") breadcrumbs = [...tabOrdersActive];
+
   return (
     <Breadcrumb className="">
       <BreadcrumbList className="text-sm">
@@ -43,7 +41,7 @@ export default function Breadcrumbs() {
               {index < breadcrumbs.length - 1 ? <BreadcrumbSeparator /> : null}
             </>
           ) : (
-            < >
+            <>
               <BreadcrumbItem key={breadcrumb.label}>
                 <BreadcrumbLink
                   asChild
