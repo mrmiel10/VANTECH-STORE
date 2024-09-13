@@ -26,7 +26,7 @@ export const AdminBtn = async () => {
   const user = await getCurrentUser();
   if (!user) redirect("/");
 
-  if (user && user.role !== "USER") redirect("/");
+  if (user && user.role === "USER") redirect("/");
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

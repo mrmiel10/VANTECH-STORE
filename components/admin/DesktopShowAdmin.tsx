@@ -14,10 +14,11 @@ import { DisplayDeleteAdminModalBtn } from '../DisplayModalDeleteAdminBtn';
 import { Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
-import { AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar,AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { GetPermissionsAdminBtn } from './GetPermissionsAdminBtn';
-
-export const DesktopShowAdmin = () => {
+import { User } from '@prisma/client';
+import { getInitials } from '@/app/UserNav';
+export const DesktopShowAdmin = ({admins}:{admins:User[]}) => {
   return (
     <Table className="text-muted-foreground font-caption hidden md:table ">
     <TableHeader className="rounded-lg text-left text-sm font-normal">
@@ -40,30 +41,39 @@ export const DesktopShowAdmin = () => {
       </TableRow>
     </TableHeader>
     <TableBody>
-      <TableRow>
+      {admins.map((admin,_)=>(
+        <TableRow key={admin.id}>
         <TableCell className="">
           <div className="w-full shrink-0 ">
-              {/* <Avatar>
-                  <AvatarImage>
+          <Avatar>
+              <AvatarImage
+                alt="image"
+                src={admin.picture}
+                width={50}
+                height={50}
+                className="rounded-full aspect-square object-cover"
+              >
 
-                  </AvatarImage>
-                  <AvatarFallback>XO</AvatarFallback>
-              </Avatar> */}
-            <Image
+              </AvatarImage>
+              <AvatarFallback>
+                {getInitials(admin.firstName,admin.lastName,admin.email)}
+              </AvatarFallback>
+          </Avatar>
+            {/* <Image
               src={profil}
               className="rounded-full aspect-square object-cover flex-shrink-0"
               width={50}
               height={50}
               alt={"dddd"}
-            />
+            /> */}
           </div>
         </TableCell>
         <TableCell className="whitespace-nowrap px-3 py-3">
-          <p className='font-semibold'>Daryl</p>
-          <p className='text-sm'>mbakongako@gmail.com</p>
+          <p className='font-semibold'>{admin.firstName}{" "}{admin.lastName}</p>
+          <p className='text-sm'>{admin.email}</p>
         </TableCell>
         <TableCell className="whitespace-nowrap px-3 py-3">
-          Admin
+         {admin.role}
         </TableCell>
         <TableCell className="whitespace-nowrap px-3 pl-6 pr-3">
           <ul className="flex gap-2 items-center flex-wrap">
@@ -87,6 +97,8 @@ export const DesktopShowAdmin = () => {
           </div>
         </TableCell>
       </TableRow>
+      ))}
+      
     </TableBody>
   </Table>
   )

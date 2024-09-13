@@ -11,6 +11,7 @@ export const authProcedure = createServerActionProcedure()
         throw new ZSAError("NOT_AUTHORIZED","You aren't authentificated")
     }
 })
+
 export const authedAction = authProcedure.createServerAction()
 export const authAdminProcedure =  createServerActionProcedure()
 .handler(async()=>{

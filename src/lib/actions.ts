@@ -49,13 +49,22 @@ export const addProductAction = authedAdminAction
   export const addAdminAction = authedAdminAction.input
   (SchemaValidateAdmin)
 .handler(async({input})=>{
+  const isAdmin =  await prisma.user.findUnique({
+    where:{
+      email:input.email,
+      role:{
+        in:["ADMIN","SUPERADMIN"]
+      }
+    }
+  })
+  if(isAdmin) throw new Error("this")
   if(input.role.toLowerCase() === "super admin" && input.permissions.length !== 0) throw new Error("super admin has all rights. there is no point in redefining these rights!")
   await prisma.user.update({
     where:{
       email:input.email
     },
     data:{
-      permissions:input.role.toLowerCase() === "admin" ? ["all"] : input.permissions,
+      permissions:input.role.toLowerCase() === "super admin" ? ["all"] : input.permissions,
     role:input.role.toLowerCase() === "admin" ? "ADMIN" : "SUPERADMIN"
     }
   })
@@ -425,10 +434,10 @@ search?:string,
 )=>{
   noStore()
   try {
-    await prisma.user.findMany({
+ const admins =    await prisma.user.findMany({
       where:{
-        AND:[
-          {
+       AND:[
+         {
             OR: [
               {   email:  {
                 contains:search,
@@ -449,23 +458,24 @@ search?:string,
                 mode:"insensitive"
                }
               }
-            ]
+            ],
           },
-          {
+         {
             role:{
               in:["ADMIN","SUPERADMIN"]
             },
-           permissions:{
-           hasSome:permissions
-           }
+          //  permissions:{
+          //  hasSome:permissions
+          //  }
           
-          }
-        ]
+         }
+       ]
         
 
 
       } 
     })
+    return admins
   } catch (error) {
     throw error
 
@@ -498,7 +508,9 @@ export const isAdmin = async() =>{
     const isAdmin = await prisma.user.findUnique({
       where: {
         kindeId: sessionUser.id,
-        role: "ADMIN"
+        role: {
+          in:["ADMIN","SUPERADMIN"]
+        }
       },
      
     });

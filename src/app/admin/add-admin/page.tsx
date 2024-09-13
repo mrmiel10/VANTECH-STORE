@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Loader } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import {
   Form,
@@ -32,16 +32,16 @@ import { Item } from "@radix-ui/react-select";
 import Link from "next/link";
 import { addAdminAction } from "@/lib/actions";
 import { useServerAction } from "zsa-react";
-import {toast} from "sonner"
+import { toast } from "sonner";
 const AddAdminPage = () => {
-  const addAdmin = useServerAction(addAdminAction,{
-    onSuccess:() =>{
-      toast.success("ok!")
+  const addAdmin = useServerAction(addAdminAction, {
+    onSuccess: () => {
+      toast.success("this role has been changed successfully!");
     },
-    onError:(err) =>{
-toast.error(err.err.message)
-    }
-  })
+    onError: (err) => {
+      toast.error(err.err.message);
+    },
+  });
   const [displayPermission, setDisplayPermission] =
     React.useState<boolean>(false);
   console.log(displayPermission);
@@ -49,21 +49,22 @@ toast.error(err.err.message)
     resolver: zodResolver(SchemaValidateAdmin),
     defaultValues: {
       email: undefined,
-      role:undefined,          
+      role: undefined,
       permissions: [],
     },
   });
-  
-  React.useEffect(()=>{
-    displayPermission === false && form.setValue("permissions",[],{
-      shouldValidate: true,
-      shouldDirty: true,
-      shouldTouch: true,
-    })
-  },[displayPermission])
+
+  React.useEffect(() => {
+    displayPermission === false &&
+      form.setValue("permissions", [], {
+        shouldValidate: true,
+        shouldDirty: true,
+        shouldTouch: true,
+      });
+  }, [displayPermission]);
   async function onSubmit(values: z.infer<typeof SchemaValidateAdmin>) {
     console.log(values);
-await addAdmin.execute(values)
+    await addAdmin.execute(values);
   }
   return (
     <div className="flex items-start h-full justify-center">
@@ -71,9 +72,9 @@ await addAdmin.execute(values)
         <div className="flex  items-center gap-2 mb-4">
           <Button asChild variant="outline" size="icon" className="h-7 w-7">
             <Link href={"/admin/manage-admins"}>
-            <ChevronLeft className="h-4 w-4" />
-            <span className="sr-only">Back</span></Link>
-          
+              <ChevronLeft className="h-4 w-4" />
+              <span className="sr-only">Back</span>
+            </Link>
           </Button>
           <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0 text-blue-500">
             Add Admin
@@ -90,7 +91,10 @@ await addAdmin.execute(values)
                     <FormItem>
                       <div className="grid gap-3">
                         <div className="">
-                          <Label htmlFor="email" className="font-normal text-blue-500">
+                          <Label
+                            htmlFor="email"
+                            className="font-normal text-blue-500"
+                          >
                             Email
                           </Label>
                           <p className="flex gap-1 text-destructive items-center ">
@@ -120,15 +124,17 @@ await addAdmin.execute(values)
                   render={({ field }) => (
                     <FormItem>
                       <div className="grid gap-3">
-                       
                         <div className="">
-                        <Label htmlFor="status" className="font-normal text-blue-500">
-                          Role
-                        </Label>
+                          <Label
+                            htmlFor="status"
+                            className="font-normal text-blue-500"
+                          >
+                            Role
+                          </Label>
                           <p className="flex text-destructive items-center gap-1 ">
                             <Info size={16} />
                             <span className="text-sm">
-                           The super admin has all permissions
+                              The super admin has all permissions
                             </span>
                           </p>
                         </div>
@@ -162,76 +168,75 @@ await addAdmin.execute(values)
                   )}
                 />
                 {displayPermission && (
-                
-                   
-                    <FormField
-                      control={form.control}
-                      name="permissions"
-                      render={({ field }) => (
-                        <FormItem>
-                          <div className="grid gap-3">
-                            <div className="mb-3">
-                              <FormLabel className="text-blue-500">
-                                Permissions
-                              </FormLabel>
-                              <FormDescription className="flex items-center text-sm ">
-      
-                                Attribute permissions
-                              </FormDescription>
-                            </div>
-                            {Permissions.map((permission, _) => (
-                              <FormField
-                                key={permission.id}
-                                name="permissions"
-                                render={({ field }) => {
-                                  return (
-                                    <FormItem key={permission.id}>
-                                      <div className="flex items-center gap-2">
-                                      <FormControl>
-                                      <Checkbox
-                                       className="border-muted-foreground border"
-                                        checked={field.value?.includes(
-                                          permission.id
-                                        )}
-                                        onCheckedChange={(checked) => {
-                                          return checked
-                                            ? field.onChange([
-                                                ...field.value,
-                                                permission.id,
-                                              ])
-                                            : field.onChange(
-                                                field.value?.filter(
-                                                  (value:string) =>
-                                                    value !== permission.id
-                                                )
-                                              );
-                                        }}
-                                      />
-                                      </FormControl>
-                                     
-                                      <FormLabel className="text-muted-foreground font-normal">
-                             {permission.label}
-                              </FormLabel>
-                                      </div>
-                                     
-                                    </FormItem>
-                                  );
-                                }}
-                              />
-                            ))}
-
-                       
+                  <FormField
+                    control={form.control}
+                    name="permissions"
+                    render={({ field }) => (
+                      <FormItem>
+                        <div className="grid gap-3">
+                          <div className="mb-3">
+                            <FormLabel className="text-blue-500">
+                              Permissions
+                            </FormLabel>
+                            <FormDescription className="flex items-center text-sm ">
+                              Attribute permissions
+                            </FormDescription>
                           </div>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                 
+                          {Permissions.map((permission, _) => (
+                            <FormField
+                              key={permission.id}
+                              name="permissions"
+                              render={({ field }) => {
+                                return (
+                                  <FormItem key={permission.id}>
+                                    <div className="flex items-center gap-2">
+                                      <FormControl>
+                                        <Checkbox
+                                          className="border-muted-foreground border"
+                                          checked={field.value?.includes(
+                                            permission.id
+                                          )}
+                                          onCheckedChange={(checked) => {
+                                            return checked
+                                              ? field.onChange([
+                                                  ...field.value,
+                                                  permission.id,
+                                                ])
+                                              : field.onChange(
+                                                  field.value?.filter(
+                                                    (value: string) =>
+                                                      value !== permission.id
+                                                  )
+                                                );
+                                          }}
+                                        />
+                                      </FormControl>
+
+                                      <FormLabel className="text-muted-foreground font-normal">
+                                        {permission.label}
+                                      </FormLabel>
+                                    </div>
+                                  </FormItem>
+                                );
+                              }}
+                            />
+                          ))}
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                 )}
               </div>
 
               <div className="flex justify-center mt-4">
-                <Button variant={"defaultBtn"}>Save as Admin</Button>
+                <Button disabled={addAdmin.isPending} variant={"defaultBtn"}>
+                  {addAdmin.isPending ? (
+                    <Loader size={16} className="animate-spin" />
+                  ) : (
+                    <span> Save as Admin</span>
+                  )}
+                </Button>
               </div>
             </form>
           </Form>

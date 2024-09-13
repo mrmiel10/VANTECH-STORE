@@ -20,11 +20,12 @@ export const ShowAdmins = async (
   }
   console.log(role, search, currentPage,permissions);
   const admins = await getAdmins(currentPage,permissions,role,search)
+  console.log(admins)
   return (
     <div className="grid grid-cols-1 gap-4">
       <div>
-        <MobileShowAdmin />
-        <DesktopShowAdmin />
+        <MobileShowAdmin admins={admins} />
+        <DesktopShowAdmin admins={admins} />
       </div>
 
       {/* <PaginationTable totalPages={totalPages} /> */}
