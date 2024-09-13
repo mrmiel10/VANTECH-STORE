@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, Loader } from "lucide-react";
+import { ChevronLeft, Loader2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import {
   Form,
@@ -232,7 +232,7 @@ const AddAdminPage = () => {
               <div className="flex justify-center mt-4">
                 <Button disabled={addAdmin.isPending} variant={"defaultBtn"}>
                   {addAdmin.isPending ? (
-                    <Loader size={16} className="animate-spin" />
+                    <Loader2 size={16} className="animate-spin" />
                   ) : (
                     <span> Save as Admin</span>
                   )}
