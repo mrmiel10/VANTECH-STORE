@@ -1,9 +1,5 @@
 import Link from "next/link";
-import {
-  File,
-  PlusCircle,
-
-} from "lucide-react";
+import { File, PlusCircle, Section } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -20,79 +16,77 @@ import { AdminSearch } from "../../../../components/admin/AdminSearch";
 import { ProductsTable } from "./ProductsTable";
 import { Suspense } from "react";
 import { PageProps, searchParamsCache } from "@/lib/utils";
-import { getProductsPages,} from "@/lib/actions";
+import { getProductsPages } from "@/lib/actions";
 import PaginationTable from "../../../../components/Pagination";
 import { SkeletonLoadingManageProducts } from "../../../../components/Skeletons";
-import { Alert,AlertTitle,AlertDescription } from "@/components/ui/alert";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import searchInTable from "../../../../public/search.png";
 
-export default function ManageProducts({
-  params,
-  searchParams,
-}: PageProps) {
+import { DeletePorductDialog } from "../../../../components/DeleteProductDialog";
+
+export default function ManageProducts({ params, searchParams }: PageProps) {
   const paramSearch = searchParamsCache.parse(searchParams);
   const currentPage = paramSearch.page;
 
   return (
-    <div>
-      <main className="grid flex-1 items-start gap-4 p-4 sm:px-6  md:gap-8">
-        <AdminSearch placeholder="search products..." />
-        <Tabs defaultValue="all">
-          <div className="flex items-center">
-            <TabsList>
-              <TabsTrigger value="all">All</TabsTrigger>
-              <TabsTrigger value="active">Active</TabsTrigger>
-              <TabsTrigger value="draft">Draft</TabsTrigger>
-              <TabsTrigger value="archived" className="hidden sm:flex">
-                Archived
-              </TabsTrigger>
-            </TabsList>
-            <div className="ml-auto flex items-center gap-2">
-              <FilterStatusProducts />
+    <section className="grid gap-4">
+      <AdminSearch placeholder="search products..." />
+      <Tabs defaultValue="all">
+        <div className="flex items-center">
+          <TabsList>
+            <TabsTrigger value="all">All</TabsTrigger>
+            <TabsTrigger value="active">Active</TabsTrigger>
+            <TabsTrigger value="draft">Draft</TabsTrigger>
+            <TabsTrigger value="archived" className="hidden sm:flex">
+              Archived
+            </TabsTrigger>
+          </TabsList>
+          <div className="ml-auto flex items-center gap-2">
+            <FilterStatusProducts />
 
-              <Button size="sm" variant="outline" className="h-8 gap-1">
-                <File className="h-3.5 w-3.5" />
+            <Button size="sm" variant="outline" className="h-8 gap-1">
+              <File className="h-3.5 w-3.5" />
+              <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                Export
+              </span>
+            </Button>
+            <Button
+              variant={"defaultBtn"}
+              size="sm"
+              className="h-8 gap-1"
+              asChild
+            >
+              <Link href="/admin/add-products">
+                {" "}
+                <PlusCircle className="h-3.5 w-3.5" />
                 <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                  Export
+                  Add Product
                 </span>
-              </Button>
-              <Button
-                variant={"defaultBtn"}
-                size="sm"
-                className="h-8 gap-1"
-                asChild
-              >
-                <Link href="/admin/add-products">
-                  {" "}
-                  <PlusCircle className="h-3.5 w-3.5" />
-                  <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                    Add Product
-                  </span>
-                </Link>
-              </Button>
-            </div>
+              </Link>
+            </Button>
           </div>
-          <TabsContent value="all">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-blue-500 ">Products</CardTitle>
-                <CardDescription>
-                  Manage your products and view their sales performance.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Suspense fallback={<SkeletonLoadingManageProducts />}>
-                  <DisplayProductsAndPagination currentPage={currentPage} />
-                </Suspense>
-              </CardContent>
-              <CardFooter>
-                <ShowingNumberProducts />
-              </CardFooter>
-            </Card>
-          </TabsContent>
-        </Tabs>
-      </main>
-    </div>
+        </div>
+        <TabsContent value="all">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-blue-500 ">Products</CardTitle>
+              <CardDescription>
+                Manage your products and view their sales performance.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Suspense fallback={<SkeletonLoadingManageProducts />}>
+                <DisplayProductsAndPagination currentPage={currentPage} />
+              </Suspense>
+            </CardContent>
+            <CardFooter>
+              <ShowingNumberProducts />
+            </CardFooter>
+          </Card>
+        </TabsContent>
+      </Tabs>
+      <DeletePorductDialog />
+    </section>
   );
 }
 const DisplayProductsAndPagination = async ({
@@ -105,7 +99,7 @@ const DisplayProductsAndPagination = async ({
   const productStatus = searchParamsCache.get("status");
   const { totalPages } = await getProductsPages(searchProduct, productStatus);
   console.log(`totalsPages:${totalPages}`);
-  if(totalPages === 0 ) return <NoProducts />
+  if (totalPages === 0) return <NoProducts />;
   return (
     <div className="grid grid-cols-1 auto-rows-max gap-4">
       <ProductsTable />
@@ -114,7 +108,6 @@ const DisplayProductsAndPagination = async ({
   );
 };
 const ShowingNumberProducts = async () => {
-
   const searchProduct = searchParamsCache.get("search");
   const productStatus = searchParamsCache.get("status");
   const currentPage = searchParamsCache.get("page");
@@ -122,14 +115,14 @@ const ShowingNumberProducts = async () => {
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
   const { count } = await getProductsPages(searchProduct, productStatus);
-  console.log("count",count)
+  console.log("count", count);
   const totalProducts = count;
-  const lastProduct = count > (offset + ITEMS_PER_PAGE) ? (offset + ITEMS_PER_PAGE) : count
+  const lastProduct =
+    count > offset + ITEMS_PER_PAGE ? offset + ITEMS_PER_PAGE : count;
   if (totalProducts === 0) return null;
   return (
     <div className="text-xs text-muted-foreground">
-    
-      {(offset + 1)  === totalProducts ? (
+      {offset + 1 === totalProducts ? (
         <div>Showing one product</div>
       ) : (
         <div>
@@ -144,32 +137,32 @@ const ShowingNumberProducts = async () => {
     </div>
   );
 };
-const NoProducts = () =>{
+const NoProducts = () => {
   return (
     <div className="container flex flex-col gap-8 justify-center items-center px-5 md:px-10  max-w-5xl">
-          <Alert className="p-6">
-    <div className="flex sm:items-stretch max-sm:flex-col items-center">
-      <div className="relative w-64 aspect-square">
-        <Image src={searchInTable} alt={"cartImage"} className=" object-contain" />
-      </div>
-      <div className="max-sm:self-stretch">
-        <div className="h-full flex flex-col mt-8 max-sm:space-y-2 gap-4">
-          <div className="text-lg space-y-2">
-            <AlertTitle className="font-bold text-blue-500">
-        No products match your filter!
-            </AlertTitle>
-            <AlertDescription className="text-muted-foreground">
-        Please try another filter
-            </AlertDescription>
+      <Alert className="p-6">
+        <div className="flex sm:items-stretch max-sm:flex-col items-center">
+          <div className="relative w-64 aspect-square">
+            <Image
+              src={searchInTable}
+              alt={"cartImage"}
+              className=" object-contain"
+            />
           </div>
-        
-        
+          <div className="max-sm:self-stretch">
+            <div className="h-full flex flex-col mt-8 max-sm:space-y-2 gap-4">
+              <div className="text-lg space-y-2">
+                <AlertTitle className="font-bold text-blue-500">
+                  No products match your filter!
+                </AlertTitle>
+                <AlertDescription className="text-muted-foreground">
+                  Please try another filter
+                </AlertDescription>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+      </Alert>
     </div>
-  </Alert>
-    </div>
-
-  )
-
-}
+  );
+};

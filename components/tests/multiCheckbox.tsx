@@ -20,7 +20,7 @@ import { filtersComputers } from "@/lib/listFiltersProducts";
 export function CheckboxReactHookFormMultiple() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const pathname = usePathname();
+const pathname = usePathname();
   const [isSelectedFilter, setIsSelectedFilter] = useState(false);
 
   useEffect(() => {

@@ -17,7 +17,7 @@ import { Alert,AlertTitle,AlertDescription } from "@/components/ui/alert"
 
 import searchInTable from "../../../../public/search.png"
 import Image from 'next/image';
-export const OrdersTableAdmin = async() => {
+export const OrdersTableAdmin= async() => {
   const currentPage = searchParamsCache.get("page");
   const searchOrder = searchParamsCache.get("search")
   const deliveryStatus = searchParamsCache.get("deliveryStatus")

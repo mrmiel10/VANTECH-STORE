@@ -7,33 +7,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { MapDeliveryStatusOrder } from "../../admin/orders/FilterDeliveryStatusOrder";
+
 import { useSearchParams } from "next/navigation";
 
 import { useQueryState } from "nuqs";
 import clsx from "clsx";
 import { TitleFilterOrder } from "./SelectFilterPaymentStatusOrderUser";
+import { MapDeliveryStatusOrder } from "@/lib/utils";
 export const SelectFilterDeliveryStatusOrderUser = () => {
   const [deliveryStatus, setDeliveryStatus] = useQueryState("deliveryStatus", {
     defaultValue: "",
     shallow: false,
   });
   const searchParams = useSearchParams();
-  const handleFilterChange = (value: string) => {
-    console.log(value);
-   
-    const params = new URLSearchParams(searchParams.toString());
 
-    if (value !== "all") {
-      setDeliveryStatus(value);
-    } else {
-      setDeliveryStatus("");
-    }
-  };
   return (
     <div className="flex flex-col gap-1 ">
    <TitleFilterOrder title="deliveryStatus" />
-      <Select  onValueChange={(value) => handleFilterChange(value)}>
+      <Select  onValueChange={(value) => value.toLowerCase() === "all" ? setDeliveryStatus("") : setDeliveryStatus(value)}>
         <SelectTrigger id="category" aria-label="All">
           <SelectValue placeholder="All products" className="w-full" />
         </SelectTrigger>

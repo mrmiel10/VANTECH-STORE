@@ -42,7 +42,7 @@ export const AsideNav = async () => {
         <div className=" font-semibold">Admin</div>
         <div className="">
           {user?.email}  
-          {/* mbakopngako@gmail.com */}
+       
           </div>
         </div>
       <div className="text-xs flex gap-2 mt-4">

@@ -1,3 +1,4 @@
+"use client"
 import React from "react";
 import {
   DropdownMenu,
@@ -23,6 +24,8 @@ import { HandleSetStatusProduct } from "./HandleSetStatusProduct";
 import prisma from "../../db";
 import { Badge } from "@/components/ui/badge";
 import { ParseProducts } from "@/lib/utils";
+import { DisplayDeleteProductDialogBtn } from "../DisplayDeleteProductDialogBtn";
+import { DeletePorductDialog } from "../DeleteProductDialog";
 export const MobileProductsAdmin = async({
   products,
 }: {
@@ -90,41 +93,48 @@ export const MobileProductsAdmin = async({
 
             <div className="flex flex-col mt-4">
               <div className="w-full flex flex-row items-center justify-between">
-                <TotalSales productId={product.id} />
+                {/* <TotalSales productId={product.id} /> */}
              
                 <div className="flex gap-2 ml-auto">
                   {" "}
                   <EditProductButton productId={product.id} />
-                  <DeleteProductBtn
+                  {/* <DeleteProductBtn
+                  
                     images={ParseProductImages(product.images)}
                     id={product.id}
-                  />
+                  /> */}
+                    <DisplayDeleteProductDialogBtn
+                     productId={product.id} 
+                     images={ParseProductImages(product.images)}
+                     />
                 </div>
               </div>
 
               <Separator className="my-4 w-full" />
             </div>
           </div>
+         
         </div>
+        
       ))}
     </Card>
   );
 };
-export const TotalSales = async({productId}:{productId:string}) =>{
-  const totalSales =  (await prisma.order.findMany()).reduce((acc,cmd)=>{
-    const products = ParseProducts(cmd.products)
-    return acc + products.filter((p) =>p.id === productId).length
-  },0)
-  return (
+// export const TotalSales = async({productId}:{productId:string}) =>{
+//   const totalSales =  (await prisma.order.findMany()).reduce((acc,cmd)=>{
+//     const products = ParseProducts(cmd.products)
+//     return acc + products.filter((p) =>p.id === productId).length
+//   },0)
+//   return (
   
-<div>
-{totalSales === 0  ? (
-<div>There are no sales yet</div>
-):(
-<Badge variant={"defaultBtn"} className="text-sm px-4 py-2">
+// <div>
+// {totalSales === 0  ? (
+// <div>There are no sales yet</div>
+// ):(
+// <Badge variant={"defaultBtn"} className="text-sm px-4 py-2">
   
-  {totalSales < 10 ? "0" + totalSales : totalSales}{" "}sales</Badge>
-)}
-</div>
-  )
-}
+//   {totalSales < 10 ? "0" + totalSales : totalSales}{" "}sales</Badge>
+// )}
+// </div>
+//   )
+// }

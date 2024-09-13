@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React from "react";
 import {
   Select,
@@ -21,36 +21,33 @@ export const SelectFilterDateOrderUser = () => {
   const searchParams = useSearchParams();
   const orderByDate = [
     {
-      oldest:"oldest last",
-      value:"asc"
+      oldest: "oldest last",
+      value: "asc",
     },
     {
-      oldest:"oldest first",
-      value:"desc"
-    }
-  ]
-  const handleFilterChange = (value: string) => {
-    console.log(value);
-   
-    const params = new URLSearchParams(searchParams.toString());
-      setOrderDate(value)
-  };
+      oldest: "oldest first",
+      value: "desc",
+    },
+  ];
+
   return (
     <div className="flex flex-col gap-1 flex-shrink">
-     <TitleFilterOrder title="order" />
-      <Select  onValueChange={(value) => handleFilterChange(value)}>
+      <TitleFilterOrder title="order" />
+      <Select onValueChange={(value) => setOrderDate(value)}>
         <SelectTrigger id="paymentStatus" aria-label="All">
           <SelectValue placeholder="oldest last" className="w-full" />
         </SelectTrigger>
         <SelectContent id="paymentStatus">
-     
           {orderByDate.map((old, _) => (
-            <SelectItem 
-            key={old.oldest}
-            className={clsx(
-                {"bg-muted": searchParams.has("order",old.value)}
-            )}
-              value={old.value}>{old.oldest}</SelectItem>
+            <SelectItem
+              key={old.oldest}
+              className={clsx({
+                "bg-muted": searchParams.has("order", old.value),
+              })}
+              value={old.value}
+            >
+              {old.oldest}
+            </SelectItem>
           ))}
         </SelectContent>
       </Select>

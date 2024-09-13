@@ -1,3 +1,4 @@
+import { permission } from "process";
 import * as z from "zod";
 export const formValidateProducts = z.object({
   name: z
@@ -102,4 +103,12 @@ export const SchemaSafeProductsOrder = z.array(
 
   })
 )
-
+export const  SchemaValidateAdmin = z.object({
+  email:z
+  .string({required_error:"enter an email"}).email({message:"enter a valid email address"})
+  .min(1,{message:"this field can't be empty!"})
+  ,
+   role:z.string({required_error:"select role"})
+  .min(1,{message:"this field can't be empty!"}),
+  permissions:z.array(z.string())
+})

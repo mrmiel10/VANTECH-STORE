@@ -48,6 +48,7 @@ datasource db {
 enum Role {
   USER
   ADMIN
+  SUPERADMIN
 }
 
 model User {
@@ -64,16 +65,17 @@ model User {
   orders    Order[]
   role      Role     @default(USER)
   reviews   Review[]
+  permissions String[]
 }
 
 model Review {
   id          String   @id @default(uuid())
   userId      String
-  productId   String
+  productId   String?
   rating      Int
   comment     String
   createdDate DateTime @default(now())
-  product     Product  @relation(fields: [productId], references: [id])
+  product     Product?  @relation(fields: [productId], references: [id],onDelete: SetNull)
   user        User     @relation(fields: [userId], references: [id])
 }
 

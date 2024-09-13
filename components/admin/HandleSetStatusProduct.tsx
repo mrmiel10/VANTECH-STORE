@@ -15,7 +15,9 @@ export const HandleSetStatusProduct = ({
   productId: string;
   status: string;
 }) => {
+  
   const { execute } = useServerAction(handleSetStatusProductAction);
+
 
   return (
     <div className="flex flex-col gap-1">
@@ -40,7 +42,7 @@ export const HandleSetStatusProduct = ({
                 });
               }}
             >
-              <input type="hidden" name="productStatus" value={productStatus} />
+              <input type="hidden" name="productStatus" value={productStatus.toLowerCase()} />
 
               <Button variant={"pStatus"} className="p-0" type="submit">
                 <span>

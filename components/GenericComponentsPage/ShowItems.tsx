@@ -1,6 +1,4 @@
-
 import React, { Suspense } from "react";
-
 import { handleFilterSearchParams } from "@/lib/handleFilterSearchParams";
 import prisma from "../../db";
 import * as z from "zod";

@@ -23,7 +23,35 @@ export const EditProductButton = ({ productId }: { productId: string }) => {
     </Button>
   );
 };
+export const EditAdminButton = ({idAdmin }: { idAdmin: string }) => {
+  const router = useRouter();
 
+  return (
+    <Button
+      onClick={() => {
+        router.push(`/admin/${idAdmin}/editadmin`);
+      }}
+      className=" text-muted font-medium border-none hover:bg-blue-500 hover:text-white  bg-blue-500"
+      variant={"outline"}
+    >
+      Edit 
+     
+    </Button>
+  );
+};
+export const DeleteAsAdmin = ()=>{
+  return (
+<Button
+   
+      className="text-muted-foreground font-normal  hover:text-blue-500  p-2"
+      variant={"outline"}
+    >
+      {" "}
+      Delete 
+  
+    </Button>
+  )
+}
 export const DeleteProductBtn = ({
   id,
   images,
@@ -31,6 +59,7 @@ export const DeleteProductBtn = ({
   id: string;
   images: { image: string }[];
 }) => {
+
   const router = useRouter();
   const deleteImagesProduct = useServerAction(deleteImagesProductAction, {
     onSuccess: () => {
@@ -52,7 +81,8 @@ export const DeleteProductBtn = ({
   });
 
   return (
-    <Button
+    <>
+   <Button
       disabled={deleteProduct.isPending || deleteImagesProduct.isPending}
       onClick={async () => {
         await Promise.all([
@@ -66,5 +96,9 @@ export const DeleteProductBtn = ({
       {" "}
       <TrashIcon className="size-5" />
     </Button>
+  
+</>
+   
+    
   );
 };

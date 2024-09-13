@@ -10,6 +10,7 @@ import {
   formValidateReview,
   schemaInfoUser,
   SchemaSafeProductsOrder,
+  SchemaValidateAdmin,
 } from "../../schemas/schema";
 import { authedAction } from "./zsa";
 import { updateProfileSchema } from "@/app/editprofil/EditProfil";
@@ -45,6 +46,20 @@ export const addProductAction = authedAdminAction
       },
     });
   });
+  export const addAdminAction = authedAdminAction.input
+  (SchemaValidateAdmin)
+.handler(async({input})=>{
+  if(input.role.toLowerCase() === "super admin" && input.permissions.length !== 0) throw new Error("super admin has all rights. there is no point in redefining these rights!")
+  await prisma.user.update({
+    where:{
+      email:input.email
+    },
+    data:{
+      permissions:input.role.toLowerCase() === "admin" ? ["all"] : input.permissions,
+    role:input.role.toLowerCase() === "admin" ? "ADMIN" : "SUPERADMIN"
+    }
+  })
+})
 export const getReviewsPages = async(filterRating:number | undefined) =>{
 try {
  const count =  await prisma.review.count({
@@ -378,7 +393,7 @@ console.log("createdDate",orderByDate)
 export const handleSetStatusProductAction = authedAdminAction
   .input(
     z.object({
-      productStatus: z.string(),
+      productStatus: z.enum(["published","archive","draft"]),
       productId: z.string(),
     }),
     {
@@ -400,6 +415,62 @@ console.log(input)
   // return update
     revalidatePath("/admin/manage-products");
   });
+export const getAdmins = async(
+  currentPage:number,
+permissions:string[],
+role?:string,
+search?:string,
+
+
+)=>{
+  noStore()
+  try {
+    await prisma.user.findMany({
+      where:{
+        AND:[
+          {
+            OR: [
+              {   email:  {
+                contains:search,
+                mode:"insensitive"
+               }
+              }
+               ,
+    
+             {  lastName: {
+                contains:search,
+                mode:"insensitive"
+               }
+              }
+               ,
+               
+             {  firstName: {
+                contains:search,
+                mode:"insensitive"
+               }
+              }
+            ]
+          },
+          {
+            role:{
+              in:["ADMIN","SUPERADMIN"]
+            },
+           permissions:{
+           hasSome:permissions
+           }
+          
+          }
+        ]
+        
+
+
+      } 
+    })
+  } catch (error) {
+    throw error
+
+}
+}
 
 export const getCurrentUser = async () => {
   try {
@@ -482,7 +553,7 @@ export const deleteImagesProductAction = authedAdminAction
     });
   });
 
-export const deleteProductAction =authedAction
+export const deleteProductAction =authedAdminAction
   .input(
     z.object({
       id: z.string(),

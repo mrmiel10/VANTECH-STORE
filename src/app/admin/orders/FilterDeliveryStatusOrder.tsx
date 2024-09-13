@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -8,40 +8,20 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import React, { useCallback } from "react";
+import React from "react";
 import { ListFilter } from "lucide-react";
 import clsx from "clsx";
-import { CheckedState } from "@radix-ui/react-checkbox";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useQueryState } from 'nuqs'
-export const MapDeliveryStatusOrder = [
-  "Delivered",
-  "Pending",
-  "Dispatched",
-  "Cancelled",
-];
+import { useSearchParams } from "next/navigation";
+import { useQueryState } from "nuqs";
+import { MapDeliveryStatusOrder } from "@/lib/utils";
+
 export const FilterDeliveryStatusOrder = () => {
   const searchParams = useSearchParams();
-  const pathname = usePathname();
-  const { replace } = useRouter();
-  const [deliveryStatus,setDeliveryStatus] = useQueryState("deliveryStatus",{
-    defaultValue:"",
-    shallow:false,  
-})
-  const handleFilterChange = 
-    (deliveryStatus: string, checked: CheckedState) => {
-     
+  const [deliveryStatus, setDeliveryStatus] = useQueryState("deliveryStatus", {
+    defaultValue: "",
+    shallow: false,
+  });
 
-      if (checked) {
-        setDeliveryStatus(deliveryStatus)
-     
-      } else {
-        setDeliveryStatus("")
-      //  
-      }
-   
-    }
-  
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -68,7 +48,9 @@ export const FilterDeliveryStatusOrder = () => {
             )}
             checked={searchParams.has("deliveryStatus", deliverystatus)}
             onCheckedChange={(checked) =>
-              handleFilterChange(deliverystatus, checked)
+              checked
+                ? setDeliveryStatus(deliveryStatus)
+                : setDeliveryStatus("")
             }
           >
             {deliverystatus}

@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { handleSetDeliveryOrderStatusAction } from "@/lib/actions";
-import { MapDeliveryStatusOrder } from "../../../src/app/admin/orders/FilterDeliveryStatusOrder";
+import { MapDeliveryStatusOrder } from "@/lib/utils";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,

@@ -24,6 +24,9 @@ export const searchParamsCache = createSearchParamsCache({
   deliveryStatus:parseAsString.withDefault(""),
   paymentStatus:parseAsString.withDefault(""),
  orderDate:parseAsString.withDefault(""),
+ role:parseAsString.withDefault(""),
+
+
 })
 
 
@@ -133,7 +136,39 @@ return [
 ];
 }
 export const mapStatus = ["published", "draft", "archive"]
+export const MapDeliveryStatusOrder = [
+  "Delivered",
+  "Pending",
+  "Dispatched",
+  "Cancelled",
+];
+export const Permissions = [
+  {
+    id:"edit product",
+    label:"Edit product"
 
+  },
+  {
+    id:"add product",
+    label:"Add product"
+
+  },
+  {
+    id:"delete product",
+    label:"Delete product"
+
+  },
+  {
+    id:"delete order",
+    label:"Delete order"
+
+  },
+  // "add product",
+  // "delete product",
+  // "edit product",
+  // "delete order",
+  // "change the status order"
+]
 export type PageProps<T = never> = {
   params:T,
   searchParams:{ [key: string]: string}

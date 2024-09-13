@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster as Sonner } from "sonner";
@@ -13,6 +13,8 @@ import { GeistSans } from 'geist/font/sans';
 import { GeistMono } from 'geist/font/mono';
 import { Anek_Telugu } from "next/font/google";
 import { cn } from "@/lib/utils";
+import { DeleteComponent } from "../../components/DeleteComponent";
+import { DeleteCredenza } from "../../components/DeleteCredenza";
 const AnekTelugu = Anek_Telugu({ subsets: ["latin"],
   variable:"--font-caption"
  });
@@ -29,7 +31,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
       className={cn(
         GeistSans.variable,
@@ -47,10 +49,16 @@ export default function RootLayout({
           </div>
 
           <main className="">
-            <EdgeStoreProvider>{children}</EdgeStoreProvider>
+            <EdgeStoreProvider>
+            {/* <div vaul-drawer-wrapper="" className="bg-background"> */}
+            {children}
+          {/* </div> */}
+              </EdgeStoreProvider>
           </main>
           <div>
             <Footer />
+            {/* <DeleteCredenza /> */}
+            {/* <DeleteComponent /> */}
             {/* <Footer2 /> */}
           </div>
 
