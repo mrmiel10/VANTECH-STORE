@@ -13,8 +13,7 @@ import { GeistSans } from 'geist/font/sans';
 import { GeistMono } from 'geist/font/mono';
 import { Anek_Telugu } from "next/font/google";
 import { cn } from "@/lib/utils";
-import { DeleteComponent } from "../../components/DeleteComponent";
-import { DeleteCredenza } from "../../components/DeleteCredenza";
+
 const AnekTelugu = Anek_Telugu({ subsets: ["latin"],
   variable:"--font-caption"
  });
@@ -57,9 +56,7 @@ export default function RootLayout({
           </main>
           <div>
             <Footer />
-            {/* <DeleteCredenza /> */}
-            {/* <DeleteComponent /> */}
-            {/* <Footer2 /> */}
+         
           </div>
 
           <Sonner

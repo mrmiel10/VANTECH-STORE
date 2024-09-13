@@ -118,12 +118,12 @@ export const UserNav = async () => {
                 My orders
               </Link>
             </DropdownMenuItem>
-            {user?.role === "ADMIN" && (
+            {user?.role !== "USER" && (
               <DropdownMenuItem className="focus:text-blue-500" asChild>
                 <Link href="/admin/dashboard">
                   {" "}
                   <LayoutDashboard className="size-4 mr-2 transition ease grduration-150 text-blue-500" />
-                  Mon dashboard
+                  My dashboard
                 </Link>
               </DropdownMenuItem>
             )}
