@@ -33,8 +33,8 @@ const deleteAdmin = useServerAction(deleteAdminAction,{
     onClose()
   },
   onError: (err) => {
-   // toast.error(err.err.message)
-     toast.error("an error occurred while deleting admin")
+    toast.error(err.err.message)
+    // toast.error("an error occurred while deleting admin")
   }
 })
   const { idAdmin } = useDeleteAdminModal(
