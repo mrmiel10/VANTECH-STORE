@@ -66,7 +66,7 @@ export default function RootLayout({
                 title: "text-sm",
                 content: "border-[1.5] border-green-500",
                 default: "text-blue-500",
-                icon: "size-4",
+                icon: "size-3",
 
                 success:
                   "border-2 border-green-200  bg-green-100 text-green-400",

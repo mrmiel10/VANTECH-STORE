@@ -19,6 +19,7 @@ import { del } from "@vercel/blob";
 import * as z from "zod";
 import { useEdgeStore } from "./edgestore";
 import { authedAdminAction } from "./zsa";
+import { authedAddAdminAction } from "./zsa";
 type product = {
   images: uploadImageType[];
   name: string;
@@ -46,7 +47,7 @@ export const addProductAction = authedAdminAction
       },
     });
   });
-  export const deleteAdminAction = authedAdminAction.input(
+  export const deleteAdminAction = authedAddAdminAction.input(
    ( z.object({
     idAdmin:z.string().min(1,{message:"ID admin is required!"})
    }))
@@ -66,7 +67,7 @@ export const addProductAction = authedAdminAction
     }
    
   })
-  export const editAdminAction = authedAdminAction.input(
+  export const editAdminAction = authedAddAdminAction.input(
     (SchemaValidateAdmin)
     
   )
@@ -84,7 +85,7 @@ export const addProductAction = authedAdminAction
           }
         })
       })
-  export const addAdminAction = authedAdminAction.input
+  export const addAdminAction = authedAddAdminAction .input
   (SchemaValidateAdmin)
 .handler(async({input})=>{
   const existingEmail = await prisma.user.findUnique({
