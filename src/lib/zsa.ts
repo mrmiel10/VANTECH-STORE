@@ -28,9 +28,9 @@ export const addAdminProcedure = createServerActionProcedure()
              
             }
         })
-        if(!isSuperAdmin) throw new ZSAError("NOT_AUTHORIZED","you do not have the necessary rights to perform this operation")
+        if(!isSuperAdmin) throw new ZSAError("NOT_AUTHORIZED","you don't have the necessary rights to perform this operation")
     } catch (error) {
-        throw new ZSAError("NOT_AUTHORIZED","You do not have the necessary rights to perform this operation")
+        throw new ZSAError("NOT_AUTHORIZED","You don't have the necessary rights to perform this operation")
     }
 })
 export const authAdminProcedure =  createServerActionProcedure()
@@ -43,5 +43,38 @@ export const authAdminProcedure =  createServerActionProcedure()
     }
 })
 
+export const addProductProcedure = createServerActionProcedure()
+.handler(async()=>{
+    try {
+        const admin = await isAdmin()
+        if(!admin) throw new ZSAError("NOT_AUTHORIZED","admin not authentificated")
+            if(!admin.permissions.includes("add product"))   throw new ZSAError("NOT_AUTHORIZED","You don't have the necessary rights to perform this operation")
+    } catch (error) {
+        throw new ZSAError("NOT_AUTHORIZED","You don't have the necessary rights to perform this operation")
+    }
+})
+export const deleteProductProcedure = createServerActionProcedure()
+.handler(async()=>{
+    try {
+        const admin = await isAdmin()
+        if(!admin) throw new ZSAError("NOT_AUTHORIZED","admin not authentificated")
+            if(!admin.permissions.includes("delete product"))   throw new ZSAError("NOT_AUTHORIZED","You don't have the necessary rights to perform this operation")
+    } catch (error) {
+        throw new ZSAError("NOT_AUTHORIZED","You don't have the necessary rights to perform this operation")
+    }
+})
+export const editProductProcedure = createServerActionProcedure()
+.handler(async()=>{
+    try {
+        const admin = await isAdmin()
+        if(!admin) throw new ZSAError("NOT_AUTHORIZED","admin not authentificated")
+            if(!admin.permissions.includes("edit product"))   throw new ZSAError("NOT_AUTHORIZED","You don't have the necessary rights to perform this operation")
+    } catch (error) {
+        throw new ZSAError("NOT_AUTHORIZED","You don't have the necessary rights to perform this operation")
+    }
+})
 export const authedAdminAction = authAdminProcedure.createServerAction()
 export const authedAddAdminAction = addAdminProcedure.createServerAction()
+export const authedAddProductAction = addProductProcedure.createServerAction()
+export const authedDeleteProductAction = deleteProductProcedure.createServerAction()
+export const authedEditProductAction = editProductProcedure.createServerAction()

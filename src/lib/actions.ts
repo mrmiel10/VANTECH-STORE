@@ -4,7 +4,7 @@ import prisma from "../../db";
 import { uploadImageType } from "@/app/admin/add-products/AddProductsForme";
 import { unstable_noStore as noStore } from "next/cache";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { action } from "./zsa";
+import { action, authedDeleteProductAction, authedEditProductAction } from "./zsa";
 import {
   formValidateProducts,
   formValidateReview,
@@ -20,6 +20,7 @@ import * as z from "zod";
 import { useEdgeStore } from "./edgestore";
 import { authedAdminAction } from "./zsa";
 import { authedAddAdminAction } from "./zsa";
+import { authedAddProductAction } from "./zsa";
 type product = {
   images: uploadImageType[];
   name: string;
@@ -30,7 +31,7 @@ type product = {
   price: number;
 };
 const ITEMS_PER_PAGE = 3;
-export const addProductAction = authedAdminAction
+export const addProductAction = authedAddProductAction
   .input(formValidateProducts)
 
   .handler(async ({ input }) => {
@@ -569,7 +570,7 @@ export const isAdmin = async() =>{
   
 
 }
-export const editProductAction = authedAdminAction
+export const editProductAction = authedEditProductAction
   .input(
     z.intersection(
       formValidateProducts,
@@ -613,7 +614,7 @@ export const deleteImagesProductAction = authedAdminAction
     });
   });
 
-export const deleteProductAction =authedAdminAction
+export const deleteProductAction =authedDeleteProductAction
   .input(
     z.object({
       id: z.string(),
