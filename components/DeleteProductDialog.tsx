@@ -24,7 +24,7 @@ import { Info } from "lucide-react";
 import { useMediaQuery } from "usehooks-ts";
 import { desktop } from "@/components/ui/credenza";
 import clsx from "clsx";
-import { Loader } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 export const DeletePorductDialog = () => {
   const { product } = useDeleteProductModal(
@@ -45,7 +45,9 @@ export const DeletePorductDialog = () => {
   const deleteImagesProduct = useServerAction(deleteImagesProductAction, {
     onSuccess: () => {
       router.refresh();
+      onClose()
       toast.success("Delete product images successfully!");
+
     },
     onError: () => {
       toast.error("Not deleted images!");
@@ -112,7 +114,7 @@ export const DeletePorductDialog = () => {
             >
               {" "}
               {deleteProduct.isPending || deleteImagesProduct.isPending ? (
-                <Loader size={16} className="animate-spin" />
+                <Loader2 size={16} className="animate-spin" />
               ) : (
                 <span>Delete</span>
               )}
