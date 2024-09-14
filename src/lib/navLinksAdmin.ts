@@ -25,7 +25,7 @@ export const navLinksAdmin = [
     },
     {
       id: "admins",
-      href: ["/admin/manage-admins","/admin/manage-admins"],
+      href: ["/admin/manage-admins","/admin/add-admin","/admin/editadmin"],
       Icon: Shield,
     },
   ];

@@ -1,5 +1,5 @@
 export  const tabAddProductActive = [
-    { label: "dashboard", href: "admin" },
+    { label: "dashboard", href: "/admin/dashboard" },
     {
         label: "manage products",
         href: "manage-products",
@@ -13,7 +13,7 @@ export  const tabAddProductActive = [
   ]
   
 export const tabManageProductActive = [
-    { label: "dashboard", href: "admin" },
+    { label: "dashboard", href: "/admin/dashboard" },
     {
       label: "manage products",
       href: "manage-products",
@@ -27,12 +27,43 @@ export const tabManageProductActive = [
   ]
   
 export const tabOrdersActive = [
-    { label: "dashboard", href: "/" },
+    { label: "dashboard", href: "/admin/dashboard" },
     {
       label: "orders",
       href: "orders",
       active: true,
     }
  
+  ]
+  
+export const tabManageAdminsActive = [
+    { label: "dashboard", href: "/admin/dashboard"},
+    {
+      label: "manage admins",
+      href: "manage-admins",
+      active: true,
+    },
+    {
+      label: "add admins",
+      href: "add-admin",
+     
+    }
+ 
+ 
+  ]
+  
+export const tabAddAdminActive = [
+    { label: "dashboard", href: "" },
+    {
+      label: "manage admins",
+      href: "manage-admins",
+     
+    },
+    {
+      label: "add admins",
+      href: "add-admin",
+      active: true,
+    },
+   
   ]
   

@@ -1,7 +1,8 @@
 "use client";
 import React from "react";
+
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, Loader2 } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import {
   Form,
@@ -16,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SchemaValidateAdmin } from "../../../../schemas/schema";
+import { SchemaValidateAdmin } from "../../../../../schemas/schema";
 import {
   Select,
   SelectContent,
@@ -26,45 +27,56 @@ import {
 } from "@/components/ui/select";
 import { z } from "zod";
 import { Info } from "lucide-react";
-import { Permissions } from "@/lib/utils";
+import { PageProps, Permissions } from "@/lib/utils";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Item } from "@radix-ui/react-select";
+
 import Link from "next/link";
-import { addAdminAction } from "@/lib/actions";
+import { User } from "@prisma/client";
+import { editAdminAction } from "@/lib/actions";
 import { useServerAction } from "zsa-react";
 import { toast } from "sonner";
-const AddAdminPage = () => {
-  const addAdmin = useServerAction(addAdminAction, {
+import { useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
+export const EditAdminForm = ({ admin }: { admin: User }) => {
+  const router = useRouter();
+  const editAdmin = useServerAction(editAdminAction, {
     onSuccess: () => {
-      toast.success("this role has been changed successfully!");
+      toast.success("Roles and permissions have been changed successfully!");
+      router.push("/admin/manage-admins");
+      router.refresh()
     },
     onError: (err) => {
       toast.error(err.err.message);
     },
   });
+  console.log(admin.permissions);
+  console.log(admin.role);
   const [displayPermission, setDisplayPermission] =
     React.useState<boolean>(false);
   console.log(displayPermission);
   const form = useForm<z.infer<typeof SchemaValidateAdmin>>({
     resolver: zodResolver(SchemaValidateAdmin),
     defaultValues: {
-      email: undefined,
-      role: undefined,
-      permissions: [],
+      email: admin.email,
+      role: admin.role,
+      permissions: admin.permissions,
     },
   });
-
+  const setCustomValue = (id: any, value: any) => {
+    form.setValue(id, value, {
+      shouldValidate: true,
+      shouldDirty: true,
+      shouldTouch: true,
+    });
+  };
   React.useEffect(() => {
-    displayPermission === false &&
-      form.setValue("permissions", [], {
-        shouldValidate: true,
-        shouldDirty: true,
-        shouldTouch: true,
-      });
-  }, [displayPermission]);
+    admin.role === "ADMIN" && setDisplayPermission(true);
+    if (!displayPermission) setCustomValue("permissions", []);
+    else setCustomValue("permissions", admin.permissions.filter((permission,_)=>permission.toLowerCase() !="all"));
+  }, [displayPermission, admin.role, admin.permissions]);
   async function onSubmit(values: z.infer<typeof SchemaValidateAdmin>) {
     console.log(values);
-    await addAdmin.execute(values);
+    await editAdmin.execute(values);
   }
   return (
     <div className="flex items-start h-full justify-center">
@@ -77,7 +89,7 @@ const AddAdminPage = () => {
             </Link>
           </Button>
           <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0 text-blue-500">
-            Add Admin
+            Edit admin role & permissions
           </h1>
         </div>
         <Card className="w-full min-h-20 px-8 lg:px-16 py-4">
@@ -86,7 +98,7 @@ const AddAdminPage = () => {
               <div className="grid gap-6">
                 <FormField
                   control={form.control}
-                  name="email"
+                 name="email"
                   render={({ field }) => (
                     <FormItem>
                       <div className="grid gap-3">
@@ -97,21 +109,18 @@ const AddAdminPage = () => {
                           >
                             Email
                           </Label>
-                          <p className="flex gap-1 text-destructive items-center ">
-                            <Info size={16} />
-                            <span className="text-sm">
-                              The email must be registred in the database
-                            </span>
-                          </p>
+                        
                         </div>
 
                         <Input
+                        defaultValue={admin.email}
+                        disabled
                           {...field}
                           id="email"
                           type="text"
                           name="email"
                           className=""
-                          placeholder="enter an email..."
+                         
                         />
                       </div>
                       <FormMessage />
@@ -145,7 +154,7 @@ const AddAdminPage = () => {
                               ? setDisplayPermission(true)
                               : setDisplayPermission(false);
                           }}
-                          defaultValue={field.value}
+                          defaultValue={admin.role}
                         >
                           <SelectTrigger id="role" aria-label="Select role">
                             <SelectValue
@@ -155,10 +164,10 @@ const AddAdminPage = () => {
                           </SelectTrigger>
                           <SelectContent className=" text-muted-foreground">
                             <SelectItem className="" value="ADMIN">
-                              Admin
+                              ADMIN
                             </SelectItem>
                             <SelectItem className="" value="SUPERADMIN">
-                              Super admin
+                              SUPER ADMIN
                             </SelectItem>
                           </SelectContent>
                         </Select>
@@ -230,11 +239,11 @@ const AddAdminPage = () => {
               </div>
 
               <div className="flex justify-center mt-4">
-                <Button disabled={addAdmin.isPending} variant={"defaultBtn"}>
-                  {addAdmin.isPending ? (
+                <Button disabled={editAdmin.isPending} variant={"defaultBtn"}>
+                  {editAdmin.isPending ? (
                     <Loader2 size={16} className="animate-spin" />
                   ) : (
-                    <span> Save as Admin</span>
+                    <span>Edit role & permissions</span>
                   )}
                 </Button>
               </div>
@@ -245,4 +254,3 @@ const AddAdminPage = () => {
     </div>
   );
 };
-export default AddAdminPage;

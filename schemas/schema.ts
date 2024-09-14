@@ -108,7 +108,7 @@ export const  SchemaValidateAdmin = z.object({
   .string({required_error:"enter an email"}).email({message:"enter a valid email address"})
   .min(1,{message:"this field can't be empty!"})
   ,
-   role:z.string({required_error:"select role"})
-  .min(1,{message:"this field can't be empty!"}),
+   role:z.enum(["ADMIN","SUPERADMIN","USER"],{message:"only ADMIN or SUPER ADMIN"})
+ ,
   permissions:z.array(z.string())
 })

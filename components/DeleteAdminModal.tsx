@@ -13,20 +13,30 @@ import {
 } from "@/components/ui/credenza";
 import { useRouter } from "next/navigation";
 import { deleteProductAction} from "@/lib/actions";
-import { toast } from "sonner";
-import { useServerAction } from "zsa-react";
-
 import { Button } from "@/components/ui/button";
 import { useShallow } from "zustand/react/shallow";
 import { Info } from "lucide-react";
 import { useMediaQuery } from "usehooks-ts";
 import { desktop } from "@/components/ui/credenza";
 import clsx from "clsx";
-import { Loader } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useModal } from "@/lib/DeleteStore";
 import { useDeleteAdminModal } from "@/lib/DeleteStore";
+import { useServerAction } from "zsa-react";
+import { deleteAdminAction } from "@/lib/actions";
+import { toast } from "sonner";
 export const DeleteAdminModal = () => {
-
+const deleteAdmin = useServerAction(deleteAdminAction,{
+  onSuccess: () => {
+    toast.success("deletion admin successfully!")
+    router.refresh()
+    onClose()
+  },
+  onError: (err) => {
+   // toast.error(err.err.message)
+     toast.error("an error occurred while deleting admin")
+  }
+})
   const { idAdmin } = useDeleteAdminModal(
     useShallow((s) => ({
      idAdmin:s.adminId
@@ -43,17 +53,6 @@ export const DeleteAdminModal = () => {
   const isDesktop = useMediaQuery(desktop);
   const router = useRouter();
 
-  const deleteProduct = useServerAction(deleteProductAction, {
-    onSuccess: () => {
-      router.refresh();
-      toast.success("the status of the product has been deleted successfully");
-    },
-    onError: (err) => {
-      console.log(err.err.message);
-      toast.error(err.err.message);
-      // toast.error("Not deleted!");
-    },
-  });
 
   return (
     <Credenza open={isOpen}>
@@ -81,19 +80,19 @@ export const DeleteAdminModal = () => {
             <Button variant={"outline"}>cancel</Button>
           </CredenzaClose> */}
           <Button
-              disabled={deleteProduct.isPending}
+              disabled={deleteAdmin.isPending}
               onClick={async () => {
                 if (!idAdmin ) return null;
                 await Promise.all([
-                  deleteProduct.execute({ id: idAdmin }),
+                  deleteAdmin.execute({idAdmin }),
                 ]);
               }}
               className={clsx("order-last", { " px-16": isDesktop === false })}
               variant={"defaultBtn"}
             >
               {" "}
-              {deleteProduct.isPending ? (
-                <Loader size={16} className="animate-spin" />
+              {deleteAdmin.isPending ? (
+                <Loader2 size={16} className="animate-spin" />
               ) : (
                 <span>Delete</span>
               )}

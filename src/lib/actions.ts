@@ -46,26 +46,73 @@ export const addProductAction = authedAdminAction
       },
     });
   });
+  export const deleteAdminAction = authedAdminAction.input(
+   ( z.object({
+    idAdmin:z.string().min(1,{message:"ID admin is required!"})
+   }))
+  )
+  .handler(async({input})=>{
+    try {
+      await prisma.user.update({
+        where:{
+          id:input.idAdmin
+        },
+        data:{
+          role:"USER"
+        }
+      })
+    } catch (error) {
+      throw error
+    }
+   
+  })
+  export const editAdminAction = authedAdminAction.input(
+    (SchemaValidateAdmin)
+    
+  )
+  .handler(async({input})=>{
+    if(input.role !== "ADMIN" && input.role !== "SUPERADMIN") throw new Error("role ADMIN or SUPER ADMIN only authorized")
+
+      if(input.role === "SUPERADMIN" && input.permissions.length !== 0) throw new Error("super admin has all rights. there is no point in redefining these rights!")
+        await prisma.user.update({
+          where:{
+            email:input.email
+          },
+          data:{
+            permissions:input.role === "SUPERADMIN" ? ["all"] : input.permissions,
+          role:input.role === "ADMIN" ? "ADMIN" : "SUPERADMIN"
+          }
+        })
+      })
   export const addAdminAction = authedAdminAction.input
   (SchemaValidateAdmin)
 .handler(async({input})=>{
-  // const isAdmin =  await prisma.user.findUnique({
-  //   where:{
-  //     email:input.email,
-  //     role:{
-  //       in:["ADMIN","SUPERADMIN"]
-  //     }
-  //   }
-  // })
-  // if(isAdmin) throw new Error("the email associated with this person has been defined as admin!")
-  if(input.role.toLowerCase() === "super admin" && input.permissions.length !== 0) throw new Error("super admin has all rights. there is no point in redefining these rights!")
+  const existingEmail = await prisma.user.findUnique({
+    where:{
+      email:input.email,
+    
+    }
+  })
+  if(!existingEmail) throw new Error("this email doesn't registred in the database")
+  const isAdmin =  await prisma.user.findUnique({
+    where:{
+      email:input.email,
+      role:{
+        in:["ADMIN","SUPERADMIN"]
+      }
+    }
+  })
+  if(isAdmin) throw new Error("the email associated with this person has been defined as admin!")
+  if(input.role !== "ADMIN" && input.role !== "SUPERADMIN") throw new Error("role ADMIN or SUPER ADMIN only authorized")
+
+  if(input.role === "SUPERADMIN" && input.permissions.length !== 0) throw new Error("super admin has all rights. there is no point in redefining these rights!")
   await prisma.user.update({
     where:{
       email:input.email
     },
     data:{
-      permissions:input.role.toLowerCase() === "super admin" ? ["all"] : input.permissions,
-    role:input.role.toLowerCase() === "admin" ? "ADMIN" : "SUPERADMIN"
+      permissions:input.role === "SUPERADMIN" ? ["all"] : input.permissions,
+    role:input.role === "ADMIN" ? "ADMIN" : "SUPERADMIN"
     }
   })
 })

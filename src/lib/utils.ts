@@ -145,22 +145,22 @@ export const MapDeliveryStatusOrder = [
 export const Permissions = [
   {
     id:"edit product",
-    label:"Edit product"
+    label:"edit product"
 
   },
   {
     id:"add product",
-    label:"Add product"
+    label:"add product"
 
   },
   {
     id:"delete product",
-    label:"Delete product"
+    label:"delete product"
 
   },
   {
     id:"delete order",
-    label:"Delete order"
+    label:"delete order"
 
   },
   // "add product",

@@ -14,8 +14,8 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { tabAddProductActive, tabOrdersActive } from "@/lib/breadCrumbsAdmin";
-import { tabManageProductActive } from "@/lib/breadCrumbsAdmin";
+import { tabAddProductActive, tabOrdersActive,tabManageAdminsActive,tabAddAdminActive } from "@/lib/breadCrumbsAdmin";
+import { tabManageProductActive, } from "@/lib/breadCrumbsAdmin";
 import { usePathname } from "next/navigation";
 
 export default function Breadcrumbs() {
@@ -26,6 +26,8 @@ export default function Breadcrumbs() {
   if (pathname === "/admin/manage-products")
     breadcrumbs = [...tabManageProductActive];
   if (pathname === "/admin/orders") breadcrumbs = [...tabOrdersActive];
+  if (pathname === "/admin/manage-admins") breadcrumbs = [...tabManageAdminsActive];
+  if (pathname === "/admin/add-admin") breadcrumbs = [...tabAddAdminActive ];
 
   return (
     <Breadcrumb className="">

@@ -18,6 +18,7 @@ import { Avatar,AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { GetPermissionsAdminBtn } from './GetPermissionsAdminBtn';
 import { User } from '@prisma/client';
 import { getInitials } from '@/app/UserNav';
+import { permission } from 'process';
 export const DesktopShowAdmin = ({admins}:{admins:User[]}) => {
   return (
     <Table className="text-muted-foreground font-caption hidden md:table ">
@@ -73,26 +74,30 @@ export const DesktopShowAdmin = ({admins}:{admins:User[]}) => {
           <p className='text-sm'>{admin.email}</p>
         </TableCell>
         <TableCell className="whitespace-nowrap px-3 py-3">
-         {admin.role}
+         {admin.role === "ADMIN" ? admin.role : "SUPER ADMIN"}
         </TableCell>
         <TableCell className="whitespace-nowrap px-3 pl-6 pr-3">
           <ul className="flex gap-2 items-center flex-wrap">
-            <li className="bg-accent/30 font-caption border border-accent rounded-sm text-blue-500 px-1 py-0.5 hover:bg-accent-50 transition-colors">
-              Add product
+            {!admin.permissions || admin.permissions.length === 0 ? 
+           <li className='text-blue-500 font-caption'>No permission</li>:(
+            admin.permissions.map((permission,_)=>(
+              <li key={permission.toLowerCase()} className="bg-accent/30 font-caption border border-accent rounded-sm text-blue-500 px-1 py-0.5 hover:bg-accent-50 transition-colors">
+            {permission}
             </li>
-            <li className="bg-accent/30 font-caption border border-accent rounded-sm text-blue-500 px-1 py-0.5 hover:bg-accent-50 transition-colors">
-              Edit product
-            </li>
-            <li className="bg-accent/30 font-caption border border-accent rounded-sm text-blue-500 px-1 py-0.5 hover:bg-accent-50 transition-colors">
-              Delete product
-            </li>
+          ))
+           ) }
+         
           </ul>
         </TableCell>
         <TableCell className="whitespace-nowrap py-3 ">
-          <div className="flex  gap-2 w-fit">
-         <GetPermissionsAdminBtn />
-            <DisplayDeleteAdminModalBtn adminId="dfgfdrr2r" />
-            <EditAdminButton idAdmin="ddddd" />{" "}
+          <div className="w-full flex  gap-2 ">
+            {!admin.permissions || admin.permissions.length !== 0 &&  <GetPermissionsAdminBtn permissions={admin.permissions} />}
+        <div className='flex-1' />
+      
+        <DisplayDeleteAdminModalBtn adminId={admin.id} />
+        <EditAdminButton idAdmin={admin.id} />{" "}
+       
+           
       
           </div>
         </TableCell>

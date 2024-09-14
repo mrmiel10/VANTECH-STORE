@@ -40,7 +40,7 @@ import {
 } from "./Skeletons";
 const DashboardPage = () => {
   return (
-    <section >
+    <section className="grid gap-4" >
       <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
         <Suspense
           fallback={

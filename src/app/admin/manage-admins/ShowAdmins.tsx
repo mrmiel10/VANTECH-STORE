@@ -9,6 +9,7 @@ export const ShowAdmins = async (
     searchParams:{ [key: string]: string}
   }
 ) => {
+  //await new Promise((resolve) => setTimeout(resolve, 20000));
   let permissions:string[] = []
   const role = searchParamsCache.get("role");
   const search = searchParamsCache.get("search");
@@ -24,7 +25,7 @@ export const ShowAdmins = async (
   return (
     <div className="grid grid-cols-1 gap-4">
       <div>
-        <MobileShowAdmin admins={admins} />
+        {/* <MobileShowAdmin admins={admins} /> */}
         <DesktopShowAdmin admins={admins} />
       </div>
 

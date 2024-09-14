@@ -23,15 +23,19 @@ import {
 import clsx from "clsx";
 import { useMediaQuery } from "../use-media-query";
 import { desktop } from "@/components/ui/credenza";
-export const GetPermissionsAdminBtn = () => {
+export const GetPermissionsAdminBtn = ({
+  permissions,
+}: {
+  permissions: string[];
+}) => {
   const isDesktop = useMediaQuery(desktop);
   return (
     <Credenza>
-      <CredenzaTrigger>
+      <CredenzaTrigger asChild>
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant={"outline"} className="px-3 border-0">
+              <Button  variant={"outline"} className="px-3 border-0">
                 <Info className="font-normal" size={20} />
               </Button>
             </TooltipTrigger>
@@ -57,17 +61,37 @@ export const GetPermissionsAdminBtn = () => {
             })}
           >
             <div className="flex flex-col gap-2 ">
-              <p>this admin has the right to:</p>
+              {isDesktop && permissions.length === 1 && (
+                <p>
+                  this admin has the right to all{" "}
+                  <span className="text-blue-500 font-bold">permissions</span>
+                </p>
+              )}
+                {permissions.length > 1 && (
+                  <>
+                     <p>this admin has the right to:</p>
+                       
               <ul className="flex text-sm flex-col gap-1">
-                <li>Add product</li>
-                <li>Edit product</li>
-              </ul>
+                
+                { permissions.map((permission, _) => (
+                   <li
+                     key={permission.toLowerCase()}
+                     className="font-normal text-blue-500"
+                   >
+                     {permission[0].toUpperCase() + permission.slice(1)}
+                   </li>
+                 ))}
+             </ul>
+                  </>
+                )
+         
+                  }
             </div>
           </div>
         </CredenzaBody>
         {isDesktop && (
           <CredenzaFooter>
-            <CredenzaClose>
+            <CredenzaClose asChild>
               <Button variant={"outline"}>cancel</Button>
             </CredenzaClose>
           </CredenzaFooter>
