@@ -25,7 +25,7 @@ export const ShowAdmins = async (
   return (
     <div className="grid grid-cols-1 gap-4">
       <div>
-        {/* <MobileShowAdmin admins={admins} /> */}
+        <MobileShowAdmin admins={admins} />
         <DesktopShowAdmin admins={admins} />
       </div>
 
