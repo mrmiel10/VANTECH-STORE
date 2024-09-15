@@ -48,7 +48,7 @@ export const addProductProcedure = createServerActionProcedure()
     try {
         const admin = await isAdmin()
         if(!admin) throw new ZSAError("NOT_AUTHORIZED","admin not authentificated")
-            if(!admin.permissions.includes("add product"))   throw new ZSAError("NOT_AUTHORIZED","You don't have the necessary rights to perform this operation")
+            if(!admin.permissions.includes("add product") && !admin.permissions.includes("all"))   throw new ZSAError("NOT_AUTHORIZED","You don't have the necessary rights to perform this operation")
     } catch (error) {
         throw new ZSAError("NOT_AUTHORIZED","You don't have the necessary rights to perform this operation")
     }
@@ -58,7 +58,7 @@ export const deleteProductProcedure = createServerActionProcedure()
     try {
         const admin = await isAdmin()
         if(!admin) throw new ZSAError("NOT_AUTHORIZED","admin not authentificated")
-            if(!admin.permissions.includes("delete product"))   throw new ZSAError("NOT_AUTHORIZED","You don't have the necessary rights to perform this operation")
+            if(!admin.permissions.includes("delete product") && !admin.permissions.includes("all"))   throw new ZSAError("NOT_AUTHORIZED","You don't have the necessary rights to perform this operation")
     } catch (error) {
         throw new ZSAError("NOT_AUTHORIZED","You don't have the necessary rights to perform this operation")
     }
@@ -68,7 +68,7 @@ export const editProductProcedure = createServerActionProcedure()
     try {
         const admin = await isAdmin()
         if(!admin) throw new ZSAError("NOT_AUTHORIZED","admin not authentificated")
-            if(!admin.permissions.includes("edit product"))   throw new ZSAError("NOT_AUTHORIZED","You don't have the necessary rights to perform this operation")
+            if(!admin.permissions.includes("edit product") && !admin.permissions.includes("all"))   throw new ZSAError("NOT_AUTHORIZED","You don't have the necessary rights to perform this operation")
     } catch (error) {
         throw new ZSAError("NOT_AUTHORIZED","You don't have the necessary rights to perform this operation")
     }

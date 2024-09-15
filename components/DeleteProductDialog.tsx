@@ -25,8 +25,9 @@ import { useMediaQuery } from "usehooks-ts";
 import { desktop } from "@/components/ui/credenza";
 import clsx from "clsx";
 import { Loader2 } from "lucide-react";
-
+import { useEdgeStore } from "@/lib/edgestore";
 export const DeletePorductDialog = () => {
+  const { edgestore } = useEdgeStore();
   const { product } = useDeleteProductModal(
     useShallow((s) => ({
       product: s.product,
@@ -95,9 +96,7 @@ export const DeletePorductDialog = () => {
             >
               cancel
             </Button>
-            {/* <CredenzaClose asChild>
-            <Button variant={"outline"}>cancel</Button>
-          </CredenzaClose> */}
+        
             <Button
               disabled={
                 deleteProduct.isPending || deleteImagesProduct.isPending
@@ -106,7 +105,14 @@ export const DeletePorductDialog = () => {
                 if (!product.idProduct || !product.images) return null;
                 await Promise.all([
                   deleteProduct.execute({ id: product.idProduct }),
-                  deleteImagesProduct.execute(product.images),
+                  product.images.map(async (item, _) => {
+                  //  const { edgestore } = useEdgeStore();
+                    await edgestore.publicFiles.delete({
+                      url: item.image,
+                    });
+                  })
+               
+                // deleteImagesProduct.execute(product.images),
                 ]);
               }}
               className=" px-16"

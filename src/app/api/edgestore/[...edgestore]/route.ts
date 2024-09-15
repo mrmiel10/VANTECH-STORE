@@ -8,12 +8,12 @@ const es = initEdgeStore.create();
  */
 const edgeStoreRouter = es.router({
   publicFiles: es.imageBucket()
-  .input(
-    z.object({
-      type: z.enum(["product","profile"])
-    })
-  )
-  .path(({input})=> [{type:input.type}])
+  // .input(
+  //   z.object({
+  //     type: z.enum(["product","profile"])
+  //   })
+  // )
+//  .path(({input})=> [{type:input.type}])
   .beforeDelete(({ ctx, fileInfo }) => {
     console.log('beforeDelete', ctx, fileInfo);
     return true; // allow delete

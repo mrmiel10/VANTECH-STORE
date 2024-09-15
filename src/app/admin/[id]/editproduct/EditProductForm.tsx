@@ -157,7 +157,7 @@ console.log(fileStates)
           }else{
             const res = await edgestore.publicFiles.upload({
               file: fileState.file,
-              input:{type:"product"},
+            //  input:{type:"product"},
               options: {},
               onProgressChange: async (progress) => {
                 updateFileProgress(progress,setFileStates,fileState.key);

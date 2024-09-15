@@ -35,7 +35,7 @@ export const addProductAction = authedAddProductAction
   .input(formValidateProducts)
 
   .handler(async ({ input }) => {
-    await prisma.product.create({
+ const data =    await prisma.product.create({
       data: {
         name: input.name,
         description: input.description,
@@ -47,6 +47,7 @@ export const addProductAction = authedAddProductAction
         quantity: input.quantity,
       },
     });
+    return data
   });
   export const deleteAdminAction = authedAddAdminAction.input(
    ( z.object({
@@ -481,6 +482,7 @@ search?:string,
 
 
 )=>{
+  console.log(permissions)
   noStore()
   try {
  const admins =    await prisma.user.findMany({
@@ -517,8 +519,9 @@ search?:string,
             } : {
               in:["ADMIN","SUPERADMIN"]
             }         
-            ,
+          //   ,
           //  permissions:{
+            
           //  hasSome:permissions
           //  }
           
@@ -529,6 +532,7 @@ search?:string,
 
       } 
     })
+    
     return admins
   } catch (error) {
     throw error
@@ -610,10 +614,12 @@ export const deleteImagesProductAction = authedAdminAction
     )
   )
   .handler(async ({ input }) => {
+    const { edgestore } = useEdgeStore();
     const images = input;
+    console.log(images)
+    
     images.map(async (item, _) => {
-      const { edgestore } = useEdgeStore();
-      await edgestore.publicFiles.delete({
+         await edgestore.publicFiles.delete({
         url: item.image,
       });
     });

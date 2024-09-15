@@ -58,6 +58,7 @@ export const AddProductsForm = () => {
 
   const addProduct = useServerAction(addProductAction, {
     onSuccess: () => {
+      console.log(addProduct.data)
       form.reset({
         name: "",
         brand: "",
@@ -67,7 +68,12 @@ export const AddProductsForm = () => {
         quantity: 0,
         status: "",
       });
+    
       setFileStates([]);
+  
+      // await edgestore.publicFiles.confirmUpload({
+      //   url: urlToConfirm,
+      // });
       Router.refresh();
       toast.success("the product has been created successfully");
     },
@@ -126,7 +132,10 @@ export const AddProductsForm = () => {
           }
           const res = await edgestore.publicFiles.upload({
             file: fileState.file,
-            input: { type: "product" },
+            options:{
+              temporary:true
+            },
+           // input: { type: "product" },
   
             onProgressChange: async (progress) => {
               updateFileProgress(progress, setFileStates, fileState.key);
@@ -144,7 +153,17 @@ export const AddProductsForm = () => {
             image: res.url,
           });
           console.log("uploadimages:",uploadedImages)
-         if(index === fileStates.length - 1)  await addProduct.execute({ ...values, images: uploadedImages })
+         if(index === fileStates.length - 1){
+      const [data,e] =   await addProduct.execute({ ...values, images: uploadedImages })
+    console.log(data) 
+    if(data){
+     uploadedImages.map(async(image,_)=>{
+        await edgestore.publicFiles.confirmUpload({
+          url: image.image,
+        });
+      })
+    }    
+    }  
         } catch (err) {
           updateFileProgress("ERROR", setFileStates, fileState.key);
         } 

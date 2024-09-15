@@ -24,7 +24,7 @@ export default function ManageAdminsPage({ params, searchParams }: PageProps) {
 console.log(searchParams)
   return (
     <div className="grid gap-4">
-      <Card className="p-2 md:hidden">
+      <Card className="px-6 py-3 md:hidden">
         <SearchAdmin />
       </Card>
       <div className="flex max-md:flex-col gap-4 md:items-end ">
@@ -33,7 +33,7 @@ console.log(searchParams)
         </div>
 
         <div className="md:ml-auto flex items-end gap-2">
-          <ManagePermissionsBtn />
+          {/* <ManagePermissionsBtn /> */}
           <SelectShowAs />
           <Button
             variant={"defaultBtn"}
