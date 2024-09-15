@@ -31,13 +31,14 @@ export const GetPermissionsAdminBtn = ({
   const isDesktop = useMediaQuery(desktop);
   return (
     <Credenza>
-      <CredenzaTrigger asChild>
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
+      <CredenzaTrigger asChild>
               <Button  variant={"outline"} className="px-3 border-0">
                 <Info className="font-normal" size={20} />
               </Button>
+      </CredenzaTrigger>
             </TooltipTrigger>
             <TooltipContent>
               <p className="font-normal text-muted-foreground">
@@ -46,7 +47,6 @@ export const GetPermissionsAdminBtn = ({
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
-      </CredenzaTrigger>
       <CredenzaContent>
         <CredenzaHeader>
           <CredenzaTitle className="text-blue-500 text-2xl">

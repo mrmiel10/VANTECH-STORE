@@ -36,7 +36,7 @@ export const SelectShowAs = () => {
     </SelectTrigger>
     <SelectContent>
       <SelectItem value="all roles">Show all roles</SelectItem>
-      {["admin", "super admin"].map((role, _) => (
+      {["ADMIN", "SUPERADMIN"].map((role, _) => (
         <SelectItem
           key={role}
           className={clsx(
@@ -45,7 +45,7 @@ export const SelectShowAs = () => {
           )
         
           }
-          value={role}
+          value={role === "ADMIN" ? role : "SUPER ADMIN"}
         >
           Show as {role}
         </SelectItem>

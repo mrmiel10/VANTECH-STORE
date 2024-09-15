@@ -510,9 +510,14 @@ search?:string,
             ],
           },
          {
-            role:{
+            role: role === "ADMIN" ? {
+             equals:"ADMIN"
+            }: role === "SUPER ADMIN" ? {
+              equals:"SUPERADMIN"
+            } : {
               in:["ADMIN","SUPERADMIN"]
-            },
+            }         
+            ,
           //  permissions:{
           //  hasSome:permissions
           //  }

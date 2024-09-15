@@ -43,7 +43,7 @@ export const EditAdminForm = ({ admin }: { admin: User }) => {
     onSuccess: () => {
       toast.success("Roles and permissions have been changed successfully!");
       router.push("/admin/manage-admins");
-      router.refresh()
+      router.refresh();
     },
     onError: (err) => {
       toast.error(err.err.message);
@@ -51,9 +51,8 @@ export const EditAdminForm = ({ admin }: { admin: User }) => {
   });
   console.log(admin.permissions);
   console.log(admin.role);
-  const [displayPermission, setDisplayPermission] =
-    React.useState<boolean>(false);
-  console.log(displayPermission);
+  const [role, setRole] = React.useState<string>(admin.role);
+  console.log(role);
   const form = useForm<z.infer<typeof SchemaValidateAdmin>>({
     resolver: zodResolver(SchemaValidateAdmin),
     defaultValues: {
@@ -62,6 +61,7 @@ export const EditAdminForm = ({ admin }: { admin: User }) => {
       permissions: admin.permissions,
     },
   });
+  
   const setCustomValue = (id: any, value: any) => {
     form.setValue(id, value, {
       shouldValidate: true,
@@ -70,16 +70,27 @@ export const EditAdminForm = ({ admin }: { admin: User }) => {
     });
   };
   React.useEffect(() => {
-    admin.role === "ADMIN" && setDisplayPermission(true);
-    if (!displayPermission) setCustomValue("permissions", []);
-    else setCustomValue("permissions", admin.permissions.filter((permission,_)=>permission.toLowerCase() !="all"));
-  }, [displayPermission, admin.role, admin.permissions]);
+    // admin.role === "ADMIN" ? setRole(true) : setRole(false);
+    if (role === "ADMIN") {
+      setCustomValue(
+        "permissions",
+        admin.permissions.filter(
+          (permission, _) => permission.toLowerCase() != "all"
+        )
+      );
+    }
+    if (role === "SUPERADMIN") {
+      setCustomValue("permissions", []);
+    }
+  }, [role, admin.permissions]);
   async function onSubmit(values: z.infer<typeof SchemaValidateAdmin>) {
     console.log(values);
     await editAdmin.execute(values);
   }
+  const watched = form.watch()
+  console.log(watched)
   return (
-    <div className="flex items-start h-full justify-center">
+    <div className="flex items-start max-lg:items-center h-full justify-center">
       <section className="px-8 lg:px-12 flex-col w-full items-start max-w-3xl  flex">
         <div className="flex  items-center gap-2 mb-4">
           <Button asChild variant="outline" size="icon" className="h-7 w-7">
@@ -88,7 +99,7 @@ export const EditAdminForm = ({ admin }: { admin: User }) => {
               <span className="sr-only">Back</span>
             </Link>
           </Button>
-          <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0 text-blue-500">
+          <h1 className="flex-1 shrink-0  text-xl font-semibold tracking-tight text-blue-500">
             Edit admin role & permissions
           </h1>
         </div>
@@ -98,7 +109,7 @@ export const EditAdminForm = ({ admin }: { admin: User }) => {
               <div className="grid gap-6">
                 <FormField
                   control={form.control}
-                 name="email"
+                  name="email"
                   render={({ field }) => (
                     <FormItem>
                       <div className="grid gap-3">
@@ -109,18 +120,16 @@ export const EditAdminForm = ({ admin }: { admin: User }) => {
                           >
                             Email
                           </Label>
-                        
                         </div>
 
                         <Input
-                        defaultValue={admin.email}
-                        disabled
+                          defaultValue={admin.email}
+                          disabled
                           {...field}
                           id="email"
                           type="text"
                           name="email"
                           className=""
-                         
                         />
                       </div>
                       <FormMessage />
@@ -140,9 +149,9 @@ export const EditAdminForm = ({ admin }: { admin: User }) => {
                           >
                             Role
                           </Label>
-                          <p className="flex text-destructive items-center gap-1 ">
+                          <p className="flex text-muted-foreground text-sm items-center gap-1 ">
                             <Info size={16} />
-                            <span className="text-sm">
+                            <span className="">
                               The super admin has all permissions
                             </span>
                           </p>
@@ -150,9 +159,8 @@ export const EditAdminForm = ({ admin }: { admin: User }) => {
                         <Select
                           onValueChange={(value) => {
                             field.onChange(value);
-                            value === "ADMIN"
-                              ? setDisplayPermission(true)
-                              : setDisplayPermission(false);
+                            value === "ADMIN" && setRole("ADMIN");
+                            value === "SUPERADMIN" && setRole("SUPERADMIN");
                           }}
                           defaultValue={admin.role}
                         >
@@ -176,21 +184,41 @@ export const EditAdminForm = ({ admin }: { admin: User }) => {
                     </FormItem>
                   )}
                 />
-                {displayPermission && (
+                {role === "ADMIN" && (
                   <FormField
                     control={form.control}
                     name="permissions"
                     render={({ field }) => (
                       <FormItem>
                         <div className="grid gap-3">
-                          <div className="mb-3">
+                          <div className="mb-3 flex xs:items-cente max-xs:gap-2 max-xs:flex-col justify-between">
+                            <div>
                             <FormLabel className="text-blue-500">
                               Permissions
                             </FormLabel>
                             <FormDescription className="flex items-center text-sm ">
                               Attribute permissions
                             </FormDescription>
+                            </div>
+                       
+                       {watched.permissions.length !== 0 && (
+                               <div>
+                                    <Button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                setCustomValue("permissions", []);
+                              }}
+                              className="w-fit py-1 px-2"
+                              variant={"defaultBtn"}
+                            >
+                              Delete all
+                            </Button>
+                               </div>
+                        
+                          )} 
                           </div>
+                        
+
                           {Permissions.map((permission, _) => (
                             <FormField
                               key={permission.id}
@@ -201,7 +229,7 @@ export const EditAdminForm = ({ admin }: { admin: User }) => {
                                     <div className="flex items-center gap-2">
                                       <FormControl>
                                         <Checkbox
-                                          className="border-muted-foreground border"
+                                          className="text-blue-500 checked:bg-blue-500 border-muted-foreground border"
                                           checked={field.value?.includes(
                                             permission.id
                                           )}
