@@ -46,7 +46,7 @@ import {
 import { useRouter } from "next/navigation";
 //import addProducts from "@/lib/actions";
 import { useServerAction } from "zsa-react";
-import { addProductAction } from "@/lib/actions";
+import { addProductAction } from "@/lib/zsa.actions";
 export type imageType = {
   image: File | null;
 };
