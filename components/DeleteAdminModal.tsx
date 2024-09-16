@@ -12,7 +12,7 @@ import {
   // CredenzaOverlay
 } from "@/components/ui/credenza";
 import { useRouter } from "next/navigation";
-import { deleteProductAction} from "@/lib/actions";
+import { deleteProductAction} from "@/lib/zsa.actions";
 import { Button } from "@/components/ui/button";
 import { useShallow } from "zustand/react/shallow";
 import { Info } from "lucide-react";
@@ -23,7 +23,7 @@ import { Loader2 } from "lucide-react";
 import { useModal } from "@/lib/DeleteStore";
 import { useDeleteAdminModal } from "@/lib/DeleteStore";
 import { useServerAction } from "zsa-react";
-import { deleteAdminAction } from "@/lib/actions";
+import { deleteAdminAction } from "@/lib/zsa.actions";
 import { toast } from "sonner";
 export const DeleteAdminModal = () => {
 const deleteAdmin = useServerAction(deleteAdminAction,{

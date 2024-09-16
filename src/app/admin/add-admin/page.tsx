@@ -30,7 +30,7 @@ import { Permissions } from "@/lib/utils";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Item } from "@radix-ui/react-select";
 import Link from "next/link";
-import { addAdminAction } from "@/lib/actions";
+import { addAdminAction } from "@/lib/zsa.actions";
 import { useServerAction } from "zsa-react";
 import { toast } from "sonner";
 const AddAdminPage = () => {

@@ -32,8 +32,9 @@ import { useForm } from "react-hook-form";
 import {
   updateImageProfilAction,
   editProfilAction,
-  deleteImageProfil,
-} from "@/lib/actions";
+
+} from "@/lib/zsa.actions";
+import { deleteImageProfil } from "@/lib/actions";
 import { User } from "@prisma/client";
 
 import { Loader2 } from "lucide-react";
