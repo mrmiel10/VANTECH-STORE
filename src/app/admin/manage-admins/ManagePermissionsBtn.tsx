@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Permissions } from "@/lib/utils";
-import { useQueryState } from "nuqs";
+
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import clsx from "clsx";
 import { CheckedState } from "@radix-ui/react-checkbox";

@@ -1,12 +1,7 @@
 import React, { PropsWithChildren } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  ArrowUpRight, 
-  CreditCard,
-  Users,
-  Wallet,
-} from "lucide-react";
+import { ArrowUpRight, CreditCard, Users, Wallet } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -38,9 +33,10 @@ import {
   SkeletonDashboardSalesDetails,
   SkeletonTopCardDashboard,
 } from "./Skeletons";
+
 const DashboardPage = () => {
   return (
-    <section className="grid gap-4" >
+    <section className="grid gap-4">
       <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
         <Suspense
           fallback={
@@ -181,14 +177,26 @@ const CardDetailsSales = async () => {
     });
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center">
-        <div className="grid gap-2">
-          <CardTitle className="text-blue-500">More sales details</CardTitle>
-          <CardDescription>
-            See paid and unpaid orders of the sales
-          </CardDescription>
-        </div>
-        <Button
+      <CardHeader className="flex">
+        <CardTitle className="text-blue-500">
+          <div>
+            <Link
+              href="/admin/orders"
+              className="flex group border-none gap-2 transition-colors"
+            >
+              <span> More sales details</span>
+              <ArrowUpRight
+                size={16}
+                className=" group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"
+              />
+            </Link>
+          </div>
+        </CardTitle>
+        <CardDescription>
+          See paid and unpaid orders of the sales
+        </CardDescription>
+
+        {/* <Button
           variant={"defaultBtn"}
           asChild
           size="sm"
@@ -198,7 +206,7 @@ const CardDetailsSales = async () => {
             View All
             <ArrowUpRight className="h-4 w-4" />
           </Link>
-        </Button>
+        </Button> */}
       </CardHeader>
       <CardContent className="">
         <div className="grid gap-2">
@@ -269,48 +277,61 @@ const CardDetailsProducts = async () => {
     );
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center">
+      <CardHeader className="flex ">
         <div className="grid gap-2">
-          <CardTitle className="text-blue-500">More product details</CardTitle>
+          <CardTitle className="text-blue-500">
+            <div>
+              <Link
+                href="/admin/manage-products"
+                className="flex group border-none gap-2 transition-colors"
+              >
+                <span>More product details</span>
+                <ArrowUpRight
+                  size={16}
+                  className=" group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"
+                />
+              </Link>
+            </div>
+          </CardTitle>
           <CardDescription>
             See published,archive and draft products
           </CardDescription>
         </div>
-        <Button
-          variant={"defaultBtn"}
-          asChild
-          size="sm"
-          className="ml-auto gap-1 hover:translate-x-1 hover:-translate-y-1 transition-all ease duration-100"
-        >
-          <Link href="/admin/manage-products">
-            View All
-            <ArrowUpRight className="h-4 w-4" />
-          </Link>
-        </Button>
       </CardHeader>
       <CardContent>
-        <div className="w-full flex gap-4 flex-wrap">
-          <div className="grid gap-2 flex-1">
-            <div className="text-green-500">Published</div>
-            <div className="grid gap-1">
-              <div>{publishedProduct.count} p</div>
-              <div>{formatPrice(publishedProduct.totalAmount)}</div>
+        <div className="w-full grid gap-2 flex-wrap">
+          {publishedProduct.count === 0 ? (
+            <div>No product yet in published products</div>
+          ) : (
+            <div>
+              {" "}
+              <span className="font-semibold text-blue-500">
+                {" "}
+                {formatNumber(publishedProduct.count)} products
+              </span>{" "}
+              in <span>published{" "} </span>
+              products
             </div>
-          </div>
-          <div className="grid gap-2 flex-1">
-            <div className="text-red-500">Archive</div>
-            <div className="grid gap-1">
-              <div>{archiveProduct.count} p</div>
-              <div>{formatPrice(archiveProduct.totalAmount)}</div>
+          )}
+
+          {archiveProduct.count === 0 ? (
+            <div>No product yet in archive products</div>
+          ) : (
+            <div>
+              {" "}
+              {formatNumber(archiveProduct.count)} products in published
+              products
             </div>
-          </div>
-          <div className="grid gap-2 flex-1">
-            <div className="text-blue-500">Draft</div>
-            <div className="grid gap-1">
-              <div>{draftProduct.count} p</div>
-              <div>{formatPrice(draftProduct.totalAmount)}</div>
+          )}
+
+          {draftProduct.count === 0 ? (
+            <div>No product yet in draft products</div>
+          ) : (
+            <div>
+              {" "}
+              {formatNumber(draftProduct.count)} products in published products
             </div>
-          </div>
+          )}
         </div>
       </CardContent>
     </Card>

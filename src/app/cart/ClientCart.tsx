@@ -17,7 +17,7 @@ import { Suspense } from "react";
 import { SkeletonCartLoading } from "../../../components/Skeletons";
 import cart from "../../../public/cart.png";
 import { Skeleton } from "@/components/ui/skeleton";
-import { createOrderAction } from "@/lib/actions";
+import { createOrderAction } from "@/lib/zsa.actions";
 import { useServerAction } from "zsa-react";
 import { toast } from "sonner";
 import { User, Order } from "@prisma/client";

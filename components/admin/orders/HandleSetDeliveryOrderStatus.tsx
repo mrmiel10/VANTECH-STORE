@@ -5,7 +5,7 @@ import { useServerAction } from "zsa-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { handleSetDeliveryOrderStatusAction } from "@/lib/actions";
+import { handleSetDeliveryOrderStatusAction } from "@/lib/zsa.actions";
 import { MapDeliveryStatusOrder } from "@/lib/utils";
 import {
   DropdownMenu,
@@ -59,7 +59,7 @@ export const HandleSetDeliveryOrderStatus = ({
               <div className="w-full space-y-2" key={status}>
                 <DropdownMenuItem
                   key={status}
-                  className={clsx(" h-10", {
+                  className={clsx(" h-8 font-normal", {
                     "bg-muted text-blue-500 pointer-events-none":
                       deliveryStatus.toLowerCase() === status.toLowerCase(),
                   })}
@@ -72,7 +72,8 @@ export const HandleSetDeliveryOrderStatus = ({
                     <input type="hidden" name="orderId" value={orderId} />
                     <Button variant={"pStatus"} className="p-0" type="submit">
                       <span>{status[0].toUpperCase() + status.slice(1)}</span>
-                      { deliveryStatus.toLowerCase() === status.toLowerCase() && (
+                      {deliveryStatus.toLowerCase() ===
+                        status.toLowerCase() && (
                         <div className="ml-auto size-2 bg-blue-500 rounded-full" />
                       )}
                     </Button>

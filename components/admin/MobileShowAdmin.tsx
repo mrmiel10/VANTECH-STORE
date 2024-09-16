@@ -68,11 +68,11 @@ export const MobileShowAdmin = ({ admins }: { admins: User[] }) => {
           <div className="flex items-center">
           
               {!admin.permissions || admin.permissions.length === 0 && <div className="bg-accent/30 font-caption border border-accent rounded-sm text-blue-500 px-1 py-0.5 hover:bg-accent-50 transition-colors">No permission</div>  }
-              {admin.permissions.length === 1 && <div className="bg-accent/30 font-caption border border-accent rounded-sm text-blue-500 px-1 py-0.5 hover:bg-accent-50 transition-colors">All permissions</div>  }
+              {admin.permissions.some((permission,_)=>permission === "all") && <div className="bg-accent/30 font-caption border border-accent rounded-sm text-blue-500 px-1 py-0.5 hover:bg-accent-50 transition-colors">All permissions</div>  }
           
             <div className="flex-1" />
             <div className="flex gap-2">
-              {admin.permissions.length > 1 &&   <GetPermissionsAdminBtn permissions={admin.permissions} />}
+              {admin.permissions.every((permission,_)=>permission !== "all") &&   <GetPermissionsAdminBtn permissions={admin.permissions} />}
              
               <EditAdminButton idAdmin={admin.id} />
               <DisplayDeleteAdminModalBtn adminId={admin.id} />

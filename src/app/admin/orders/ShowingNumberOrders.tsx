@@ -7,12 +7,14 @@ import React from 'react'
 export const ShowingNumberOrders = async({userId}:{userId?:string}) => {
   //if(!userId) throw new Error
     const searchOrder = searchParamsCache.get("search");
-    const deliveryStatus = searchParamsCache.get("status");
+    const deliveryStatus = searchParamsCache.get("deliveryStatus");
+    console.log(deliveryStatus)
     const paymentStatus = searchParamsCache.get("paymentStatus")
     const currentPage = searchParamsCache.get("page");
     const ITEMS_PER_PAGE = 3;
     const offset = (currentPage - 1) * ITEMS_PER_PAGE;
-    const { count } = await getOrdersPages(searchOrder,deliveryStatus,paymentStatus,userId)
+    const { count,totalPages } = await getOrdersPages(searchOrder,deliveryStatus,paymentStatus,userId)
+    console.log(count,totalPages)
     const totalOrders = count;
     console.log('userId',userId)
     const lastOrder= count > (offset + ITEMS_PER_PAGE) ? (offset + ITEMS_PER_PAGE) : count

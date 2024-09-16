@@ -39,21 +39,21 @@ export const FilterDeliveryStatusOrder = () => {
           Filter by
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {MapDeliveryStatusOrder.map((deliverystatus, _) => (
+        {MapDeliveryStatusOrder.map((status, _) => (
           <DropdownMenuCheckboxItem
-            key={deliverystatus}
+            key={status}
             className={clsx(
-              searchParams.has("status", deliverystatus) &&
+              searchParams.has("status", status) &&
                 "bg-muted text-blue-500 pointer-events-none"
             )}
-            checked={searchParams.has("deliveryStatus", deliverystatus)}
+            checked={searchParams.has("deliveryStatus", status)}
             onCheckedChange={(checked) =>
               checked
-                ? setDeliveryStatus(deliveryStatus)
+                ? setDeliveryStatus(status)
                 : setDeliveryStatus("")
             }
           >
-            {deliverystatus}
+            {status}
           </DropdownMenuCheckboxItem>
         ))}
       </DropdownMenuContent>

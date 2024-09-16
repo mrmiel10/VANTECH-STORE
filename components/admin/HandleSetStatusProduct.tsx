@@ -6,7 +6,7 @@ import clsx from "clsx";
 import { useServerAction } from "zsa-react";
 
 import { Button } from "@/components/ui/button";
-import { handleSetStatusProductAction } from "@/lib/actions";
+import { handleSetStatusProductAction } from "@/lib/zsa.actions";
 
 export const HandleSetStatusProduct = ({
   productId,

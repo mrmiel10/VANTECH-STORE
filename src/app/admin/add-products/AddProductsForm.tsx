@@ -33,13 +33,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import SelectImage from "../../../../components/admin/SelectImage";
+
 import { formValidateProducts } from "../../../../schemas/schema";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 //import addProducts from "@/lib/actions";
 import { useServerAction } from "zsa-react";
-import { addProductAction } from "@/lib/actions";
+import { addProductAction } from "@/lib/zsa.actions";
 import { FileState } from "../../../../components/MultiImageDropzone";
 import { useEdgeStore } from "@/lib/edgestore";
 import { UploadImageProduct } from "../../../../components/UploadImageProduct";
@@ -49,7 +49,8 @@ export type uploadImageType = {
 };
 export const AddProductsForm = () => {
   const Router = useRouter();
-  const [isProductCreated, setIsProductCreated] = useState(false);
+  const [abortController,setAbortController] = useState<AbortController>()
+
   const [isUploadImage, setUploadImage] = React.useState(false);
   const [fileStates, setFileStates] = useState<FileState[]>([]);
   console.log(fileStates)
@@ -71,11 +72,10 @@ export const AddProductsForm = () => {
     
       setFileStates([]);
   
-      // await edgestore.publicFiles.confirmUpload({
-      //   url: urlToConfirm,
-      // });
       Router.refresh();
+
       toast.success("the product has been created successfully");
+   
     },
     onError: (err) => {
       toast.error(err.err.message);
@@ -106,8 +106,7 @@ export const AddProductsForm = () => {
   };
 
   const createImageFile = (files: FileState[]) => {
-    
-   /// if (!files || files.length === 0) return;
+   
     const imagesFile = files.map((img) => {
       if (typeof img.file !=="string" ) return { image: img.file.name };
     });
@@ -115,6 +114,7 @@ export const AddProductsForm = () => {
     console.log("images:",imagesFile)
   };
   async function onSubmit(values: z.infer<typeof formValidateProducts>) {
+
     console.log(values)
     setUploadImage(true);
     console.log(values);
@@ -133,8 +133,10 @@ export const AddProductsForm = () => {
           const res = await edgestore.publicFiles.upload({
             file: fileState.file,
             options:{
-              temporary:true
+              temporary:true,
+
             },
+
            // input: { type: "product" },
   
             onProgressChange: async (progress) => {
@@ -154,7 +156,7 @@ export const AddProductsForm = () => {
           });
           console.log("uploadimages:",uploadedImages)
          if(index === fileStates.length - 1){
-      const [data,e] =   await addProduct.execute({ ...values, images: uploadedImages })
+      const [data,error] =   await addProduct.execute({ ...values, images: uploadedImages })
     console.log(data) 
     if(data){
      uploadedImages.map(async(image,_)=>{
@@ -171,10 +173,10 @@ export const AddProductsForm = () => {
            setUploadImage(false);
          }
       }),
-     // await addProduct.execute({ ...values, images: uploadedImages })
+   
     ])
    
-    // console.log('uploadedImages:',uploadedImages),
+  
   }
 
   return (

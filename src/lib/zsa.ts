@@ -7,7 +7,7 @@ export const authProcedure = createServerActionProcedure()
 .handler(async()=>{
     try {
         const user = await getCurrentUser()
-        if(!user) throw new ZSAError("NOT_AUTHORIZED","user not authentificated")
+        if(!user)   throw new ZSAError("NOT_AUTHORIZED","You aren't authentificated")
     } catch (error) {
         throw new ZSAError("NOT_AUTHORIZED","You aren't authentificated")
     }
@@ -18,12 +18,11 @@ export const authedAction = authProcedure.createServerAction()
 export const addAdminProcedure = createServerActionProcedure()
 .handler(async()=>{
     try {
-        const { getUser } = getKindeServerSession();
-    const sessionUser = await getUser();
-    if (!sessionUser) return null;
+        const user = await getCurrentUser()
+        if(!user)   throw new ZSAError("NOT_AUTHORIZED","You aren't authentificated")
         const isSuperAdmin = await prisma.user.findUnique({
             where:{
-           kindeId:sessionUser.id,
+          id:user?.id ,
              role:"SUPERADMIN"
              
             }

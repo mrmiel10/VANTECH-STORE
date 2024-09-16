@@ -27,12 +27,12 @@ import {
 } from "@/components/ui/select";
 import { z } from "zod";
 import { Info } from "lucide-react";
-import { PageProps, Permissions } from "@/lib/utils";
+import { Permissions } from "@/lib/utils";
 import { Checkbox } from "@/components/ui/checkbox";
 
 import Link from "next/link";
 import { User } from "@prisma/client";
-import { editAdminAction } from "@/lib/actions";
+import { editAdminAction } from "@/lib/zsa.actions";
 import { useServerAction } from "zsa-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";

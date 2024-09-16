@@ -1,5 +1,4 @@
 import React from "react";
-
 import { searchParamsCache } from "@/lib/utils";
 import { MobileShowAdmin } from "../../../../components/admin/MobileShowAdmin";
 import { DesktopShowAdmin } from "../../../../components/admin/DesktopShowAdmin";
@@ -18,7 +17,7 @@ export const ShowAdmins = async (
     if(permission.startsWith("perm")){
       permissions = [...permissions,searchParams[permission]]
     }
-  }
+  } 
   console.log(role, search, currentPage,permissions);
   const admins = await getAdmins(currentPage,permissions,role,search)
   console.log(admins)

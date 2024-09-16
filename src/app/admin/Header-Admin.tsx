@@ -3,7 +3,7 @@ import React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Badge } from "@/components/ui/badge";
+
 import { navLinksAdmin } from "@/lib/navLinksAdmin";
 import { MenuIcon } from "lucide-react";
 import Breadcrumbs from "./breadcrumbs";

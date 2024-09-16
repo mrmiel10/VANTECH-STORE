@@ -39,11 +39,8 @@ import { formValidateProducts } from "../../../../../schemas/schema";
 import { toast } from "sonner";
 
 import {useRouter } from "next/navigation";
-import { deleteImagesProductAction, editProductAction } from "@/lib/actions";
-import {
-  imageType,
-  uploadImageType,
-} from "@/app/admin/add-products/AddProductsForme";
+import {editProductAction } from "@/lib/zsa.actions";
+
 import { ParseProductImages } from "@/lib/utils";
 
 import { useServerAction } from "zsa-react";
@@ -51,6 +48,7 @@ import { updateFileProgress } from "../../add-products/AddProductsForm";
 import { FileState } from "../../../../../components/MultiImageDropzone";
 import { useEdgeStore } from "@/lib/edgestore";
 import { UploadImageProduct } from "../../../../../components/UploadImageProduct";
+import { uploadImageType } from "../../add-products/AddProductsForm"
 export const EditProductForm = ({
   product,
 }: {
@@ -74,6 +72,7 @@ const safeImages = ParseProductImages(product.images)
   const [fileStates, setFileStates] = useState<FileState[]>(images);
   const [isProductCreated, setIsProductCreated] = useState(false);
   const { edgestore } = useEdgeStore(); 
+
   //console.log("filestates:",fileStates)
   const editProduct = useServerAction(editProductAction, {
     onSuccess: () => {
@@ -88,14 +87,7 @@ const safeImages = ParseProductImages(product.images)
       toast.error("error updating product!");
     },
   });
-  const deleteImagesProduct = useServerAction(deleteImagesProductAction, {
-    onSuccess: () => {
-      toast.success("Delete Images successfully!")
-    },
-    onError: () => {
-      toast.error("Not deleted images product")
-    },
-  });
+
   const createImageFile = (files: FileState[]) => {
     console.log('files:',files)
 if(files.length ===0) return
@@ -120,13 +112,6 @@ if(files.length ===0) return
     },
   });
 
-  // useEffect(() => {
-  //   if (isProductCreated) {
-  //     form.reset();
-  //     setFileStates([]);
-  //     setIsProductCreated(false);
-  //   }
-  // }, [form, isProductCreated]);
 
   const setCustomValue = (id: any, value: any) => {
     form.setValue(id, value, {
@@ -158,7 +143,9 @@ console.log(fileStates)
             const res = await edgestore.publicFiles.upload({
               file: fileState.file,
             //  input:{type:"product"},
-              options: {},
+              options: {
+                temporary:true
+              },
               onProgressChange: async (progress) => {
                 updateFileProgress(progress,setFileStates,fileState.key);
                   if (progress === 100) {
@@ -177,9 +164,23 @@ console.log(fileStates)
           }
        
           if(index === fileStates.length - 1){
-            console.log("uploadImages:",uploadedImages),
-            editProduct.execute({ ...values, images: uploadedImages,id:product.id})
-              deleteImagesProduct.execute(ParseProductImages(product.images))    
+            console.log("uploadImages:",uploadedImages)
+          const [data,err]  =  await editProduct.execute({ ...values, images: uploadedImages,id:product.id})
+             if(data){
+             uploadedImages.map(async(p,_)=>{
+              await edgestore.publicFiles.confirmUpload({
+                url: p.image,
+              });
+             })
+             }
+             ParseProductImages(product.images).map(async (item, _) => {
+           
+                await edgestore.publicFiles.delete({
+                  url: item.image,
+                });
+              })
+           
+          
           }
          
         } catch (err) {
@@ -214,11 +215,11 @@ console.log(fileStates)
             </Button>
       
               <Button
-                disabled={editProduct.isPending || deleteImagesProduct.isPending || isUploadImage}
+                disabled={editProduct.isPending ||  isUploadImage}
                 variant={"defaultBtn"}
                 size="sm"
               >
-                {editProduct.isPending || deleteImagesProduct.isPending || isUploadImage ? (
+                {editProduct.isPending ||  isUploadImage ? (
                   <Loader2 className="size-5 animate-spin" />
                 ) : (
                   "Edit product"
