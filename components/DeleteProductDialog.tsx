@@ -14,7 +14,7 @@ import {
 import { useRouter } from "next/navigation";
 import { Pencil } from "lucide-react";
 import { TrashIcon } from "lucide-react";
-import { deleteProductAction, deleteImagesProductAction } from "@/lib/actions";
+import { deleteProductAction} from "@/lib/zsa.actions";
 import { toast } from "sonner";
 import { useServerAction } from "zsa-react";
 import {useDeleteProductModal,useModal } from "@/lib/DeleteStore";
@@ -43,21 +43,19 @@ export const DeletePorductDialog = () => {
   console.log(isOpen);
   const isDesktop = useMediaQuery(desktop);
   const router = useRouter();
-  const deleteImagesProduct = useServerAction(deleteImagesProductAction, {
-    onSuccess: () => {
-      router.refresh();
-      onClose()
-      toast.success("Delete product images successfully!");
-
-    },
-    onError: () => {
-      toast.error("Not deleted images!");
-    },
-  });
+ 
   const deleteProduct = useServerAction(deleteProductAction, {
     onSuccess: () => {
+      // product.images!.map(async (item, _) => {
+      //   //  const { edgestore } = useEdgeStore();
+      //     await edgestore.publicFiles.delete({
+      //       url: item.image,
+      //     });
+      //   })
       router.refresh();
       toast.success("the status of the product has been deleted successfully");
+   
+   
     },
     onError: (err) => {
       console.log(err.err.message);
@@ -99,7 +97,7 @@ export const DeletePorductDialog = () => {
         
             <Button
               disabled={
-                deleteProduct.isPending || deleteImagesProduct.isPending
+                deleteProduct.isPending
               }
               onClick={async () => {
                 if (!product.idProduct || !product.images) return null;
@@ -119,7 +117,7 @@ export const DeletePorductDialog = () => {
               variant={"defaultBtn"}
             >
               {" "}
-              {deleteProduct.isPending || deleteImagesProduct.isPending ? (
+              {deleteProduct.isPending ? (
                 <Loader2 size={16} className="animate-spin" />
               ) : (
                 <span>Delete</span>

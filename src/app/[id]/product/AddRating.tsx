@@ -19,7 +19,7 @@ import { Loader2,} from "lucide-react";
 import { toast } from "sonner";
 import { formValidateReview, SchemaSafeProductsOrder } from "../../../../schemas/schema";
 import { User,Order,Product, Review } from "@prisma/client";
-import { commentProductAction} from "@/lib/actions";
+import { commentProductAction} from "@/lib/zsa.actions";
 import { useServerAction } from "zsa-react";
 import { useRouter } from "next/navigation";
 
