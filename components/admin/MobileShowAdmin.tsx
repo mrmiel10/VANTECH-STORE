@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import profil from "../../public/profil.jpg";
 import { Badge } from "@/components/ui/badge";
-import { DeleteAsAdmin, EditAdminButton } from "../SubmitButtons";
+import { EditAdminButton } from "../SubmitButtons";
 import { Button } from "@/components/ui/button";
 import { Info } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
