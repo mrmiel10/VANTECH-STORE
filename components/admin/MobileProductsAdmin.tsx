@@ -19,13 +19,11 @@ import { ParseProductImages } from "@/lib/utils";
 import { Product, Review } from "@prisma/client";
 import { formatPrice } from "@/lib/utils";
 import { EditProductButton } from "../SubmitButtons";
-import { DeleteProductBtn } from "../SubmitButtons";
+
 import { HandleSetStatusProduct } from "./HandleSetStatusProduct";
-import prisma from "../../db";
-import { Badge } from "@/components/ui/badge";
-import { ParseProducts } from "@/lib/utils";
+
 import { DisplayDeleteProductDialogBtn } from "../DisplayDeleteProductDialogBtn";
-import { DeletePorductDialog } from "../DeleteProductDialog";
+
 export const MobileProductsAdmin = async({
   products,
 }: {

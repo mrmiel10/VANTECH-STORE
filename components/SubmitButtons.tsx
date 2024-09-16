@@ -39,16 +39,3 @@ export const EditAdminButton = ({idAdmin }: { idAdmin: string }) => {
     </Button>
   );
 };
-export const DeleteAsAdmin = ()=>{
-  return (
-<Button
-   
-      className="text-muted-foreground font-normal  hover:text-blue-500  p-2"
-      variant={"outline"}
-    >
-      {" "}
-      Delete 
-  
-    </Button>
-  )
-}
