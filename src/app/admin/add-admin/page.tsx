@@ -33,6 +33,7 @@ import Link from "next/link";
 import { addAdminAction } from "@/lib/zsa.actions";
 import { useServerAction } from "zsa-react";
 import { toast } from "sonner";
+import { MultiSelectPermissions } from "../../../../components/MultiSelectPermissions";
 const AddAdminPage = () => {
   const addAdmin = useServerAction(addAdminAction, {
     onSuccess: () => {
@@ -44,6 +45,11 @@ const AddAdminPage = () => {
   });
   const [displayPermission, setDisplayPermission] =
     React.useState<boolean>(false);
+  type Role = Record<"id" | "label", string>;
+  const [selectedPermissions, setSelectedPermissions] = React.useState<Role[]>(
+    []
+  );
+  console.log(selectedPermissions);
   console.log(displayPermission);
   const form = useForm<z.infer<typeof SchemaValidateAdmin>>({
     resolver: zodResolver(SchemaValidateAdmin),
@@ -62,6 +68,20 @@ const AddAdminPage = () => {
         shouldTouch: true,
       });
   }, [displayPermission]);
+  React.useEffect(() => {
+    const idSelectedPermissions = selectedPermissions.map((permission, _) => permission.id);
+    console.log(idSelectedPermissions);
+    setCustomValue("permissions", idSelectedPermissions);
+  }, [selectedPermissions, displayPermission]);
+
+  const setCustomValue = (id: any, value: any) => {
+    form.setValue(id, value, {
+      shouldValidate: true,
+      shouldDirty: true,
+      shouldTouch: true,
+    });
+  };
+
   async function onSubmit(values: z.infer<typeof SchemaValidateAdmin>) {
     console.log(values);
     await addAdmin.execute(values);
@@ -167,65 +187,79 @@ const AddAdminPage = () => {
                     </FormItem>
                   )}
                 />
-                {displayPermission && (
-                  <FormField
-                    control={form.control}
-                    name="permissions"
-                    render={({ field }) => (
-                      <FormItem>
-                        <div className="grid gap-3">
-                          <div className="mb-3">
-                            <FormLabel className="text-blue-500">
-                              Permissions
-                            </FormLabel>
-                            <FormDescription className="flex items-center text-sm ">
-                              Attribute permissions
-                            </FormDescription>
-                          </div>
-                          {Permissions.map((permission, _) => (
-                            <FormField
-                              key={permission.id}
-                              name="permissions"
-                              render={({ field }) => {
-                                return (
-                                  <FormItem key={permission.id}>
-                                    <div className="flex items-center gap-2">
-                                      <FormControl>
-                                        <Checkbox
-                                          className="border-muted-foreground border"
-                                          checked={field.value?.includes(
-                                            permission.id
-                                          )}
-                                          onCheckedChange={(checked) => {
-                                            return checked
-                                              ? field.onChange([
-                                                  ...field.value,
-                                                  permission.id,
-                                                ])
-                                              : field.onChange(
-                                                  field.value?.filter(
-                                                    (value: string) =>
-                                                      value !== permission.id
-                                                  )
-                                                );
-                                          }}
-                                        />
-                                      </FormControl>
 
-                                      <FormLabel className="text-muted-foreground font-normal">
-                                        {permission.label}
-                                      </FormLabel>
-                                    </div>
-                                  </FormItem>
-                                );
-                              }}
-                            />
-                          ))}
-                        </div>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                {displayPermission && (
+                  <div className="grid gap-3">
+                    <div className="mb-2">
+                      <p className="text-blue-500">Permissions</p>
+                      <p className="text-sm">Attribute permissions</p>
+                    </div>
+                    <MultiSelectPermissions
+                      setSelectedPermissions={setSelectedPermissions}
+                      selectedPermissions={selectedPermissions}
+                      permissions={Permissions}
+                      placeholder="select..."
+                    />
+                  </div>
+
+                  // <FormField
+                  //   control={form.control}
+                  //   name="permissions"
+                  //   render={({ field }) => (
+                  //     <FormItem>
+                  //       <div className="grid gap-3">
+                  //         <div className="mb-3">
+                  //           <FormLabel className="text-blue-500">
+                  //             Permissions
+                  //           </FormLabel>
+                  //           <FormDescription className="flex items-center text-sm ">
+                  //             Attribute permissions
+                  //           </FormDescription>
+                  //         </div>
+                  //         {Permissions.map((permission, _) => (
+                  //           <FormField
+                  //             key={permission.id}
+                  //             name="permissions"
+                  //             render={({ field }) => {
+                  //               return (
+                  //                 <FormItem key={permission.id}>
+                  //                   <div className="flex items-center gap-2">
+                  //                     <FormControl>
+                  //                       <Checkbox
+                  //                         className="border-muted-foreground border"
+                  //                         checked={field.value?.includes(
+                  //                           permission.id
+                  //                         )}
+                  //                         onCheckedChange={(checked) => {
+                  //                           return checked
+                  //                             ? field.onChange([
+                  //                                 ...field.value,
+                  //                                 permission.id,
+                  //                               ])
+                  //                             : field.onChange(
+                  //                                 field.value?.filter(
+                  //                                   (value: string) =>
+                  //                                     value !== permission.id
+                  //                                 )
+                  //                               );
+                  //                         }}
+                  //                       />
+                  //                     </FormControl>
+
+                  //                     <FormLabel className="text-muted-foreground font-normal">
+                  //                       {permission.label}
+                  //                     </FormLabel>
+                  //                   </div>
+                  //                 </FormItem>
+                  //               );
+                  //             }}
+                  //           />
+                  //         ))}
+                  //       </div>
+                  //       <FormMessage />
+                  //     </FormItem>
+                  //   )}
+                  // />
                 )}
               </div>
 

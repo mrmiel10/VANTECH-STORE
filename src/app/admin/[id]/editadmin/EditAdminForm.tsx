@@ -37,7 +37,17 @@ import { useServerAction } from "zsa-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
+import { MultiSelectPermissions } from "../../../../../components/MultiSelectPermissions";
 export const EditAdminForm = ({ admin }: { admin: User }) => {
+  type Role = Record<"id" | "label", string>;
+  const permissionsAdmin = admin.permissions.map((permission, _) => {
+    return { id: permission, label: permission };
+  });
+  const [selectedPermissions, setSelectedPermissions] = React.useState<Role[]>(
+    permissionsAdmin 
+  );
+  console.log(selectedPermissions);
+  console.log(selectedPermissions);
   const router = useRouter();
   const editAdmin = useServerAction(editAdminAction, {
     onSuccess: () => {
@@ -61,7 +71,14 @@ export const EditAdminForm = ({ admin }: { admin: User }) => {
       permissions: admin.permissions,
     },
   });
-  
+  React.useEffect(() => {
+    const idSelectedPermissions = selectedPermissions.map(
+      (permission, _) => permission.id
+    );
+    console.log(idSelectedPermissions);
+    setCustomValue("permissions", idSelectedPermissions);
+  }, [selectedPermissions, role]);
+
   const setCustomValue = (id: any, value: any) => {
     form.setValue(id, value, {
       shouldValidate: true,
@@ -87,8 +104,8 @@ export const EditAdminForm = ({ admin }: { admin: User }) => {
     console.log(values);
     await editAdmin.execute(values);
   }
-  const watched = form.watch()
-  console.log(watched)
+  const watched = form.watch();
+  console.log(watched);
   return (
     <div className="flex items-start max-lg:items-center h-full justify-center">
       <section className="px-8 lg:px-12 flex-col w-full items-start max-w-3xl  flex">
@@ -185,84 +202,89 @@ export const EditAdminForm = ({ admin }: { admin: User }) => {
                   )}
                 />
                 {role === "ADMIN" && (
-                  <FormField
-                    control={form.control}
-                    name="permissions"
-                    render={({ field }) => (
-                      <FormItem>
-                        <div className="grid gap-3">
-                          <div className="mb-3 flex xs:items-cente max-xs:gap-2 max-xs:flex-col justify-between">
-                            <div>
-                            <FormLabel className="text-blue-500">
-                              Permissions
-                            </FormLabel>
-                            <FormDescription className="flex items-center text-sm ">
-                              Attribute permissions
-                            </FormDescription>
-                            </div>
-                       
-                       {watched.permissions.length !== 0 && (
-                               <div>
-                                    <Button
-                              onClick={(e) => {
-                                e.preventDefault();
-                                setCustomValue("permissions", []);
-                              }}
-                              className="w-fit py-1 px-2"
-                              variant={"defaultBtn"}
-                            >
-                              Delete all
-                            </Button>
-                               </div>
-                        
-                          )} 
-                          </div>
-                        
-
-                          {Permissions.map((permission, _) => (
-                            <FormField
-                              key={permission.id}
-                              name="permissions"
-                              render={({ field }) => {
-                                return (
-                                  <FormItem key={permission.id}>
-                                    <div className="flex items-center gap-2">
-                                      <FormControl>
-                                        <Checkbox
-                                          className="text-blue-500 checked:bg-blue-500 border-muted-foreground border"
-                                          checked={field.value?.includes(
-                                            permission.id
-                                          )}
-                                          onCheckedChange={(checked) => {
-                                            return checked
-                                              ? field.onChange([
-                                                  ...field.value,
-                                                  permission.id,
-                                                ])
-                                              : field.onChange(
-                                                  field.value?.filter(
-                                                    (value: string) =>
-                                                      value !== permission.id
-                                                  )
-                                                );
-                                          }}
-                                        />
-                                      </FormControl>
-
-                                      <FormLabel className="text-muted-foreground font-normal">
-                                        {permission.label}
-                                      </FormLabel>
-                                    </div>
-                                  </FormItem>
-                                );
-                              }}
-                            />
-                          ))}
-                        </div>
-                        <FormMessage />
-                      </FormItem>
-                    )}
+                  <MultiSelectPermissions
+                    setSelectedPermissions={setSelectedPermissions}
+                    selectedPermissions={selectedPermissions}
+                    permissions={Permissions}
+                    placeholder="select..."
                   />
+                  // <FormField
+                  //   control={form.control}
+                  //   name="permissions"
+                  //   render={({ field }) => (
+                  //     <FormItem>
+                  //       <div className="grid gap-3">
+                  //         <div className="mb-3 flex xs:items-cente max-xs:gap-2 max-xs:flex-col justify-between">
+                  //           <div>
+                  //           <FormLabel className="text-blue-500">
+                  //             Permissions
+                  //           </FormLabel>
+                  //           <FormDescription className="flex items-center text-sm ">
+                  //             Attribute permissions
+                  //           </FormDescription>
+                  //           </div>
+
+                  //      {watched.permissions.length !== 0 && (
+                  //              <div>
+                  //                   <Button
+                  //             onClick={(e) => {
+                  //               e.preventDefault();
+                  //               setCustomValue("permissions", []);
+                  //             }}
+                  //             className="w-fit py-1 px-2"
+                  //             variant={"defaultBtn"}
+                  //           >
+                  //             Delete all
+                  //           </Button>
+                  //              </div>
+
+                  //         )}
+                  //         </div>
+
+                  //         {Permissions.map((permission, _) => (
+                  //           <FormField
+                  //             key={permission.id}
+                  //             name="permissions"
+                  //             render={({ field }) => {
+                  //               return (
+                  //                 <FormItem key={permission.id}>
+                  //                   <div className="flex items-center gap-2">
+                  //                     <FormControl>
+                  //                       <Checkbox
+                  //                         className="text-blue-500 checked:bg-blue-500 border-muted-foreground border"
+                  //                         checked={field.value?.includes(
+                  //                           permission.id
+                  //                         )}
+                  //                         onCheckedChange={(checked) => {
+                  //                           return checked
+                  //                             ? field.onChange([
+                  //                                 ...field.value,
+                  //                                 permission.id,
+                  //                               ])
+                  //                             : field.onChange(
+                  //                                 field.value?.filter(
+                  //                                   (value: string) =>
+                  //                                     value !== permission.id
+                  //                                 )
+                  //                               );
+                  //                         }}
+                  //                       />
+                  //                     </FormControl>
+
+                  //                     <FormLabel className="text-muted-foreground font-normal">
+                  //                       {permission.label}
+                  //                     </FormLabel>
+                  //                   </div>
+                  //                 </FormItem>
+                  //               );
+                  //             }}
+                  //           />
+                  //         ))}
+                  //       </div>
+                  //       <FormMessage />
+                  //     </FormItem>
+                  //   )}
+                  // />
                 )}
               </div>
 
