@@ -202,12 +202,19 @@ export const EditAdminForm = ({ admin }: { admin: User }) => {
                   )}
                 />
                 {role === "ADMIN" && (
+                  <div className="grid gap-3">
+                  <div className="mb-2">
+                    <p className="text-blue-500">Permissions</p>
+                    <p className="text-sm">Attribute permissions</p>
+                  </div>
                   <MultiSelectPermissions
                     setSelectedPermissions={setSelectedPermissions}
                     selectedPermissions={selectedPermissions}
                     permissions={Permissions}
                     placeholder="select..."
                   />
+                </div>
+
                   // <FormField
                   //   control={form.control}
                   //   name="permissions"
